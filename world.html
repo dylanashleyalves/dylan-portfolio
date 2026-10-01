@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Dylan — Ride the world</title>
-    <meta name="description" content="Ride a bicycle through Dylan's portfolio as a 3D world." />
+    <title>Dylan Ashley Alves — Computer Engineer · 3D world</title>
+    <meta name="description" content="Ride a bicycle through the portfolio of Dylan Ashley Alves, Computer Engineer, as a 3D world." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -243,14 +243,14 @@
       /* =====================================================
          CONTENT: edit these to change what each landmark says
          ===================================================== */
-      const EMAIL = "dylan@example.com";
-      const project = (desc, tags, github = "#", live = "#") => `
+      const EMAIL = "Dylanashleyalves@gmail.com";
+      const GITHUB = "https://github.com/dylanashleyalves";
+      const tags = (list) => `<div class="tags">${list.map((t) => `<span>${t}</span>`).join("")}</div>`;
+      // links is optional: [["Label", "url"], ...]
+      const project = (desc, tagList, links = []) => `
         <p>${desc}</p>
-        <div class="tags">${tags.map((t) => `<span>${t}</span>`).join("")}</div>
-        <div class="links">
-          <a href="${github}" target="_blank" rel="noreferrer">GitHub ↗</a>
-          <a href="${live}" target="_blank" rel="noreferrer">Live demo ↗</a>
-        </div>`;
+        ${tags(tagList)}
+        ${links.length ? `<div class="links">${links.map(([label, url]) => `<a href="${url}"${url.startsWith("http") ? ' target="_blank" rel="noreferrer"' : ""}>${label}</a>`).join("")}</div>` : ""}`;
 
       // t = where on the road loop the landmark sits (0 to 1)
       const STATIONS = [
@@ -258,52 +258,59 @@
           kind: "monolith", color: "#3dffa6", t: 0.05,
           kicker: "01 — Presence", title: "About",
           html: `
-            <p>I'm Dylan, a software engineer who treats the browser as a material. I design and ship
-            products where the craft of engineering and the language of art share the same surface.</p>
-            <p>Currently exploring real-time interfaces, generative layouts, and tools that make complex
-            software feel inevitable.</p>
-            <div class="tags">${["TypeScript","React / Next","Node.js","Systems design","Motion","WebGL / Canvas","Design systems","Accessibility"].map((t) => `<span>${t}</span>`).join("")}</div>`,
+            <p>I'm a Computer Engineering graduate from Temasek Polytechnic (Class of 2026), and I'm genuinely
+            excited by anything to do with Artificial Intelligence, Machine Learning, and Computer Vision.
+            There's something special about teaching a machine to see and understand the world, and that's
+            the space I hope to specialize in.</p>
+            <p>I love coding. Whether it's building predictive models, wrangling data into clear visualizations,
+            or just tinkering with a new idea in Python, I enjoy the process of figuring things out and making
+            something work. I'm also a big believer in using AI as an everyday tool, and I happily use it to
+            learn faster, work smarter, and solve problems throughout life, not just in code.</p>
+            <p>Something that matters a lot to me is teaching. I love helping others understand tricky concepts,
+            and nothing beats the moment when something finally "clicks" for someone. Sharing what I know is one
+            of my favourite ways to learn, too.</p>
+            ${tags(["Python", "C", "C#", "Java", "HTML", "JavaScript", "Full-stack", "OOP", "Microcontrollers", "IoT", "Data visualisation", "Machine learning"])}`,
         },
         {
           kind: "portal", color: "#3dffa6", t: 0.19,
-          kicker: "02 — Work · 01", title: "Aurora Field",
-          html: project("A generative design system that paints live constraints as weather: tokens, motion, and documentation in one canvas.", ["TypeScript", "Canvas", "Storybook"]),
+          kicker: "02 — Work · 01", title: "Data Prep",
+          html: project("Took a raw dataset, cleaned it, and prepared it for training by adding, removing, and transforming data where needed, then trained a model on the result.", ["Python", "Data cleaning", "Model training"]),
         },
         {
           kind: "portal", color: "#f0b45a", t: 0.32,
-          kicker: "02 — Work · 02", title: "Lumen Atlas",
-          html: project("Spatial analytics for ops teams. Maps that breathe, filters that feel tactile, and narratives hidden in the data.", ["React", "D3", "MapLibre"]),
+          kicker: "02 — Work · 02", title: "Sandwich System",
+          html: project("An online ordering system where customers order sandwiches and staff manage and edit the inventory, built around object-oriented design.", ["OOP", "Ordering", "Inventory"]),
         },
         {
           kind: "portal", color: "#3dffa6", t: 0.45,
-          kicker: "02 — Work · 03", title: "Nimbus Desk",
-          html: project("Real-time collaboration for studios. Presence, comments, and versioned canvases without the usual noise.", ["WebSockets", "Node", "CRDT"]),
+          kicker: "02 — Work · 03", title: "Phone Store",
+          html: project("A full-stack web store where users browse and order phones, and staff log in to update the inventory.", ["Full-stack", "Web", "Inventory"]),
         },
         {
           kind: "portal", color: "#f0b45a", t: 0.58,
-          kicker: "02 — Work · 04", title: "Echo Chamber",
-          html: project("A browser instrument with granular synthesis, visual scores, and shared sessions for remote performances.", ["Web Audio", "GLSL", "WebRTC"]),
+          kicker: "02 — Work · 04", title: "This World",
+          html: project("The world you're riding through right now: a 3D open world built with Three.js that runs right in the browser, with a bike you can steer and landmarks that open up my work.", ["Three.js", "JavaScript", "WebGL"], [["View the code on GitHub ↗", "https://github.com/dylanashleyalves/dylan-portfolio"]]),
         },
         {
           kind: "tower", color: "#f0b45a", t: 0.73,
           kicker: "03 — Trajectory", title: "Path",
           html: `
             <ol class="timeline">
-              <li><span class="when">2024 — Present</span><h3>Independent, creative systems</h3><p>Partnering with studios and product teams on interface architecture, motion languages, and prototypes that ship.</p></li>
-              <li><span class="when">2021 — 2024</span><h3>Staff Engineer, product surfaces</h3><p>Led frontend platforms for a multi-product org: design tokens, performance budgets, and a shared canvas runtime.</p></li>
-              <li><span class="when">2018 — 2021</span><h3>Software Engineer, platform</h3><p>Built APIs and internal tools; learned that the most elegant code is the kind people can feel.</p></li>
-              <li><span class="when">2016 — 2018</span><h3>The first pixels</h3><p>Freelance sites, late-night experiments, and the decision to treat software as a craft.</p></li>
+              <li><span class="when">Apr 2025 — Aug 2025</span><h3>Empire Code, Coding &amp; Robotics Intern</h3><p>Taught computer science and robotics to students aged 5–15 using Scratch, Thunkable, LEGO Spike, and Minecraft Education. Designed story-based coding exercises and small games, and coached National Robotics Competition teams.</p></li>
+              <li><span class="when">Aug 2024 — Apr 2025</span><h3>Dusit Thani Laguna Singapore, Banquet Server</h3><p>Coordinated event logistics with managers and handled guest lists and orders accurately during busy events.</p></li>
+              <li><span class="when">May 2024 — Jul 2024</span><h3>Sony Pictures Networks, Production &amp; Systems Freelancer</h3><p>Monitored live broadcast feeds from India to Singapore and other regions, operated channel-sorting equipment, and managed rosters in Excel.</p></li>
+              <li><span class="when">Apr 2023 — Aug 2023</span><h3>MB Auto, Car Account Assistant</h3><p>Entered financial transactions, prepared and sent client invoices, and kept records organised.</p></li>
+              <li><span class="when">2023 — 2026</span><h3>Temasek Polytechnic, Diploma in Computer Engineering</h3><p>Full-stack Development, OOP, Microcontroller Application, IoT, Data Visualisation, and AI &amp; Machine Learning.</p></li>
             </ol>`,
         },
         {
           kind: "beacon", color: "#3dffa6", t: 0.87,
           kicker: "04 — Signal", title: "Contact",
           html: `
-            <p>New products, design systems, or a piece of the web that shouldn't exist yet. Send a signal.</p>
+            <p>Have a role, a project, or a question? I'd love to hear from you.</p>
             <div class="links">
               <a href="mailto:${EMAIL}">Email me</a>
-              <a href="https://github.com" target="_blank" rel="noreferrer">GitHub ↗</a>
-              <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+              <a href="${GITHUB}" target="_blank" rel="noreferrer">GitHub ↗</a>
             </div>`,
         },
       ];

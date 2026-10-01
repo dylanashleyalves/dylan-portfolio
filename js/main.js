@@ -133,7 +133,7 @@
   /* ----- Copy email ----- */
   const copyBtn = document.getElementById("copy-email");
   const tooltip = document.getElementById("copy-tooltip");
-  const EMAIL = "dylan@example.com";
+  const EMAIL = "Dylanashleyalves@example.com";
 
   const showTip = (text) => {
     if (!tooltip) return;
@@ -147,7 +147,7 @@
       await navigator.clipboard.writeText(EMAIL);
       showTip("Copied");
     } catch {
-      showTip("dylan@example.com");
+      showTip("Dylanashleyalve@gmail.com");
     }
   });
 
