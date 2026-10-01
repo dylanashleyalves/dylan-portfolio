@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dylan — Creative Technologist</title>
+    <meta
+      name="description"
+      content="Portfolio of Dylan, software engineer and creative technologist. Interfaces, systems, and atmospheric digital experiences."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&family=Syne:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              obsidian: "#07080b",
+              charcoal: "#0e1116",
+              mist: "#c9d0d8",
+              fog: "#8b95a3",
+              emerald: "#3dffa6",
+              amber: "#f0b45a",
+            },
+            fontFamily: {
+              display: ["Syne", "sans-serif"],
+              body: ["Outfit", "sans-serif"],
+              mono: ["IBM Plex Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="bg-obsidian text-mist antialiased">
+    <div id="atmosphere" aria-hidden="true">
+      <canvas id="particle-canvas"></canvas>
+    </div>
+    <div class="cursor-glow" aria-hidden="true"></div>
+    <div class="noise-overlay" aria-hidden="true"></div>
+
+    <div class="site">
+      <!-- Navigation -->
+      <header class="nav-shell">
+        <nav class="glass flex items-center justify-between rounded-full px-4 py-3 md:px-6">
+          <a href="#top" class="mono text-[11px] tracking-[0.28em] uppercase text-emerald">
+            DYLN / 00
+          </a>
+          <button
+            id="nav-toggle"
+            class="md:hidden p-2 text-mist"
+            aria-expanded="false"
+            aria-controls="nav-menu"
+            aria-label="Toggle menu"
+          >
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+          <ul
+            id="nav-menu"
+            class="hidden md:flex absolute md:static left-0 right-0 top-[calc(100%+0.6rem)] md:top-auto glass md:bg-transparent md:border-0 md:backdrop-blur-0 rounded-2xl md:rounded-none p-4 md:p-0 flex-col md:flex-row gap-4 md:gap-8 text-[11px] tracking-[0.2em] uppercase font-mono"
+          >
+            <li><a class="hover:text-emerald transition-colors" href="#about">About</a></li>
+            <li><a class="hover:text-emerald transition-colors" href="#work">Work</a></li>
+            <li><a class="hover:text-amber transition-colors" href="#experience">Path</a></li>
+            <li><a class="hover:text-emerald transition-colors" href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="nav-progress" aria-hidden="true"><span></span></div>
+      </header>
+
+      <main id="top">
+        <!-- Hero -->
+        <section class="relative min-h-[100svh] px-5 md:px-10 pt-28 md:pt-32 pb-24 flex flex-col justify-center overflow-hidden">
+          <div class="hero-orbit absolute right-[-2rem] md:right-10 top-1/2 -translate-y-1/2 opacity-70 lg:opacity-100 pointer-events-none" aria-hidden="true">
+            <div class="orbit-core"></div>
+          </div>
+          <div class="relative max-w-5xl">
+            <p class="mono text-[11px] tracking-[0.32em] uppercase text-amber mb-5">
+              Available for select collaborations · EST
+            </p>
+            <h1 class="display hero-name">
+              Dylan
+            </h1>
+            <p class="mt-6 max-w-xl text-lg md:text-2xl font-light text-fog leading-relaxed">
+              Creative technologist shaping
+              <span class="text-mist">interfaces that feel like weather</span>
+              — systems, motion, and code with atmosphere.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-4">
+              <a
+                href="#work"
+                class="magnetic glass rounded-full px-7 py-3 text-sm tracking-wide hover:border-emerald/40"
+              >
+                View selected work
+              </a>
+              <a
+                href="#contact"
+                class="magnetic rounded-full px-7 py-3 text-sm bg-emerald text-obsidian font-medium"
+              >
+                Start a conversation
+              </a>
+              <a
+                href="world.html"
+                class="magnetic glass rounded-full px-7 py-3 text-sm tracking-wide text-amber hover:border-amber/40"
+              >
+                Ride through my world
+              </a>
+            </div>
+          </div>
+          <div class="absolute bottom-8 left-5 md:left-10 flex items-center gap-3 text-fog mono text-[10px] tracking-[0.25em] uppercase">
+            <span class="w-8 h-px bg-emerald/50"></span>
+            Scroll to enter
+          </div>
+        </section>
+
+        <!-- Marquee -->
+        <div class="marquee py-4" aria-hidden="true">
+          <div class="marquee-track mono text-[11px] tracking-[0.35em] uppercase text-fog">
+            <span>Interface systems</span><span>✦</span>
+            <span>Creative engineering</span><span>✦</span>
+            <span>Motion design</span><span>✦</span>
+            <span>Product architecture</span><span>✦</span>
+            <span>Spatial UI</span><span>✦</span>
+            <span>Interface systems</span><span>✦</span>
+            <span>Creative engineering</span><span>✦</span>
+            <span>Motion design</span><span>✦</span>
+            <span>Product architecture</span><span>✦</span>
+            <span>Spatial UI</span><span>✦</span>
+          </div>
+        </div>
+
+        <!-- About -->
+        <section id="about" class="px-5 md:px-10 py-28">
+          <div class="grid lg:grid-cols-12 gap-10 items-start">
+            <p class="lg:col-span-3 mono text-[11px] tracking-[0.28em] uppercase text-emerald reveal">
+              01 — Presence
+            </p>
+            <div class="lg:col-span-9">
+              <h2 class="display text-4xl md:text-6xl mb-8 reveal">
+                Built for the<br />
+                <span class="text-amber">in-between</span> spaces.
+              </h2>
+              <div class="grid md:grid-cols-5 gap-8">
+                <p class="md:col-span-3 text-lg text-fog leading-relaxed reveal reveal-delay-1">
+                  I’m Dylan, a software engineer who treats the browser as a material.
+                  I design and ship products where the craft of engineering and the
+                  language of art share the same surface — precise systems wrapped in
+                  atmosphere, never decoration for its own sake.
+                </p>
+                <p class="md:col-span-2 text-fog leading-relaxed reveal reveal-delay-2">
+                  Currently exploring real-time interfaces, generative layouts, and
+                  tools that make complex software feel inevitable.
+                </p>
+              </div>
+              <div class="mt-12 flex flex-wrap gap-3 reveal reveal-delay-3">
+                <span class="skill-tag">TypeScript</span>
+                <span class="skill-tag">React / Next</span>
+                <span class="skill-tag">Node.js</span>
+                <span class="skill-tag">Systems design</span>
+                <span class="skill-tag">Motion</span>
+                <span class="skill-tag">WebGL / Canvas</span>
+                <span class="skill-tag">Design systems</span>
+                <span class="skill-tag">Accessibility</span>
+                <span class="skill-tag">Product craft</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Projects -->
+        <section id="work" class="px-5 md:px-10 py-16 md:py-24">
+          <div class="flex items-end justify-between gap-6 mb-10">
+            <div>
+              <p class="mono text-[11px] tracking-[0.28em] uppercase text-emerald reveal">02 — Selected</p>
+              <h2 class="display text-4xl md:text-6xl mt-3 reveal">Work that lingers.</h2>
+            </div>
+            <p class="hidden md:block max-w-xs text-sm text-fog reveal">
+              Drag or scroll the rail. Each piece is a collaboration between structure and sensation.
+            </p>
+          </div>
+
+          <div class="project-rail">
+            <article class="project-card glass reveal">
+              <div class="project-art bg-[#10161d]">
+                <span class="blob blob-a"></span>
+                <span class="blob blob-b"></span>
+                <span class="mono text-[10px] tracking-[0.2em] uppercase text-obsidian bg-emerald px-2 py-1 rounded">01</span>
+              </div>
+              <div class="p-6 md:p-8">
+                <h3 class="display text-2xl md:text-3xl">Aurora Field</h3>
+                <p class="mt-3 text-fog">
+                  A generative design system that paints live constraints as weather —
+                  tokens, motion, and documentation in one canvas.
+                </p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <span class="mono text-[10px] uppercase tracking-widest text-amber">TypeScript</span>
+                  <span class="mono text-[10px] uppercase tracking-widest text-amber">Canvas</span>
+                  <span class="mono text-[10px] uppercase tracking-widest text-amber">Storybook</span>
+                </div>
+                <div class="mt-6 flex gap-5 text-sm">
+                  <a class="inline-flex items-center gap-2 hover:text-emerald" href="#" aria-label="Aurora Field on GitHub">
+                    <i data-lucide="github" class="w-4 h-4"></i> GitHub
+                  </a>
+                  <a class="inline-flex items-center gap-2 hover:text-amber" href="#" aria-label="Aurora Field live demo">
+                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i> Live
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card glass reveal reveal-delay-1">
+              <div class="project-art bg-[#16120e]">
+                <span class="blob blob-b"></span>
+                <span class="blob blob-c"></span>
+                <span class="mono text-[10px] tracking-[0.2em] uppercase text-obsidian bg-amber px-2 py-1 rounded">02</span>
+              </div>
+              <div class="p-6 md:p-8">
+                <h3 class="display text-2xl md:text-3xl">Lumen Atlas</h3>
+                <p class="mt-3 text-fog">
+                  Spatial analytics for ops teams — maps that breathe, filters that
+                  feel tactile, and narratives hidden in the data.
+                </p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <span class="mono text-[10px] uppercase tracking-widest text-emerald">React</span>
+                  <span class="mono text-[10px] uppercase tracking-widest text-emerald">D3</span>
+                  <span class="mono text-[10px] uppercase tracking-widest text-emerald">MapLibre</span>
+                </div>
+                <div class="mt-6 flex gap-5 text-sm">
+                  <a class="inline-flex items-center gap-2 hover:text-emerald" href="#">
+                    <i data-lucide="github" class="w-4 h-4"></i> GitHub
+                  </a>
+                  <a class="inline-flex items-center gap-2 hover:text-amber" href="#">
+                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i> Live
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card glass reveal reveal-delay-2">
+              <div class="project-art bg-[#0e1418]">
+                <span class="blob blob-c"></span>
+                <span class="blob blob-a"></span>
+                <span class="mono text-[10px] tracking-[0.2em] uppercase text-obsidian bg-emerald px-2 py-1 rounded">03</span>
+              </div>
+              <div class="p-6 md:p-8">
+                <h3 class="display text-2xl md:text-3xl">Nimbus Desk</h3>
+                <p class="mt-3 text-fog">
+                  Real-time collaboration for studios. Presence, comments, and
+                  versioned canvases without the usual noise.
+                </p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <span class="mono text-[10px] uppercase tracking-widest text-amber">WebSockets</span>
+                  <span class="mono text-[10px] uppercase tracking-widest text-amber">Node</span>
+                  <span class="mono text-[10px] uppercase tracking-widest text-amber">CRDT</span>
+                </div>
+                <div class="mt-6 flex gap-5 text-sm">
+                  <a class="inline-flex items-center gap-2 hover:text-emerald" href="#">
+                    <i data-lucide="github" class="w-4 h-4"></i> GitHub
+                  </a>
+                  <a class="inline-flex items-center gap-2 hover:text-amber" href="#">
+                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i> Live
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card glass reveal reveal-delay-3">
+              <div class="project-art bg-[#121018]">
+                <span class="blob blob-a"></span>
+                <span class="blob blob-b" style="left: 50%"></span>
+                <span class="mono text-[10px] tracking-[0.2em] uppercase text-obsidian bg-amber px-2 py-1 rounded">04</span>
+              </div>
+              <div class="p-6 md:p-8">
+                <h3 class="display text-2xl md:text-3xl">Echo Chamber</h3>
+                <p class="mt-3 text-fog">
+                  A browser instrument — granular synthesis, visual scores, and
+                  shared sessions for remote performances.
+                </p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <span class="mono text-[10px] uppercase tracking-widest text-emerald">Web Audio</span>
+                  <span class="mono text-[10px] uppercase tracking-widest text-emerald">GLSL</span>
+                  <span class="mono text-[10px] uppercase tracking-widest text-emerald">WebRTC</span>
+                </div>
+                <div class="mt-6 flex gap-5 text-sm">
+                  <a class="inline-flex items-center gap-2 hover:text-emerald" href="#">
+                    <i data-lucide="github" class="w-4 h-4"></i> GitHub
+                  </a>
+                  <a class="inline-flex items-center gap-2 hover:text-amber" href="#">
+                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i> Live
+                  </a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Experience -->
+        <section id="experience" class="px-5 md:px-10 py-24">
+          <p class="mono text-[11px] tracking-[0.28em] uppercase text-emerald reveal">03 — Trajectory</p>
+          <h2 class="display text-4xl md:text-6xl mt-3 mb-16 reveal">Milestones, not monuments.</h2>
+
+          <ol class="timeline space-y-12 md:space-y-16">
+            <li class="timeline-item relative reveal">
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <p class="mono text-[11px] tracking-[0.2em] uppercase text-amber pl-8 md:pl-0">2024 — Present</p>
+              <h3 class="display text-2xl mt-1 pl-8 md:pl-0">Independent — Creative systems</h3>
+              <p class="text-fog mt-2 pl-8 md:pl-0 max-w-md md:max-w-none md:inline-block">
+                Partnering with studios and product teams on interface architecture, motion languages, and prototypes that ship.
+              </p>
+            </li>
+            <li class="timeline-item relative reveal reveal-delay-1">
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <p class="mono text-[11px] tracking-[0.2em] uppercase text-amber pl-8 md:pl-0">2021 — 2024</p>
+              <h3 class="display text-2xl mt-1 pl-8 md:pl-0">Staff Engineer — Product surfaces</h3>
+              <p class="text-fog mt-2 pl-8 md:pl-0">
+                Led frontend platforms for a multi-product org: design tokens, performance budgets, and a shared canvas runtime.
+              </p>
+            </li>
+            <li class="timeline-item relative reveal reveal-delay-2">
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <p class="mono text-[11px] tracking-[0.2em] uppercase text-amber pl-8 md:pl-0">2018 — 2021</p>
+              <h3 class="display text-2xl mt-1 pl-8 md:pl-0">Software Engineer — Platform</h3>
+              <p class="text-fog mt-2 pl-8 md:pl-0">
+                Built APIs and internal tools; learned that the most elegant code is the kind people can feel.
+              </p>
+            </li>
+            <li class="timeline-item relative reveal reveal-delay-3">
+              <span class="timeline-dot" aria-hidden="true"></span>
+              <p class="mono text-[11px] tracking-[0.2em] uppercase text-amber pl-8 md:pl-0">2016 — 2018</p>
+              <h3 class="display text-2xl mt-1 pl-8 md:pl-0">The first pixels</h3>
+              <p class="text-fog mt-2 pl-8 md:pl-0">
+                Freelance sites, late-night experiments, and the decision to treat software as a craft.
+              </p>
+            </li>
+          </ol>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" class="px-5 md:px-10 py-24 pb-32">
+          <div class="grid lg:grid-cols-12 gap-12">
+            <div class="lg:col-span-5">
+              <p class="mono text-[11px] tracking-[0.28em] uppercase text-emerald reveal">04 — Signal</p>
+              <h2 class="display text-4xl md:text-6xl mt-3 reveal">Let’s make something atmospheric.</h2>
+              <p class="mt-6 text-fog reveal">
+                New products, design systems, or a piece of the web that shouldn’t exist yet.
+              </p>
+
+              <div class="mt-10 flex flex-wrap gap-3 reveal">
+                <a class="glass rounded-full px-5 py-3 inline-flex items-center gap-2 text-sm hover:border-emerald/40" href="https://github.com" target="_blank" rel="noreferrer">
+                  <i data-lucide="github" class="w-4 h-4"></i> GitHub
+                </a>
+                <a class="glass rounded-full px-5 py-3 inline-flex items-center gap-2 text-sm hover:border-amber/40" href="https://linkedin.com" target="_blank" rel="noreferrer">
+                  <i data-lucide="linkedin" class="w-4 h-4"></i> LinkedIn
+                </a>
+                <div class="relative">
+                  <button
+                    id="copy-email"
+                    type="button"
+                    class="glass rounded-full px-5 py-3 inline-flex items-center gap-2 text-sm hover:border-emerald/40"
+                  >
+                    <i data-lucide="mail" class="w-4 h-4"></i> Copy email
+                  </button>
+                  <span id="copy-tooltip" class="tooltip" role="status">Copied</span>
+                </div>
+              </div>
+            </div>
+
+            <form id="contact-form" class="lg:col-span-7 glass rounded-3xl p-6 md:p-8 space-y-4 reveal reveal-delay-2">
+              <label class="block">
+                <span class="mono text-[10px] tracking-[0.2em] uppercase text-fog">Name</span>
+                <input class="field mt-2" name="name" type="text" autocomplete="name" required />
+              </label>
+              <label class="block">
+                <span class="mono text-[10px] tracking-[0.2em] uppercase text-fog">Email</span>
+                <input class="field mt-2" name="email" type="email" autocomplete="email" required />
+              </label>
+              <label class="block">
+                <span class="mono text-[10px] tracking-[0.2em] uppercase text-fog">Message</span>
+                <textarea class="field mt-2 min-h-[140px] resize-y" name="message" required></textarea>
+              </label>
+              <button type="submit" class="magnetic w-full md:w-auto rounded-full bg-emerald text-obsidian px-8 py-3 font-medium">
+                Transmit
+              </button>
+              <p id="form-status" class="mono text-xs text-emerald opacity-0 min-h-[1.2rem]" role="status"></p>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <footer class="px-5 md:px-10 py-8 border-t border-white/5 flex flex-col md:flex-row justify-between gap-3 mono text-[10px] tracking-[0.2em] uppercase text-fog">
+        <span>© <span id="year"></span> Dylan</span>
+        <span>Crafted in the quiet hours</span>
+      </footer>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
