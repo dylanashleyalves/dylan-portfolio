@@ -1,5 +1,5 @@
 /* ============================================================
-   Dylan — Portfolio
+   Dylan Ashley Alves — Portfolio
    Custom artistic layer on top of Tailwind. Keep this file
    focused on motion, atmosphere, and effects Tailwind cannot
    express as cleanly (canvas glow, glass, marquee, timeline).
@@ -18,9 +18,11 @@
   --glass: rgba(18, 22, 30, 0.55);
   --glass-border: rgba(255, 255, 255, 0.08);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --font-display: "Syne", system-ui, sans-serif;
-  --font-body: "Outfit", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  /* One coding font for everything */
+  --font-code: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-display: var(--font-code);
+  --font-body: var(--font-code);
+  --font-mono: var(--font-code);
 }
 
 *,
@@ -100,8 +102,8 @@ section[id] {
 .display {
   font-family: var(--font-display);
   font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 0.88;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
 }
 
 .mono {
@@ -148,43 +150,136 @@ section[id] {
 /* ---------- Hero ---------- */
 
 .hero-name {
-  font-size: clamp(3.4rem, 12vw, 9.5rem);
+  font-size: clamp(3.4rem, 11vw, 8.5rem);
   text-transform: uppercase;
 }
 
-.hero-orbit {
-  position: relative;
-  width: min(280px, 70vw);
-  height: min(280px, 70vw);
+.hero-greeting {
+  font-size: clamp(1.4rem, 3.4vw, 2.4rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--fog);
+  margin-bottom: 0.4rem;
 }
 
-.hero-orbit::before {
+/* Portrait with orbit rings (photo lives in images/dylan.jpg) */
+.hero-portrait {
+  position: relative;
+  width: min(400px, 66vw);
+  aspect-ratio: 1;
+}
+
+.portrait-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(240, 180, 90, 0.2);
+  pointer-events: none;
+}
+
+.portrait-ring::before {
   content: "";
   position: absolute;
-  inset: 18%;
+  inset: 9%;
   border-radius: 50%;
-  border: 1px dashed rgba(61, 255, 166, 0.25);
-  animation: spin 28s linear infinite;
+  border: 1px dashed rgba(61, 255, 166, 0.3);
+  animation: spin 40s linear infinite;
 }
 
-.hero-orbit::after {
+/* small amber dot that travels around the outer ring */
+.portrait-ring-spin {
+  position: absolute;
+  inset: 0;
+  animation: spin 26s linear infinite;
+}
+
+.portrait-ring-spin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 14px var(--amber);
+}
+
+.portrait-frame {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 2px solid rgba(61, 255, 166, 0.55);
+  background: #10151c;
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.02),
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    0 0 90px rgba(61, 255, 166, 0.12);
+}
+
+.portrait-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 18%;
+  filter: saturate(0.92) contrast(1.03);
+}
+
+.portrait-frame::after {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 50%;
-  border: 1px solid rgba(240, 180, 90, 0.18);
-  animation: spin 42s linear infinite reverse;
+  background: radial-gradient(circle, transparent 62%, rgba(7, 8, 11, 0.35));
+  pointer-events: none;
 }
 
-.orbit-core {
+/* LinkedIn button sitting on the outer ring */
+.portrait-social {
   position: absolute;
-  inset: 32%;
+  left: 111.4%;
+  top: 7%;
+  transform: translate(-50%, -50%);
+  width: 3.25rem;
+  height: 3.25rem;
   border-radius: 50%;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(61, 255, 166, 0.55), transparent 45%),
-    radial-gradient(circle at 70% 70%, rgba(240, 180, 90, 0.4), transparent 50%),
-    #10151c;
-  box-shadow: 0 0 60px rgba(61, 255, 166, 0.18);
+  display: grid;
+  place-items: center;
+  color: var(--mist);
+  background: var(--glass);
+  border: 1px solid rgba(61, 255, 166, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s var(--ease-out-expo);
+}
+
+.portrait-social svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Brand logos drawn inline (the icon library no longer ships them) */
+.brand-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  fill: currentColor;
+}
+
+.portrait-social:hover,
+.portrait-social:focus-visible {
+  background: var(--emerald);
+  color: var(--obsidian);
+  transform: translate(-50%, -50%) scale(1.08);
 }
 
 @keyframes spin {
@@ -259,7 +354,7 @@ section[id] {
   background: rgba(255, 255, 255, 0.03);
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--mist);
   transition:
@@ -370,6 +465,219 @@ section[id] {
   }
 }
 
+/* ---------- Project screenshot slideshow ---------- */
+
+.project-art.shots {
+  height: auto;
+  aspect-ratio: 16 / 10;
+  background: #0b0e13;
+  touch-action: pan-y;
+}
+
+.shots-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.shot {
+  position: relative;
+  flex: 0 0 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.shot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(7, 8, 11, 0.75));
+  pointer-events: none;
+}
+
+.shot-open {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.shot-open img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.shot figcaption {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 2;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(61, 255, 166, 0.45);
+  background: rgba(7, 8, 11, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--emerald);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.shot-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 3;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.3rem;
+  background: var(--amber);
+  color: var(--obsidian);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+
+.shot-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-top: -1.25rem;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: rgba(14, 17, 22, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--mist);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+
+.shot-nav.prev { left: 0.75rem; }
+.shot-nav.next { right: 0.75rem; }
+
+.shots:hover .shot-nav,
+.shot-nav:focus-visible {
+  opacity: 1;
+}
+
+.shot-nav:hover {
+  background: var(--emerald);
+  color: var(--obsidian);
+}
+
+@media (hover: none) {
+  .shot-nav { opacity: 1; }
+}
+
+.shot-dots {
+  position: absolute;
+  right: 1rem;
+  bottom: 1.35rem;
+  z-index: 3;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.shot-dots button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: width 0.35s var(--ease-out-expo), background 0.3s ease;
+}
+
+.shot-dots button[aria-current="true"] {
+  width: 22px;
+  background: var(--emerald);
+}
+
+/* ---------- Project video ---------- */
+
+.project-art.video-art {
+  height: auto;
+  aspect-ratio: 16 / 10;
+  background: #000;
+}
+
+.project-art.video-art video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ---------- Lightbox ---------- */
+
+.lightbox {
+  max-width: min(1200px, 94vw);
+  max-height: 92vh;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--mist);
+  overflow: visible;
+}
+
+.lightbox::backdrop {
+  background: rgba(7, 8, 11, 0.86);
+  backdrop-filter: blur(6px);
+}
+
+.lightbox figure {
+  margin: 0;
+}
+
+.lightbox img {
+  display: block;
+  max-width: 100%;
+  max-height: 84vh;
+  margin: 0 auto;
+  border-radius: 1rem;
+  border: 1px solid var(--glass-border);
+}
+
+.lightbox figcaption {
+  margin-top: 0.85rem;
+  text-align: center;
+  color: var(--emerald);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -0.9rem;
+  right: -0.9rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--emerald);
+  color: var(--obsidian);
+  font-weight: 700;
+  cursor: pointer;
+}
+
 /* ---------- Timeline ---------- */
 
 .timeline {
@@ -420,6 +728,54 @@ section[id] {
     left: 50%;
     transform: translateX(-50%);
   }
+}
+
+/* ---------- Gallery (photos added in js/main.js) ---------- */
+
+.gallery-group + .gallery-group {
+  margin-top: 4.5rem;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: 1rem;
+}
+
+.gallery-item {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  border-radius: 1.25rem;
+  border: 1px solid var(--glass-border);
+  background: #10151c;
+}
+
+.gallery-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+.gallery-item figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2.5rem 1rem 0.9rem;
+  background: linear-gradient(transparent, rgba(7, 8, 11, 0.88));
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mist);
 }
 
 /* ---------- Form ---------- */
@@ -474,8 +830,10 @@ section[id] {
   .magnetic,
   .cursor-glow,
   .marquee-track,
-  .hero-orbit::before,
-  .hero-orbit::after,
+  .portrait-ring::before,
+  .portrait-ring-spin,
+  .gallery-item img,
+  .shots-track,
   .blob {
     animation: none !important;
     transition: none !important;

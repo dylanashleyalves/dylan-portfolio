@@ -1,10 +1,135 @@
 /**
  * Portfolio interactions — kept lightweight:
- * mouse glow, canvas particles, scroll reveals, magnetic CTAs,
- * copy-email tooltip, contact form, nav progress.
+ * photo gallery, mouse glow, canvas particles, scroll reveals,
+ * magnetic CTAs, copy-email tooltip, contact form, nav progress.
  */
 (() => {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* =========================================================
+     PHOTO GALLERY — add your photos here!
+     1. Put the image in images/poly/ or images/fitness/
+     2. Add a line like the examples below (remove the // )
+     The "Life" section stays hidden until at least one photo
+     is listed, so the live site never shows an empty gallery.
+     ========================================================= */
+  const GALLERY = {
+    poly: [
+      // { src: "images/poly/orientation.jpg", caption: "Orientation week, 2023" },
+      // { src: "images/poly/project-showcase.jpg", caption: "Major project showcase" },
+    ],
+    fitness: [
+      // { src: "images/fitness/day-1.jpg", caption: "Day 1 — Jan 2024" },
+      // { src: "images/fitness/6-months.jpg", caption: "6 months in" },
+    ],
+  };
+
+  const renderGallery = () => {
+    const section = document.getElementById("life");
+    if (!section) return;
+    let total = 0;
+    for (const [key, items] of Object.entries(GALLERY)) {
+      const group = section.querySelector(`[data-gallery="${key}"]`);
+      const grid = group?.querySelector(".gallery-grid");
+      if (!grid) continue;
+      items.forEach(({ src, caption = "" }) => {
+        const fig = document.createElement("figure");
+        fig.className = "gallery-item";
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = caption || "Photo of Dylan";
+        img.loading = "lazy";
+        img.decoding = "async";
+        fig.append(img);
+        if (caption) {
+          const cap = document.createElement("figcaption");
+          cap.textContent = caption;
+          fig.append(cap);
+        }
+        grid.append(fig);
+      });
+      group.hidden = items.length === 0;
+      total += items.length;
+    }
+    section.hidden = total === 0;
+    const navLink = document.getElementById("nav-life");
+    if (navLink) navLink.hidden = total === 0;
+  };
+  renderGallery();
+
+  /* ----- Project screenshot slideshows ----- */
+  document.querySelectorAll("[data-carousel]").forEach((root) => {
+    const track = root.querySelector(".shots-track");
+    const slides = Array.from(track?.children || []);
+    const dotsWrap = root.querySelector(".shot-dots");
+    if (!slides.length) return;
+    let index = 0;
+
+    const go = (n) => {
+      index = (n + slides.length) % slides.length;
+      track.style.transform = `translateX(-${index * 100}%)`;
+      dots.forEach((d, k) => d.setAttribute("aria-current", String(k === index)));
+      slides.forEach((s, k) => {
+        s.setAttribute("aria-hidden", String(k !== index));
+        s.querySelector("button")?.setAttribute("tabindex", k === index ? "0" : "-1");
+      });
+    };
+
+    const dots = slides.map((slide, n) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      const title = slide.querySelector("figcaption")?.textContent || `screenshot ${n + 1}`;
+      b.setAttribute("aria-label", `Show ${title}`);
+      b.addEventListener("click", () => go(n));
+      dotsWrap?.append(b);
+      return b;
+    });
+
+    root.querySelector(".prev")?.addEventListener("click", () => go(index - 1));
+    root.querySelector(".next")?.addEventListener("click", () => go(index + 1));
+
+    // Swipe on touch screens
+    let startX = null;
+    root.addEventListener("pointerdown", (e) => {
+      root.dataset.swiped = "";
+      if (e.pointerType !== "mouse") startX = e.clientX;
+    });
+    root.addEventListener("pointerup", (e) => {
+      if (startX === null) return;
+      const dx = e.clientX - startX;
+      startX = null;
+      if (Math.abs(dx) > 40) {
+        root.dataset.swiped = "1";
+        go(index + (dx < 0 ? 1 : -1));
+      }
+    });
+    root.addEventListener("pointercancel", () => { startX = null; });
+
+    if (slides.length < 2) {
+      root.querySelectorAll(".shot-nav, .shot-dots").forEach((el) => (el.hidden = true));
+    }
+    go(0);
+  });
+
+  /* ----- Lightbox: click a screenshot to see it full size ----- */
+  const lightbox = document.getElementById("lightbox");
+  if (lightbox && typeof lightbox.showModal === "function") {
+    const lbImg = lightbox.querySelector("img");
+    const lbCap = lightbox.querySelector("figcaption");
+    document.querySelectorAll(".shot-open").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (btn.closest("[data-carousel]")?.dataset.swiped === "1") return;
+        const img = btn.querySelector("img");
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt;
+        lbCap.textContent = btn.closest("figure")?.querySelector("figcaption")?.textContent || "";
+        lightbox.showModal();
+      });
+    });
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox || e.target.closest(".lightbox-close")) lightbox.close();
+    });
+  }
 
   /* ----- Year ----- */
   const yearEl = document.getElementById("year");
@@ -133,7 +258,7 @@
   /* ----- Copy email ----- */
   const copyBtn = document.getElementById("copy-email");
   const tooltip = document.getElementById("copy-tooltip");
-  const EMAIL = "Dylanashleyalves@example.com";
+  const EMAIL = "Dylanashleyalves@gmail.com";
 
   const showTip = (text) => {
     if (!tooltip) return;
@@ -147,7 +272,7 @@
       await navigator.clipboard.writeText(EMAIL);
       showTip("Copied");
     } catch {
-      showTip("Dylanashleyalve@gmail.com");
+      showTip(EMAIL);
     }
   });
 
