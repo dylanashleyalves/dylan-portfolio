@@ -68,6 +68,7 @@
             <li><a class="hover:text-emerald transition-colors" href="#about">About</a></li>
             <li><a class="hover:text-emerald transition-colors" href="#work">Work</a></li>
             <li><a class="hover:text-amber transition-colors" href="#experience">Path</a></li>
+            <li><a class="hover:text-amber transition-colors" href="#achievements">Certs</a></li>
             <li id="nav-life"><a class="hover:text-emerald transition-colors" href="#life">Life</a></li>
             <li><a class="hover:text-amber transition-colors" href="world.html">World</a></li>
             <li><a class="hover:text-emerald transition-colors" href="#contact">Contact</a></li>
@@ -229,22 +230,24 @@
 
           <div class="project-rail">
             <article class="project-card glass reveal">
-              <div class="project-art bg-[#10161d]">
-                <span class="blob blob-a"></span>
-                <span class="blob blob-b"></span>
-                <span class="mono text-[10px] tracking-[0.2em] uppercase text-obsidian bg-emerald px-2 py-1 rounded">01</span>
+              <!-- Demo video: file lives at videos/Carpark.mp4 -->
+              <div class="project-art video-art">
+                <video
+                  src="videos/Carpark.mp4"
+                  controls
+                  muted
+                  playsinline
+                  preload="metadata"
+                  aria-label="Demo video of the Carpark Monitoring System"
+                ></video>
+                <div class="shot-badge mono">01</div>
               </div>
               <div class="p-6 md:p-8">
-                <h3 class="display text-2xl md:text-3xl">Data Prep &amp; Model Training</h3>
+                <h3 class="display text-2xl md:text-3xl">Carpark Monitoring System</h3>
                 <p class="mt-3 text-fog">
-                  Took a raw dataset, cleaned it, and prepared it for training by adding, removing,
-                  and transforming data where needed, then trained a model on the result.
+                  A system that monitors a carpark and tracks which lots are available, so drivers
+                  can see the current status at a glance. Watch the demo above.
                 </p>
-                <div class="mt-5 flex flex-wrap gap-2">
-                  <span class="mono text-[10px] uppercase tracking-widest text-amber">Python</span>
-                  <span class="mono text-[10px] uppercase tracking-widest text-amber">Data cleaning</span>
-                  <span class="mono text-[10px] uppercase tracking-widest text-amber">Model training</span>
-                </div>
               </div>
             </article>
 
@@ -414,9 +417,89 @@
           </ol>
         </section>
 
+        <!-- Achievements & certifications -->
+        <section id="achievements" class="px-5 md:px-10 py-24">
+          <p class="mono text-[11px] tracking-[0.28em] uppercase text-emerald reveal">04 — Recognition</p>
+          <h2 class="display text-3xl md:text-5xl mt-3 mb-14 reveal">Achievements &amp; certifications.</h2>
+
+          <h3 class="mono text-[11px] tracking-[0.24em] uppercase text-fog mb-5 reveal">Achievements</h3>
+          <div class="grid md:grid-cols-3 gap-4 mb-16">
+            <article class="achv-card glass reveal">
+              <span class="achv-icon"><i data-lucide="trophy" class="w-5 h-5"></i></span>
+              <p class="mono text-[10px] tracking-[0.2em] uppercase text-amber mt-5">2018</p>
+              <h4 class="display text-xl mt-2">Young Engineers Award</h4>
+              <p class="text-fog text-sm mt-2 leading-relaxed">Recognised early for engineering ability, years before choosing it as a career.</p>
+            </article>
+            <article class="achv-card glass reveal reveal-delay-1">
+              <span class="achv-icon"><i data-lucide="medal" class="w-5 h-5"></i></span>
+              <p class="mono text-[10px] tracking-[0.2em] uppercase text-amber mt-5">2020 — 2022</p>
+              <h4 class="display text-xl mt-2">Football Captain, Top 8</h4>
+              <p class="text-fog text-sm mt-2 leading-relaxed">Led training and match-day strategy, taking the team to a Top 8 finish in the National B Division Championships.</p>
+            </article>
+            <article class="achv-card glass reveal reveal-delay-2">
+              <span class="achv-icon"><i data-lucide="users" class="w-5 h-5"></i></span>
+              <p class="mono text-[10px] tracking-[0.2em] uppercase text-amber mt-5">2020 — 2022</p>
+              <h4 class="display text-xl mt-2">Basketball Vice-Captain</h4>
+              <p class="text-fog text-sm mt-2 leading-relaxed">Organised and led team practices, and kept teammates motivated through games and training.</p>
+            </article>
+          </div>
+
+          <h3 class="mono text-[11px] tracking-[0.24em] uppercase text-fog mb-5 reveal">Certifications</h3>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <article class="cert-card cert-featured glass md:col-span-2 reveal">
+              <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p class="mono text-[10px] tracking-[0.2em] uppercase text-amber">Google Cloud · Coursera Specialization</p>
+                  <h4 class="display text-2xl mt-2">Introduction to Generative AI Learning Path</h4>
+                  <p class="mono text-[11px] text-fog mt-2">May 2025 · 4 courses</p>
+                </div>
+                <a class="cert-verify" href="https://coursera.org/verify/specialization/LIRZ044B9N4W" target="_blank" rel="noreferrer" aria-label="Verify the Generative AI Learning Path specialization on Coursera">
+                  Verify <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                </a>
+              </div>
+              <ul class="cert-courses">
+                  <li><a href="https://coursera.org/verify/A2G4CLO211HQ" target="_blank" rel="noreferrer">Introduction to Generative AI <i data-lucide="arrow-up-right" class="w-3 h-3"></i></a></li>
+                  <li><a href="https://coursera.org/verify/YXFFPTUCD4SI" target="_blank" rel="noreferrer">Introduction to Large Language Models <i data-lucide="arrow-up-right" class="w-3 h-3"></i></a></li>
+                  <li><a href="https://coursera.org/verify/LOXLTUAOB70V" target="_blank" rel="noreferrer">Introduction to Responsible AI <i data-lucide="arrow-up-right" class="w-3 h-3"></i></a></li>
+                  <li><a href="https://coursera.org/verify/8QFD6Y4535GE" target="_blank" rel="noreferrer">Responsible AI: Applying AI Principles with Google Cloud <i data-lucide="arrow-up-right" class="w-3 h-3"></i></a></li>
+              </ul>
+            </article>
+              <article class="cert-card glass reveal reveal-delay-1">
+                <p class="mono text-[10px] tracking-[0.2em] uppercase text-amber">IBM · Coursera</p>
+                <h4 class="display text-lg mt-2">Generative AI: Elevate Your Data Science Career</h4>
+                <p class="mono text-[11px] text-fog mt-2">May 2025</p>
+                <a class="cert-verify" href="https://coursera.org/verify/PAM56PRETI77" target="_blank" rel="noreferrer" aria-label="Verify Generative AI: Elevate Your Data Science Career on Coursera">
+                  Verify <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                </a>
+              </article>
+              <article class="cert-card glass reveal reveal-delay-1">
+                <p class="mono text-[10px] tracking-[0.2em] uppercase text-amber">IBM · Coursera</p>
+                <h4 class="display text-lg mt-2">Data Scientist Career Guide and Interview Preparation</h4>
+                <p class="mono text-[11px] text-fog mt-2">May 2025</p>
+                <a class="cert-verify" href="https://coursera.org/verify/GKVML39AKR2I" target="_blank" rel="noreferrer" aria-label="Verify Data Scientist Career Guide and Interview Preparation on Coursera">
+                  Verify <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                </a>
+              </article>
+              <article class="cert-card glass reveal reveal-delay-2">
+                <p class="mono text-[10px] tracking-[0.2em] uppercase text-amber">Google · Coursera</p>
+                <h4 class="display text-lg mt-2">Crash Course on Python</h4>
+                <p class="mono text-[11px] text-fog mt-2">Feb 2025</p>
+                <a class="cert-verify" href="https://coursera.org/verify/DU48F48QFUUB" target="_blank" rel="noreferrer" aria-label="Verify Crash Course on Python on Coursera">
+                  Verify <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                </a>
+              </article>
+              <article class="cert-card glass reveal reveal-delay-3">
+                <p class="mono text-[10px] tracking-[0.2em] uppercase text-amber">STC Institute of Learning</p>
+                <h4 class="display text-lg mt-2">First Aid with CPR + AED (Hands-only) Provider</h4>
+                <p class="mono text-[11px] text-fog mt-2">Sep 2026</p>
+                <p class="cert-note">Valid until Sep 2028</p>
+              </article>
+          </div>
+        </section>
+
         <!-- Life (photos are listed in js/main.js; this section stays hidden until you add some) -->
         <section id="life" class="px-5 md:px-10 py-24" hidden>
-          <p class="mono text-[11px] tracking-[0.28em] uppercase text-emerald reveal">04 — Off the keyboard</p>
+          <p class="mono text-[11px] tracking-[0.28em] uppercase text-emerald reveal">05 — Off the keyboard</p>
           <h2 class="display text-3xl md:text-5xl mt-3 mb-14 reveal">Life beyond the code.</h2>
 
           <div class="gallery-group" data-gallery="poly">
@@ -440,7 +523,7 @@
         <section id="contact" class="px-5 md:px-10 py-24 pb-32">
           <div class="grid lg:grid-cols-12 gap-12">
             <div class="lg:col-span-5">
-              <p class="mono text-[11px] tracking-[0.28em] uppercase text-emerald reveal">05 — Signal</p>
+              <p class="mono text-[11px] tracking-[0.28em] uppercase text-emerald reveal">06 — Signal</p>
               <h2 class="display text-3xl md:text-5xl mt-3 reveal">Let's build something together.</h2>
               <p class="mt-6 text-fog reveal">
                 Have a role, a project, or a question? I'd love to hear from you.
@@ -450,7 +533,7 @@
                 <a class="glass rounded-full px-5 py-3 inline-flex items-center gap-2 text-sm hover:border-emerald/40" href="https://github.com/dylanashleyalves" target="_blank" rel="noreferrer">
                   <svg class="brand-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> GitHub
                 </a>
-                <a class="glass rounded-full px-5 py-3 inline-flex items-center gap-2 text-sm hover:border-amber/40" href="https://www.linkedin.com/in/YOUR-LINKEDIN" target="_blank" rel="noreferrer">
+                <a class="glass rounded-full px-5 py-3 inline-flex items-center gap-2 text-sm hover:border-amber/40" href="https://www.linkedin.com/in/dylan-alves-757831281" target="_blank" rel="noreferrer">
                   <svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.948 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg> LinkedIn
                 </a>
                 <div class="relative">

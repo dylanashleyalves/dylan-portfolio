@@ -730,6 +730,109 @@ section[id] {
   }
 }
 
+/* ---------- Achievements & certifications ---------- */
+
+.achv-card,
+.cert-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  transition:
+    transform 0.4s var(--ease-out-expo),
+    border-color 0.3s ease;
+}
+
+.achv-card:hover,
+.cert-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(61, 255, 166, 0.3);
+}
+
+.achv-icon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  color: var(--amber);
+  background: rgba(240, 180, 90, 0.1);
+  border: 1px solid rgba(240, 180, 90, 0.35);
+}
+
+.cert-featured {
+  border-color: rgba(61, 255, 166, 0.25);
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(61, 255, 166, 0.08), transparent 55%),
+    var(--glass);
+}
+
+.cert-verify {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: auto;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mist);
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.cert-card > .cert-verify,
+.cert-card > .cert-note {
+  margin-top: 1.25rem;
+}
+
+.cert-verify:hover {
+  border-color: rgba(61, 255, 166, 0.5);
+  color: var(--emerald);
+}
+
+.cert-note {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--emerald);
+}
+
+.cert-courses {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1.5rem 0 0;
+  padding: 1.25rem 0 0;
+  list-style: none;
+  border-top: 1px solid var(--glass-border);
+}
+
+@media (min-width: 640px) {
+  .cert-courses { grid-template-columns: 1fr 1fr; }
+}
+
+.cert-courses a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--fog);
+  transition: color 0.3s ease;
+}
+
+.cert-courses a::before {
+  content: "›";
+  color: var(--emerald);
+}
+
+.cert-courses a:hover {
+  color: var(--emerald);
+}
+
 /* ---------- Gallery (photos added in js/main.js) ---------- */
 
 .gallery-group + .gallery-group {
@@ -834,6 +937,8 @@ section[id] {
   .portrait-ring-spin,
   .gallery-item img,
   .shots-track,
+  .achv-card,
+  .cert-card,
   .blob {
     animation: none !important;
     transition: none !important;

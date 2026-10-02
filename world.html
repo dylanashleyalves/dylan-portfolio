@@ -249,7 +249,7 @@
          ===================================================== */
       const EMAIL = "Dylanashleyalves@gmail.com";
       const GITHUB = "https://github.com/dylanashleyalves";
-      const tags = (list) => `<div class="tags">${list.map((t) => `<span>${t}</span>`).join("")}</div>`;
+      const tags = (list) => !list.length ? "" : `<div class="tags">${list.map((t) => `<span>${t}</span>`).join("")}</div>`;
       // links is optional: [["Label", "url"], ...]
       const project = (desc, tagList, links = []) => `
         <p>${desc}</p>
@@ -277,27 +277,27 @@
             ${tags(["Python", "C", "C#", "Java", "HTML", "JavaScript", "Full-stack", "OOP", "Microcontrollers", "IoT", "Data visualisation", "Machine learning"])}`,
         },
         {
-          kind: "portal", color: "#3dffa6", t: 0.19,
-          kicker: "02 — Work · 01", title: "Data Prep",
-          html: project("Took a raw dataset, cleaned it, and prepared it for training by adding, removing, and transforming data where needed, then trained a model on the result.", ["Python", "Data cleaning", "Model training"]),
+          kind: "portal", color: "#3dffa6", t: 0.17,
+          kicker: "02 — Work · 01", title: "Carpark Monitor",
+          html: project("A system that monitors a carpark and tracks which lots are available, so drivers can see the current status at a glance.", []),
         },
         {
-          kind: "portal", color: "#f0b45a", t: 0.32,
+          kind: "portal", color: "#f0b45a", t: 0.29,
           kicker: "02 — Work · 02", title: "Food Ordering",
           html: project("An online food ordering system where customers browse the menu and place orders, and staff manage and edit the inventory, built around object-oriented design.", ["OOP", "Ordering", "Inventory"]),
         },
         {
-          kind: "portal", color: "#3dffa6", t: 0.45,
+          kind: "portal", color: "#3dffa6", t: 0.41,
           kicker: "02 — Work · 03", title: "My Learning AI",
           html: project("My major project: a RAG study assistant built with LangChain. Students upload their notes and slides, chat with an AI tutor that answers from that material, generate 10-question quizzes per subject, and track their accuracy and mistakes over time.", ["Python", "LangChain", "RAG", "Streamlit", "Qdrant"], [["Try it live ↗", "https://mylearningai.streamlit.app/"], ["View the code on GitHub ↗", "https://github.com/DylanAshleyAlves24/LangChainApp"]]),
         },
         {
-          kind: "portal", color: "#f0b45a", t: 0.58,
+          kind: "portal", color: "#f0b45a", t: 0.53,
           kicker: "02 — Work · 04", title: "This World",
           html: project("The world you're riding through right now: a 3D open world built with Three.js that runs right in the browser, with a bike you can steer and landmarks that open up my work.", ["Three.js", "JavaScript", "WebGL"], [["View the code on GitHub ↗", "https://github.com/dylanashleyalves/dylan-portfolio"]]),
         },
         {
-          kind: "tower", color: "#f0b45a", t: 0.73,
+          kind: "tower", color: "#f0b45a", t: 0.65,
           kicker: "03 — Trajectory", title: "Path",
           html: `
             <ol class="timeline">
@@ -309,13 +309,31 @@
             </ol>`,
         },
         {
-          kind: "beacon", color: "#3dffa6", t: 0.87,
-          kicker: "04 — Signal", title: "Contact",
+          kind: "monolith", color: "#f0b45a", t: 0.77,
+          kicker: "04 — Recognition", title: "Certs",
+          html: `
+            <ol class="timeline">
+              <li><span class="when">2018</span><h3>Young Engineers Award</h3></li>
+              <li><span class="when">2020 — 2022</span><h3>Football Captain, Top 8</h3><p>National B Division Championships.</p></li>
+              <li><span class="when">2020 — 2022</span><h3>Basketball Vice-Captain</h3></li>
+            </ol>
+            <div class="links">
+              <a href="https://coursera.org/verify/specialization/LIRZ044B9N4W" target="_blank" rel="noreferrer">Google Cloud · Generative AI Learning Path ↗</a>
+              <a href="https://coursera.org/verify/PAM56PRETI77" target="_blank" rel="noreferrer">IBM · Generative AI for Data Science ↗</a>
+              <a href="https://coursera.org/verify/GKVML39AKR2I" target="_blank" rel="noreferrer">IBM · Data Scientist Career Guide ↗</a>
+              <a href="https://coursera.org/verify/DU48F48QFUUB" target="_blank" rel="noreferrer">Google · Crash Course on Python ↗</a>
+            </div>
+            <p>Also certified in First Aid with CPR + AED (STC Institute of Learning, valid until Sep 2028).</p>`,
+        },
+        {
+          kind: "beacon", color: "#3dffa6", t: 0.89,
+          kicker: "05 — Signal", title: "Contact",
           html: `
             <p>Have a role, a project, or a question? I'd love to hear from you.</p>
             <div class="links">
               <a href="mailto:${EMAIL}">Email me</a>
               <a href="${GITHUB}" target="_blank" rel="noreferrer">GitHub ↗</a>
+              <a href="https://www.linkedin.com/in/dylan-alves-757831281" target="_blank" rel="noreferrer">LinkedIn ↗</a>
             </div>`,
         },
       ];
