@@ -14,15 +14,31 @@
      is listed, so the live site never shows an empty gallery.
      ========================================================= */
   const GALLERY = {
-    poly: [
-      // { src: "images/poly/orientation.jpg", caption: "Orientation week, 2023" },
-      // { src: "images/poly/project-showcase.jpg", caption: "Major project showcase" },
+    darts: [
+      {
+        src: "images/darts/u22-jb-festival-top8.jpg",
+        caption: "Top 8 · U-22 JB Festival, with doubles partner Kok Zhi Hao and my coach",
+        wide: true,
+        position: "50% 40%",
+      },
+      { src: "images/darts/cricket-win.jpg", caption: "Cricket win · 3.25 stats with a White Horse" },
+      { src: "images/darts/701-result.jpg", caption: "701 finished in 25 darts" },
+    ],
+    football: [
+      // { src: "images/football/match-day.jpg", caption: "Match day" },
     ],
     fitness: [
-      // { src: "images/fitness/day-1.jpg", caption: "Day 1 — Jan 2024" },
-      // { src: "images/fitness/6-months.jpg", caption: "6 months in" },
+      { src: "images/fitness/start.jpg", caption: "Where it started", position: "50% 30%" },
+      { src: "images/fitness/progress.jpg", caption: "Progress · still going", position: "50% 30%" },
+    ],
+    poly: [
+      // { src: "images/poly/orientation.jpg", caption: "Orientation week, 2023" },
     ],
   };
+
+  // Optional per-photo settings:
+  //   wide: true          → photo spans two columns (good for group shots)
+  //   position: "50% 30%" → which part of the photo to keep when it's cropped (x% y%)
 
   const renderGallery = () => {
     const section = document.getElementById("life");
@@ -32,10 +48,11 @@
       const group = section.querySelector(`[data-gallery="${key}"]`);
       const grid = group?.querySelector(".gallery-grid");
       if (!grid) continue;
-      items.forEach(({ src, caption = "" }) => {
+      items.forEach(({ src, caption = "", wide = false, position }) => {
         const fig = document.createElement("figure");
-        fig.className = "gallery-item";
+        fig.className = wide ? "gallery-item wide" : "gallery-item";
         const img = document.createElement("img");
+        if (position) img.style.objectPosition = position;
         img.src = src;
         img.alt = caption || "Photo of Dylan";
         img.loading = "lazy";
