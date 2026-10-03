@@ -175,6 +175,7 @@
       }
     </style>
 
+    <script data-goatcounter="https://dylanalves.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     <!-- Three.js (3D engine) loaded from a CDN, no install needed -->
     <script type="importmap">
       { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
@@ -242,6 +243,11 @@
       import * as THREE from "three";
 
       const $ = (s) => document.querySelector(s);
+      // Analytics events (GoatCounter); does nothing if the script is blocked or not loaded
+      const track = (name, title = name) => {
+        if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: name, title, event: true });
+      };
+      const slug = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
       const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       /* =====================================================
@@ -934,6 +940,7 @@
       }
 
       function openPanel(s) {
+        track(`world-open-${slug(s.title)}`, `Opened ${s.title} landmark`);
         panelOpen = true;
         clearInput();
         $("#panel-kicker").textContent = s.kicker;
@@ -952,6 +959,13 @@
         canvas.focus({ preventScroll: true });
       }
       $("#panel-close").addEventListener("click", closePanel);
+      $("#panel-body").addEventListener("click", (e) => {
+        const a = e.target.closest("a[href]");
+        if (!a) return;
+        let host = "link";
+        try { host = new URL(a.href).hostname.replace(/^www\./, ""); } catch {}
+        track(`world-link-${slug(host)}`, `World link: ${a.textContent.trim()}`);
+      });
       promptEl.addEventListener("click", () => nearest && openPanel(nearest));
 
       // Minimap
@@ -1044,6 +1058,7 @@
       function start() {
         if (started) return;
         started = true;
+        track("world-start-riding", "Started riding in the 3D world");
         $("#intro").classList.add("gone");
         document.body.classList.add("playing");
         canvas.focus({ preventScroll: true });

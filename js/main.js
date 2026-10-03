@@ -148,6 +148,19 @@
     });
   }
 
+  /* ----- Analytics helper (GoatCounter) ----- */
+  const track = (name, title = name) => {
+    if (window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({ path: name, title, event: true });
+    }
+  };
+
+  // Count the first time each project video is played
+  document.querySelectorAll(".video-art video").forEach((video) => {
+    const name = (video.getAttribute("src") || "video").split("/").pop().replace(/\.[^.]+$/, "");
+    video.addEventListener("play", () => track(`video-play-${name}`, `Played ${name} video`), { once: true });
+  });
+
   /* ----- Year ----- */
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
