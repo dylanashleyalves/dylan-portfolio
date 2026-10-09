@@ -306,18 +306,55 @@
     }
   });
 
-  /* ----- Contact form (client-only success) ----- */
+  /* ----- Contact form (sends through Formspree) -----
+     Create a form at formspree.io and paste its ID below.
+     Until then, the form opens the visitor's email app instead,
+     so no message is ever lost. */
+  const CONTACT_FORM_URL = "https://formspree.io/f/xnpjdlqj";
   const form = document.getElementById("contact-form");
-  form?.addEventListener("submit", (e) => {
+  const status = document.getElementById("form-status");
+  const setStatus = (text, isError = false) => {
+    if (!status) return;
+    status.textContent = text;
+    status.classList.remove("opacity-0");
+    status.classList.toggle("text-emerald", !isError);
+    status.classList.toggle("text-amber", isError);
+  };
+
+  form?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const status = document.getElementById("form-status");
     const data = new FormData(form);
+    if (data.get("_gotcha")) return; // hidden spam trap: bots fill it, people don't
     const name = String(data.get("name") || "").trim();
-    if (status) {
-      status.textContent = `Signal received, ${name || "friend"}. I’ll reply soon.`;
-      status.classList.remove("opacity-0");
+    const email = String(data.get("email") || "").trim();
+    const message = String(data.get("message") || "").trim();
+
+    // Not connected yet: fall back to the visitor's own email app
+    if (CONTACT_FORM_URL.includes("YOUR_CONTACT_FORM_ID")) {
+      const subject = encodeURIComponent(`Portfolio message from ${name || "a visitor"}`);
+      const body = encodeURIComponent(`${message}\n\n— ${name}${email ? ` (${email})` : ""}`);
+      window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
+      setStatus("Opening your email app to send this…");
+      return;
     }
-    form.reset();
+
+    const button = form.querySelector('button[type="submit"]');
+    if (button) { button.disabled = true; button.textContent = "Sending…"; }
+    try {
+      const res = await fetch(CONTACT_FORM_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ name, email, message, _subject: `New message from your portfolio · ${name || "a visitor"}`, _replyto: email }),
+      });
+      if (!res.ok) throw new Error(`Formspree responded ${res.status}`);
+      setStatus(`Signal received, ${name || "friend"}. I’ll reply soon.`);
+      track("contact-form-sent", "Sent a message through the contact form");
+      form.reset();
+    } catch {
+      setStatus(`That didn't send. Please email me directly at ${EMAIL}.`, true);
+    } finally {
+      if (button) { button.disabled = false; button.textContent = "Transmit"; }
+    }
   });
 
   /* ----- Mobile nav ----- */

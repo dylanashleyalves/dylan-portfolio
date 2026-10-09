@@ -37,7 +37,8 @@
       };
     </script>
     <link rel="stylesheet" href="css/styles.css" />
-    <script data-goatcounter="https://dylanalves.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <!-- Visitor analytics (GoatCounter). Replace YOURCODE with the code you picked when signing up. -->
+    <script data-goatcounter="https://YOURCODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   </head>
   <body class="bg-obsidian text-mist antialiased">
     <div id="atmosphere" aria-hidden="true">
@@ -586,7 +587,9 @@
                 <span class="mono text-[10px] tracking-[0.2em] uppercase text-fog">Message</span>
                 <textarea class="field mt-2 min-h-[140px] resize-y" name="message" required></textarea>
               </label>
-              <button type="submit" class="magnetic w-full md:w-auto rounded-full bg-emerald text-obsidian px-8 py-3 font-medium">
+              <!-- Spam trap: hidden from people, bots fill it in -->
+              <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0" />
+              <button type="submit" class="magnetic w-full md:w-auto rounded-full bg-emerald text-obsidian px-8 py-3 font-medium disabled:opacity-60">
                 Transmit
               </button>
               <p id="form-status" class="mono text-xs text-emerald opacity-0 min-h-[1.2rem]" role="status"></p>

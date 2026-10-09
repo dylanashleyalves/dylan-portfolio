@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&family=Silkscreen:wght@400;700&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -46,12 +46,12 @@
       /* ---------- Intro ---------- */
       #intro {
         position: fixed; inset: 0; z-index: 30;
-        display: grid; place-items: center; padding: 1.25rem;
+        display: flex; padding: 1.25rem; overflow-y: auto;
         background: radial-gradient(ellipse at center, rgba(7, 8, 11, 0.3), rgba(7, 8, 11, 0.85));
         transition: opacity 0.7s var(--ease), visibility 0s linear 0.7s;
       }
       #intro.gone { opacity: 0; visibility: hidden; }
-      .intro-card { width: min(520px, 100%); border-radius: 1.75rem; padding: clamp(1.5rem, 5vw, 2.4rem); }
+      .intro-card { margin: auto; width: min(520px, 100%); border-radius: 1.75rem; padding: clamp(1.5rem, 5vw, 2.4rem); }
       .kicker { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--emerald); margin: 0 0 1rem; }
       .intro-card h1 { font-size: clamp(2.1rem, 7.5vw, 3.3rem); margin: 0; text-transform: uppercase; }
       .intro-card h1 span { color: var(--amber); }
@@ -72,6 +72,18 @@
       .btn:disabled { opacity: 0.55; cursor: progress; }
       .link { color: var(--fog); font-size: 0.88rem; text-decoration: none; border-bottom: 1px solid transparent; }
       .link:hover { color: var(--mist); border-color: var(--emerald); }
+      .guest { display: grid; gap: 0.5rem; margin: 0 0 1.5rem; }
+      .guest label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fog); margin-top: 0.35rem; }
+      .guest label span { color: rgba(139, 149, 163, 0.6); text-transform: none; letter-spacing: 0.04em; }
+      .guest input {
+        width: 100%; padding: 0.8rem 1rem; border-radius: 0.8rem; font: 400 0.9rem var(--mono); color: var(--mist);
+        background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); outline: none;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      }
+      .guest input::placeholder { color: rgba(139, 149, 163, 0.55); }
+      .guest input:focus { border-color: rgba(61, 255, 166, 0.5); box-shadow: 0 0 0 3px rgba(61, 255, 166, 0.12); }
+      .guest-note { margin: 0.35rem 0 0; font-size: 0.78rem; line-height: 1.5; color: var(--fog); }
+      #rider-pill { color: var(--emerald); max-width: 14rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       #load-error { color: var(--amber); font-size: 0.85rem; line-height: 1.5; margin: 1rem 0 0; min-height: 1em; }
 
       /* ---------- HUD ---------- */
@@ -80,7 +92,77 @@
       body:not(.playing) .hud { opacity: 0; }
       body:not(.playing) .hud > * { pointer-events: none; }
       .top-left { top: calc(1rem + env(safe-area-inset-top)); left: calc(1rem + env(safe-area-inset-left)); display: flex; gap: 0.5rem; }
-      .top-right { top: calc(1rem + env(safe-area-inset-top)); right: calc(1rem + env(safe-area-inset-right)); }
+      .top-right { top: calc(1rem + env(safe-area-inset-top)); right: calc(1rem + env(safe-area-inset-right)); display: flex; gap: 0.5rem; align-items: flex-start; }
+      .icon-btn { width: 2.6rem; height: 2.6rem; padding: 0; border-radius: 50%; display: grid; place-items: center; color: var(--mist); cursor: pointer; }
+      .icon-btn:hover { color: var(--emerald); border-color: rgba(61, 255, 166, 0.45); }
+      .icon-btn svg { width: 1.15rem; height: 1.15rem; }
+      .stats { top: calc(4.3rem + env(safe-area-inset-top)); left: calc(1rem + env(safe-area-inset-left)); display: flex; flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+      .stats .pill { padding: 0.45rem 0.85rem; font-size: 10px; }
+      .stats b { color: var(--emerald); font-weight: 500; }
+      #lap-pill b { color: var(--amber); }
+      #toast {
+        position: fixed; z-index: 45; left: 50%; bottom: calc(5.75rem + env(safe-area-inset-bottom));
+        transform: translate(-50%, 12px); opacity: 0; pointer-events: none; white-space: nowrap; max-width: calc(100vw - 2rem); overflow: hidden; text-overflow: ellipsis;
+        border-radius: 999px; padding: 0.7rem 1.2rem; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mist);
+        border-color: rgba(240, 180, 90, 0.45); transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+      }
+      #toast.show { opacity: 1; transform: translate(-50%, 0); }
+      body.touch #toast { bottom: calc(10.5rem + env(safe-area-inset-bottom)); }
+
+      /* ---------- Settings (retro game menu) ---------- */
+      .pixel { font-family: "Silkscreen", var(--mono); font-weight: 400; letter-spacing: 0.04em; }
+      #settings { position: fixed; inset: 0; z-index: 40; display: flex; padding: 1rem; overflow-y: auto; background: rgba(8, 10, 12, 0.84); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+      #settings[hidden] { display: none; }
+      .settings-card { margin: auto; width: min(520px, 100%); padding: 1.25rem 0.25rem; color: #e8ecef; }
+      .settings-card h2 { margin: 0 0 1.75rem; text-align: center; font-size: clamp(2.2rem, 8vw, 3.1rem); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #f2f4f5; text-shadow: 0 0 18px rgba(61, 255, 166, 0.25); }
+      .set-row { margin-bottom: 1.35rem; }
+      .set-label { display: flex; align-items: center; gap: 0.55rem; margin: 0 0 0.55rem; font-size: 1rem; text-transform: uppercase; color: #e8ecef; }
+      .set-label svg { width: 1.1rem; height: 1.1rem; flex: none; }
+      .set-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; }
+      .set-select {
+        appearance: none; -webkit-appearance: none; flex: 1; min-width: 11rem; padding: 0.5rem 2rem 0.5rem 0.7rem; border-radius: 0; cursor: pointer;
+        font: 400 0.72rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: #f2f4f5; border: 1px solid rgba(255, 255, 255, 0.3);
+        background: #121519 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0h10L5 6z' fill='%23f2f4f5'/%3E%3C/svg%3E") no-repeat right 0.7rem center / 0.7rem;
+      }
+      .set-select option { background: #121519; color: #f2f4f5; }
+      .set-check { display: inline-flex; align-items: center; gap: 0.55rem; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; position: relative; }
+      .set-check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+      .set-check .box { width: 1.25rem; height: 1.25rem; border: 2px solid #e8ecef; display: grid; place-items: center; flex: none; }
+      .set-check input:checked + .box::after { content: ""; width: 0.7rem; height: 0.4rem; border-left: 3px solid var(--emerald); border-bottom: 3px solid var(--emerald); transform: translateY(-2px) rotate(-45deg); }
+      .set-check input:focus-visible + .box { outline: 2px solid var(--emerald); outline-offset: 2px; }
+      .set-check input:disabled ~ * { opacity: 0.4; }
+      .set-slider { display: flex; align-items: center; gap: 0.75rem; }
+      .set-range {
+        -webkit-appearance: none; appearance: none; flex: 1; height: 12px; margin: 0; border-radius: 0; cursor: pointer;
+        background: linear-gradient(90deg, #d9dee2 0 var(--val, 50%), #1a1e23 var(--val, 50%) 100%); border: 1px solid rgba(255, 255, 255, 0.5);
+      }
+      .set-range::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 24px; background: #f2f4f5; border: 2px solid #07080b; border-radius: 0; box-shadow: 0 0 0 1px #f2f4f5; }
+      .set-range::-moz-range-thumb { width: 10px; height: 22px; background: #f2f4f5; border: 2px solid #07080b; border-radius: 0; }
+      .set-range::-moz-range-track { background: transparent; }
+      .set-value { min-width: 3ch; text-align: right; font: 400 0.72rem var(--mono); color: var(--fog); }
+      .set-note { margin: 0.45rem 0 0; font: 400 0.62rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fog); }
+      .set-wide { width: 100%; padding: 0.6rem; font-size: 0.8rem; text-transform: uppercase; color: #f2f4f5; background: #121519; border: 1px solid rgba(255, 255, 255, 0.3); cursor: pointer; }
+      .set-wide:hover { border-color: #ff6b6b; color: #ff9a9a; }
+      .set-wide.confirm { border-color: #ff6b6b; color: #ff6b6b; background: rgba(255, 107, 107, 0.08); }
+      .set-actions { display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; }
+      .set-btn {
+        min-width: 8rem; padding: 0.6rem 1rem; font-size: 0.85rem; text-transform: uppercase; color: #f2f4f5; cursor: pointer;
+        background: #121519; border: 2px solid rgba(255, 255, 255, 0.55); box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6); transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      .set-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.6); }
+      .set-btn.primary { border-color: var(--emerald); color: var(--emerald); }
+      .set-btn.primary:hover { background: var(--emerald); color: var(--obsidian); }
+      .set-select:focus-visible, .set-range:focus-visible, .set-btn:focus-visible, .set-wide:focus-visible { outline: 2px solid var(--emerald); outline-offset: 2px; }
+
+      /* ---------- Passport complete ---------- */
+      #complete { position: fixed; inset: 0; z-index: 35; display: flex; padding: 1rem; overflow-y: auto; background: rgba(7, 8, 11, 0.7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+      #complete[hidden] { display: none; }
+      .complete-card { margin: auto; width: min(460px, 100%); border-radius: 1.5rem; padding: 2rem 1.75rem; text-align: center; }
+      .complete-card h2 { font-size: clamp(1.8rem, 6vw, 2.4rem); margin: 0.25rem 0 1rem; text-transform: uppercase; }
+      .complete-card p { color: var(--fog); line-height: 1.6; }
+      .complete-card .links { justify-content: center; }
+      .complete-stats { display: flex; justify-content: center; gap: 1.75rem; margin: 1.5rem 0; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mist); }
+      .complete-stats b { display: block; margin-bottom: 0.3rem; font-size: 1.35rem; font-weight: 700; letter-spacing: 0; color: var(--emerald); }
       .pill {
         display: inline-flex; align-items: center; gap: 0.5rem; border-radius: 999px; padding: 0.6rem 1rem;
         font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mist); text-decoration: none;
@@ -160,6 +242,7 @@
         background: var(--glass); border: 1px solid var(--glass-border);
         touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
       }
+      .pad button.small { width: 48px; height: 48px; align-self: center; font-size: 1rem; }
       .pad button.on { border-color: var(--emerald); color: var(--emerald); background: rgba(61, 255, 166, 0.14); }
 
       @media (max-width: 640px) {
@@ -175,7 +258,8 @@
       }
     </style>
 
-    <script data-goatcounter="https://dylanalves.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <!-- Visitor analytics (GoatCounter). Replace YOURCODE with the code you picked when signing up. -->
+    <script data-goatcounter="https://YOURCODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     <!-- Three.js (3D engine) loaded from a CDN, no install needed -->
     <script type="importmap">
       { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
@@ -190,19 +274,30 @@
         <h1 id="intro-title" class="display">Ride the <span>atmosphere</span></h1>
         <p class="lead">
           Hop on the bike and follow the glowing road. Every landmark holds a piece of my work.
-          Ride up close and open it.
+          Stamp them all, set a lap time, and hunt for glowing orbs hidden off the road.
         </p>
         <div class="keys">
           <kbd>W / ↑</kbd><span>Pedal</span>
           <kbd>S / ↓ / Space</kbd><span>Brake, then reverse</span>
           <kbd>A D / ← →</kbd><span>Steer</span>
           <kbd>E</kbd><span>Open the landmark you're near</span>
+          <kbd>B · L · C</kbd><span>Bell, headlight, camera view</span>
+          <kbd>P / Esc</kbd><span>Settings (pauses the ride)</span>
           <kbd>Phone</kbd><span>Use the on-screen pads</span>
         </div>
-        <div class="intro-actions">
-          <button id="start" class="btn" type="button" disabled>Loading world…</button>
-          <a class="link" href="index.html">Back to the classic site</a>
-        </div>
+        <form id="guest-form" novalidate>
+          <div class="guest">
+            <label for="guest-name">Your name <span>(optional)</span></label>
+            <input id="guest-name" name="name" type="text" maxlength="60" autocomplete="name" placeholder="e.g. Alex Tan" />
+            <label for="guest-org">Company or school <span>(optional)</span></label>
+            <input id="guest-org" name="organisation" type="text" maxlength="80" autocomplete="organization" placeholder="e.g. Temasek Polytechnic" />
+            <p class="guest-note">Shared only with me, so I know who stopped by. Leave it blank to ride anonymously.</p>
+          </div>
+          <div class="intro-actions">
+            <button id="start" class="btn" type="submit" disabled>Loading world…</button>
+            <a class="link" href="index.html">Back to the classic site</a>
+          </div>
+        </form>
         <p id="load-error" role="status"></p>
       </div>
     </section>
@@ -210,9 +305,19 @@
     <div class="hud top-left">
       <a class="pill glass mono" href="index.html">← Site</a>
       <span class="pill glass mono" id="speed" aria-live="off">0 km/h</span>
+      <span class="pill glass mono" id="rider-pill" hidden></span>
     </div>
-    <div class="hud top-right"><canvas id="minimap" aria-hidden="true"></canvas></div>
-    <p class="hud hint mono">WASD or arrows to ride · E to open</p>
+    <div class="hud top-right">
+      <button id="settings-btn" class="icon-btn glass" type="button" aria-label="Open settings (P)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      <canvas id="minimap" aria-hidden="true"></canvas>
+    </div>
+    <div class="hud stats">
+      <span class="pill glass mono" id="passport-pill">Landmarks <b>0/0</b></span>
+      <span class="pill glass mono" id="orb-pill">Orbs <b>0/0</b></span>
+      <span class="pill glass mono" id="lap-pill">Lap <b>0:00.0</b></span>
+    </div>
+    <p class="hud hint mono">WASD to ride · E open · B bell · P settings</p>
+    <div id="toast" class="glass mono" role="status" aria-live="polite"></div>
 
     <button id="prompt" class="glass mono" type="button"></button>
 
@@ -224,8 +329,92 @@
       <p class="esc">Esc to close and keep riding</p>
     </aside>
 
+    <!-- Settings menu -->
+    <div id="settings" hidden>
+      <section class="settings-card" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <h2 id="settings-title" class="pixel">Settings</h2>
+
+        <div class="set-row">
+          <h3 class="set-label pixel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><rect x="2" y="4" width="20" height="13"/><path d="M8 21h8M12 17v4"/></svg> Screen:</h3>
+          <div class="set-inline">
+            <select id="set-quality" class="set-select" aria-label="Graphics quality">
+              <option value="low">Low quality · fastest</option>
+              <option value="medium">Medium quality</option>
+              <option value="high">High quality</option>
+            </select>
+            <label class="set-check pixel"><input id="set-fullscreen" type="checkbox" /><span class="box"></span><span>Fullscreen</span></label>
+          </div>
+        </div>
+
+        <div class="set-row">
+          <h3 class="set-label pixel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg> Sound:</h3>
+          <div class="set-slider"><input id="set-sound" class="set-range" type="range" min="0" max="100" step="5" aria-label="Sound effects volume" /><span class="set-value"></span></div>
+        </div>
+
+        <div class="set-row">
+          <h3 class="set-label pixel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg> Music:</h3>
+          <div class="set-slider"><input id="set-music" class="set-range" type="range" min="0" max="100" step="5" aria-label="Music volume" /><span class="set-value"></span></div>
+          <p class="set-note">Background music coming soon</p>
+        </div>
+
+        <div class="set-row">
+          <h3 class="set-label pixel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3z"/><circle cx="12" cy="13" r="4"/></svg> Camera:</h3>
+          <select id="set-camera" class="set-select" aria-label="Camera distance">
+            <option value="close">Close</option>
+            <option value="normal">Normal</option>
+            <option value="far">Far</option>
+          </select>
+        </div>
+
+        <div class="set-row">
+          <h3 class="set-label pixel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg> Display:</h3>
+          <div class="set-inline">
+            <label class="set-check pixel"><input id="set-minimap" type="checkbox" /><span class="box"></span><span>Minimap</span></label>
+            <label class="set-check pixel"><input id="set-motion" type="checkbox" /><span class="box"></span><span>Reduce motion</span></label>
+          </div>
+        </div>
+
+        <div class="set-row">
+          <h3 class="set-label pixel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg> Language:</h3>
+          <select id="set-lang" class="set-select" aria-label="Language">
+            <option value="en">English</option>
+          </select>
+        </div>
+
+        <div class="set-row">
+          <h3 class="set-label pixel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg> Saved data:</h3>
+          <button id="set-delete" class="set-wide pixel" type="button">Delete saved data</button>
+        </div>
+
+        <div class="set-actions">
+          <button id="set-cancel" class="set-btn pixel" type="button">Cancel</button>
+          <button id="set-save" class="set-btn pixel primary" type="button">Save</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Shown once every landmark has been stamped -->
+    <div id="complete" hidden>
+      <section class="complete-card glass" role="dialog" aria-modal="true" aria-labelledby="complete-title">
+        <p class="kicker mono">Passport complete</p>
+        <h2 id="complete-title" class="display">You've seen it all</h2>
+        <p>Thanks for riding through my world. If something caught your eye, I'd love to hear from you.</p>
+        <div class="complete-stats">
+          <div><b id="cs-landmarks">0/0</b>Landmarks</div>
+          <div><b id="cs-orbs">0/0</b>Orbs</div>
+          <div><b id="cs-lap">–</b>Best lap</div>
+        </div>
+        <div class="links">
+          <a data-goatcounter-click="world-complete-linkedin" href="https://www.linkedin.com/in/dylan-alves-757831281" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+          <a data-goatcounter-click="world-complete-email" href="mailto:Dylanashleyalves@gmail.com">Email me</a>
+          <a href="index.html">Back to the site</a>
+        </div>
+        <button id="complete-close" class="btn" type="button" style="margin-top: 1.5rem">Keep riding</button>
+      </section>
+    </div>
+
     <div id="touch" class="hud" aria-hidden="true">
-      <div class="pad"><button data-k="left">◀</button><button data-k="right">▶</button></div>
+      <div class="pad"><button data-k="left">◀</button><button data-k="right">▶</button><button class="small" data-act="bell">🔔</button></div>
       <div class="pad"><button data-k="down">▼</button><button data-k="up">▲</button></div>
     </div>
 
@@ -249,6 +438,19 @@
       };
       const slug = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
       const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* ---------- Saved data (browser storage) ---------- */
+      const persist = {
+        get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
+        set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
+        remove: (k) => { try { localStorage.removeItem(k); } catch {} },
+        json: (k, fallback) => {
+          try { return { ...fallback, ...JSON.parse(localStorage.getItem(k) || "{}") }; } catch { return { ...fallback }; }
+        },
+      };
+      const coarse = matchMedia("(pointer: coarse)").matches;
+      const DEFAULT_SETTINGS = { quality: coarse ? "medium" : "high", sound: 70, music: 50, camera: "normal", minimap: true, motion: reduced, lang: "en" };
+      let settings = persist.json("world-settings", DEFAULT_SETTINGS);
 
       /* =====================================================
          CONTENT: edit these to change what each landmark says
@@ -431,6 +633,16 @@
         return Math.sqrt(m);
       }
 
+      function roadNearest(x, z) {
+        let m = Infinity, idx = 0;
+        for (let i = 0; i < roadPts.length; i++) {
+          const p = roadPts[i];
+          const d = (p.x - x) ** 2 + (p.z - z) ** 2;
+          if (d < m) { m = d; idx = i; }
+        }
+        return { i: idx, d: Math.sqrt(m) };
+      }
+
       function strip(offset, halfW, y) {
         const pos = [], idx = [];
         for (let i = 0; i <= SAMPLES; i++) {
@@ -608,12 +820,15 @@
       plazaRing.position.y = 0.03;
       scene.add(plazaRing);
 
+      const POND = { x: 30, z: 20, r: 8 };
+
       /* ================= TREES, ROCKS, MOUNTAINS ================= */
       const trees = [];
       for (let tries = 0; trees.length < 260 && tries < 7000; tries++) {
         const a = rand() * Math.PI * 2, r = Math.sqrt(rand()) * 172;
         const x = Math.cos(a) * r, z = Math.sin(a) * r;
         if (Math.hypot(x, z) < 14) continue;
+        if (Math.hypot(x - POND.x, z - POND.z) < POND.r + 3) continue;
         if (roadDist(x, z) < ROAD_W + 3) continue;
         if (STATIONS.some((s) => Math.hypot(x - s.pos.x, z - s.pos.z) < 9)) continue;
         if (trees.some((t) => Math.hypot(x - t.x, z - t.z) < 3.2)) continue;
@@ -639,6 +854,7 @@
         const a = rand() * Math.PI * 2, r = 16 + rand() * 160;
         const x = Math.cos(a) * r, z = Math.sin(a) * r;
         if (roadDist(x, z) < ROAD_W + 1.5) continue;
+        if (Math.hypot(x - POND.x, z - POND.z) < POND.r + 1) continue;
         const sc = 0.25 + rand() * 0.7;
         rocks.setMatrixAt(placed++, m4.compose(v4.set(x, sc * 0.3, z), q4.setFromEuler(new THREE.Euler(rand() * 3, rand() * 3, 0)), new THREE.Vector3(sc, sc * 0.7, sc)));
       }
@@ -697,6 +913,241 @@
       ffGeo.setAttribute("color", new THREE.BufferAttribute(ffCol, 3));
       const fireflies = new THREE.Points(ffGeo, new THREE.PointsMaterial({ size: 0.45, map: dotTex, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
       scene.add(fireflies);
+
+      /* ================= SCENERY: lamps, plants, pond, start line ================= */
+      const radialTex = (inner, outer = "rgba(0,0,0,0)") => {
+        const c = document.createElement("canvas"); c.width = c.height = 128;
+        const g = c.getContext("2d");
+        const grd = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+        grd.addColorStop(0, inner); grd.addColorStop(1, outer);
+        g.fillStyle = grd; g.fillRect(0, 0, 128, 128);
+        const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+      };
+      const yAxis = new THREE.Vector3(0, 1, 0);
+      const sideNormal = (u) => { const t = road.getTangentAt(u); return new THREE.Vector3(-t.z, 0, t.x).normalize(); };
+
+      // Streetlamps along the road (fake light pools keep it fast)
+      const lampSpots = [];
+      for (let i = 14, k = 0; i < SAMPLES - 8; i += 20, k++) {
+        const u = i / SAMPLES, p = road.getPointAt(u), n = sideNormal(u), side = k % 2 ? 1 : -1;
+        const bx = p.x + n.x * side * (ROAD_W + 1.1), bz = p.z + n.z * side * (ROAD_W + 1.1);
+        if (STATIONS.some((s) => Math.hypot(bx - s.pos.x, bz - s.pos.z) < s.radius + 2)) continue;
+        lampSpots.push({ bx, bz, hx: p.x + n.x * side * (ROAD_W - 0.4), hz: p.z + n.z * side * (ROAD_W - 0.4), ang: Math.atan2(-n.z, n.x) });
+      }
+      const poleGeo = new THREE.CylinderGeometry(0.06, 0.09, 4.4, 8); poleGeo.translate(0, 2.2, 0);
+      const poles = new THREE.InstancedMesh(poleGeo, darkMat, lampSpots.length);
+      const lampArms = new THREE.InstancedMesh(new THREE.BoxGeometry(1.55, 0.06, 0.06), darkMat, lampSpots.length);
+      const heads = new THREE.InstancedMesh(new THREE.BoxGeometry(0.55, 0.12, 0.26), new THREE.MeshBasicMaterial({ color: 0xffe2b0, toneMapped: false }), lampSpots.length);
+      const pools = new THREE.InstancedMesh(new THREE.PlaneGeometry(7, 7), new THREE.MeshBasicMaterial({
+        map: radialTex("rgba(255,214,150,0.5)"), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false,
+      }), lampSpots.length);
+      const flat = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
+      const one = new THREE.Vector3(1, 1, 1);
+      const haloPos = [];
+      lampSpots.forEach((l, i) => {
+        const q = new THREE.Quaternion().setFromAxisAngle(yAxis, l.ang);
+        poles.setMatrixAt(i, m4.compose(v4.set(l.bx, 0, l.bz), q, one));
+        lampArms.setMatrixAt(i, m4.compose(v4.set((l.bx + l.hx) / 2, 4.38, (l.bz + l.hz) / 2), q, one));
+        heads.setMatrixAt(i, m4.compose(v4.set(l.hx, 4.3, l.hz), q, one));
+        pools.setMatrixAt(i, m4.compose(v4.set(l.hx, 0.06, l.hz), flat, one));
+        haloPos.push(l.hx, 4.2, l.hz);
+      });
+      poles.castShadow = true;
+      scene.add(poles, lampArms, heads, pools);
+      const haloGeo = new THREE.BufferGeometry();
+      haloGeo.setAttribute("position", new THREE.Float32BufferAttribute(haloPos, 3));
+      scene.add(new THREE.Points(haloGeo, new THREE.PointsMaterial({
+        size: 2.4, map: radialTex("rgba(255,226,176,0.9)"), color: 0xffe2b0, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false,
+      })));
+
+      // Pond with lily pads and a moon shimmer
+      const pond = new THREE.Group();
+      pond.position.set(POND.x, 0, POND.z);
+      scene.add(pond);
+      const water = new THREE.Mesh(new THREE.CircleGeometry(POND.r, 64), new THREE.MeshStandardMaterial({ color: 0x0a2233, roughness: 0.08, metalness: 0.7, emissive: 0x05202c, emissiveIntensity: 0.8 }));
+      water.rotation.x = -Math.PI / 2; water.position.y = 0.04; water.receiveShadow = true;
+      const rim = new THREE.Mesh(new THREE.RingGeometry(POND.r, POND.r + 0.14, 96), new THREE.MeshBasicMaterial({ color: 0x3dffa6, transparent: true, opacity: 0.55, side: THREE.DoubleSide, toneMapped: false }));
+      rim.rotation.x = -Math.PI / 2; rim.position.y = 0.05;
+      pond.add(water, rim);
+      const padMat = new THREE.MeshStandardMaterial({ color: 0x1d5a3a, roughness: 0.8, side: THREE.DoubleSide });
+      for (let i = 0; i < 8; i++) {
+        const a = i * 0.85 + 0.3, r = 2 + (i % 3) * 1.7;
+        const pad = new THREE.Mesh(new THREE.CircleGeometry(0.45 + (i % 2) * 0.2, 14, 0.4, Math.PI * 2 - 0.8), padMat);
+        pad.rotation.set(-Math.PI / 2, 0, a);
+        pad.position.set(Math.cos(a) * r, 0.06, Math.sin(a) * r);
+        pond.add(pad);
+      }
+      const shimmer = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialTex("rgba(200,225,255,0.6)"), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
+      shimmer.scale.set(5, 1.1, 1); shimmer.position.set(-1.5, 0.3, -2);
+      pond.add(shimmer);
+
+      // Bushes and glowing flowers
+      const bushSpots = [], flowerSpots = [];
+      const freeSpot = (x, z, gap) =>
+        Math.hypot(x, z) > 12 &&
+        roadDist(x, z) > ROAD_W + 1.6 &&
+        Math.hypot(x - POND.x, z - POND.z) > POND.r + 1.2 &&
+        !trees.some((t) => Math.abs(t.x - x) < gap && Math.abs(t.z - z) < gap) &&
+        !STATIONS.some((s) => Math.hypot(x - s.pos.x, z - s.pos.z) < s.radius + 1.5) &&
+        !lampSpots.some((l) => Math.hypot(x - l.bx, z - l.bz) < 1.2);
+      for (let tries = 0; bushSpots.length < 170 && tries < 5000; tries++) {
+        let x, z;
+        if (rand() < 0.65) {
+          const u = rand(), p = road.getPointAt(u), n = sideNormal(u), side = rand() < 0.5 ? 1 : -1, off = ROAD_W + 2.2 + rand() * 4;
+          x = p.x + n.x * side * off; z = p.z + n.z * side * off;
+        } else {
+          const s = STATIONS[Math.floor(rand() * STATIONS.length)], a = rand() * Math.PI * 2, r = s.radius + 2.5 + rand() * 3.5;
+          x = s.pos.x + Math.cos(a) * r; z = s.pos.z + Math.sin(a) * r;
+        }
+        if (!freeSpot(x, z, 1.4)) continue;
+        bushSpots.push({ x, z, s: 0.45 + rand() * 0.6 });
+        for (let f = 0, nf = 1 + Math.floor(rand() * 3); f < nf; f++) {
+          const a = rand() * Math.PI * 2, r = 0.9 + rand() * 1.1;
+          flowerSpots.push({ x: x + Math.cos(a) * r, z: z + Math.sin(a) * r });
+        }
+      }
+      for (let i = 0; i < 70; i++) {
+        const a = rand() * Math.PI * 2, r = POND.r + 0.6 + rand() * 1.6;
+        flowerSpots.push({ x: POND.x + Math.cos(a) * r, z: POND.z + Math.sin(a) * r });
+      }
+      const bushes = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 0), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, flatShading: true }), bushSpots.length);
+      const bushA = new THREE.Color(0x123b2c), bushB = new THREE.Color(0x24533a);
+      bushSpots.forEach((b, i) => {
+        bushes.setMatrixAt(i, m4.compose(v4.set(b.x, b.s * 0.45, b.z), q4.setFromAxisAngle(yAxis, rand() * 6), new THREE.Vector3(b.s * 1.2, b.s * 0.8, b.s)));
+        bushes.setColorAt(i, tmpC.copy(bushA).lerp(bushB, rand()));
+      });
+      bushes.castShadow = bushes.receiveShadow = true;
+      scene.add(bushes);
+      const flowerColors = [0x3dffa6, 0xf0b45a, 0xff7eb6, 0x7ab8ff].map((c) => new THREE.Color(c).multiplyScalar(0.85));
+      const flowers = new THREE.InstancedMesh(new THREE.SphereGeometry(0.09, 6, 4), new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false }), flowerSpots.length);
+      flowerSpots.forEach((f, i) => {
+        flowers.setMatrixAt(i, m4.compose(v4.set(f.x, 0.14 + rand() * 0.12, f.z), q4.identity(), one));
+        flowers.setColorAt(i, flowerColors[Math.floor(rand() * flowerColors.length)]);
+      });
+      scene.add(flowers);
+
+      // Start / finish arch for the lap timer
+      const startGroup = new THREE.Group();
+      {
+        const p = road.getPointAt(0), t = road.getTangentAt(0);
+        startGroup.position.set(p.x, 0, p.z);
+        startGroup.rotation.y = Math.atan2(t.x, t.z);
+      }
+      scene.add(startGroup);
+      const checker = (() => {
+        const c = document.createElement("canvas"); c.width = 256; c.height = 32;
+        const g = c.getContext("2d");
+        for (let x = 0; x < 16; x++) for (let y = 0; y < 2; y++) { g.fillStyle = (x + y) % 2 ? "#f2f4f5" : "#0b0e12"; g.fillRect(x * 16, y * 16, 16, 16); }
+        const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+      })();
+      const line = new THREE.Mesh(new THREE.PlaneGeometry(ROAD_W * 2, 1.1), new THREE.MeshStandardMaterial({ map: checker, roughness: 0.8 }));
+      line.rotation.x = -Math.PI / 2; line.position.y = 0.05; line.receiveShadow = true;
+      startGroup.add(line);
+      const postX = ROAD_W + 0.7;
+      [-1, 1].forEach((s) => {
+        add(startGroup, new THREE.CylinderGeometry(0.16, 0.2, 5.2, 10), darkMat, s * postX, 2.6, 0);
+        add(startGroup, new THREE.SphereGeometry(0.22, 12, 8), glow("#f0b45a"), s * postX, 5.3, 0);
+      });
+      add(startGroup, new THREE.BoxGeometry(postX * 2, 0.12, 0.12), glow("#3dffa6"), 0, 4.4, 0);
+      const bannerTex = (() => {
+        const c = document.createElement("canvas"); c.width = 1024; c.height = 128;
+        const g = c.getContext("2d");
+        g.fillStyle = "#0b0e12"; g.fillRect(0, 0, 1024, 128);
+        for (let x = 0; x < 6; x++) for (let y = 0; y < 4; y++) {
+          g.fillStyle = (x + y) % 2 ? "#f2f4f5" : "#0b0e12";
+          g.fillRect(x * 16, y * 32, 16, 32); g.fillRect(1024 - 96 + x * 16, y * 32, 16, 32);
+        }
+        g.fillStyle = "#3dffa6"; g.font = '800 64px "JetBrains Mono", ui-monospace, monospace';
+        g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("START · FINISH", 512, 68);
+        const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+      })();
+      [0, Math.PI].forEach((ry) => {
+        const b = new THREE.Mesh(new THREE.PlaneGeometry(postX * 2 - 0.4, 0.9), new THREE.MeshBasicMaterial({ map: bannerTex, toneMapped: false }));
+        b.position.y = 4.95; b.rotation.y = ry; b.position.z = ry ? -0.02 : 0.02;
+        startGroup.add(b);
+      });
+      startGroup.updateMatrixWorld(true);
+      const startPosts = [-1, 1].map((s) => startGroup.localToWorld(new THREE.Vector3(s * postX, 0, 0)));
+
+      /* ================= COLLECTIBLE ORBS ================= */
+      const orbs = [];
+      const orbGeo = new THREE.IcosahedronGeometry(0.42, 0);
+      const haloMat = (hex) => new THREE.SpriteMaterial({ map: radialTex("rgba(255,255,255,0.75)"), color: hex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
+      const orbHalo = [haloMat(0x3dffa6), haloMat(0xf0b45a)];
+      for (let tries = 0; orbs.length < 20 && tries < 8000; tries++) {
+        const a = rand() * Math.PI * 2, r = 14 + Math.sqrt(rand()) * 150;
+        const x = Math.cos(a) * r, z = Math.sin(a) * r;
+        if (roadDist(x, z) < ROAD_W + 2.5) continue;
+        if (Math.hypot(x - POND.x, z - POND.z) < POND.r + 1.5) continue;
+        if (STATIONS.some((s) => Math.hypot(x - s.pos.x, z - s.pos.z) < s.radius + 3)) continue;
+        if (trees.some((t) => Math.hypot(x - t.x, z - t.z) < 1.8)) continue;
+        if (orbs.some((o) => Math.hypot(x - o.x, z - o.z) < 18)) continue;
+        const kind = orbs.length % 2;
+        const g = new THREE.Group();
+        g.position.set(x, 1.3, z);
+        const m = new THREE.Mesh(orbGeo, glow(kind ? "#f0b45a" : "#3dffa6"));
+        const halo = new THREE.Sprite(orbHalo[kind]);
+        halo.scale.set(2.6, 2.6, 1);
+        g.add(m, halo);
+        scene.add(g);
+        orbs.push({ id: orbs.length, x, z, g, m, phase: rand() * 6.28 });
+      }
+
+      /* ================= BIRDS & SHOOTING STARS ================= */
+      const wingGeo = new THREE.BufferGeometry();
+      wingGeo.setAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0.2, 1, 0, -0.1, 0, 0, -0.35], 3));
+      const birdMat = new THREE.MeshBasicMaterial({ color: 0x3a4554, side: THREE.DoubleSide });
+      const birds = [];
+      for (let i = 0; i < 7; i++) {
+        const b = new THREE.Group(), L = new THREE.Mesh(wingGeo, birdMat), R = new THREE.Mesh(wingGeo, birdMat);
+        R.scale.x = -1;
+        b.add(L, R);
+        b.scale.setScalar(1.4);
+        scene.add(b);
+        birds.push({ b, L, R, r: 45 + rand() * 45, h: 24 + rand() * 14, speed: (0.06 + rand() * 0.05) * (i % 3 ? 1 : -1), phase: rand() * 6.28, flap: 7 + rand() * 3 });
+      }
+      const shootGeo = new THREE.BufferGeometry();
+      shootGeo.setAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3));
+      const shootMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, fog: false, toneMapped: false });
+      const shootLine = new THREE.Line(shootGeo, shootMat);
+      shootLine.frustumCulled = false;
+      scene.add(shootLine);
+      const shoot = { t: -1, wait: 5, from: new THREE.Vector3(), dir: new THREE.Vector3() };
+
+      function updateScenery(dt, t) {
+        for (const o of orbs) {
+          if (!o.g.visible) continue;
+          o.m.rotation.y = t * 1.6 + o.phase;
+          o.m.rotation.x = t * 0.7;
+          o.g.position.y = 1.3 + Math.sin(t * 2 + o.phase) * 0.25;
+        }
+        for (const bd of birds) {
+          const a = bd.phase + t * bd.speed;
+          bd.b.position.set(Math.cos(a) * bd.r, bd.h + Math.sin(t * 0.5 + bd.phase) * 2, Math.sin(a) * bd.r);
+          const dir = Math.sign(bd.speed);
+          bd.b.rotation.y = Math.atan2(-Math.sin(a) * dir, Math.cos(a) * dir);
+          const f = Math.sin(t * bd.flap + bd.phase) * 0.6;
+          bd.L.rotation.z = f; bd.R.rotation.z = -f;
+        }
+        shimmer.material.opacity = 0.5 + Math.sin(t * 1.3) * 0.25;
+        if (shoot.t < 0) {
+          shoot.wait -= dt;
+          if (shoot.wait <= 0 && !settings.motion) {
+            shoot.t = 0;
+            shoot.from.set(camera.position.x + (Math.random() - 0.5) * 500, 170 + Math.random() * 110, camera.position.z + (Math.random() - 0.5) * 500);
+            shoot.dir.set(Math.random() - 0.5, -0.35, Math.random() - 0.5).normalize();
+          }
+        } else {
+          shoot.t += dt;
+          const p = shootGeo.attributes.position;
+          const hx = shoot.from.x + shoot.dir.x * shoot.t * 320, hy = shoot.from.y + shoot.dir.y * shoot.t * 320, hz = shoot.from.z + shoot.dir.z * shoot.t * 320;
+          p.setXYZ(0, hx, hy, hz);
+          p.setXYZ(1, hx - shoot.dir.x * 45, hy - shoot.dir.y * 45, hz - shoot.dir.z * 45);
+          p.needsUpdate = true;
+          shootMat.opacity = Math.sin(Math.PI * Math.min(shoot.t / 0.9, 1)) * 0.9;
+          if (shoot.t > 0.9) { shoot.t = -1; shoot.wait = 6 + Math.random() * 10; shootMat.opacity = 0; }
+        }
+      }
 
       /* ================= BIKE & RIDER ================= */
       const UP = new THREE.Vector3(0, 1, 0);
@@ -829,7 +1280,7 @@
       const tan0 = road.getTangentAt(0);
       let heading = Math.atan2(tan0.x, tan0.z);
       let speed = 0, steer = 0, wheelAngle = 0, crankAngle = 0, crankVel = 0;
-      let started = false, panelOpen = false, nearest = null;
+      let started = false, panelOpen = false, nearest = null, paused = false, settingsOpen = false, pendingComplete = false;
       const input = { up: false, down: false, left: false, right: false };
       const clearInput = () => {
         for (const k in input) input[k] = false;
@@ -865,6 +1316,9 @@
 
         for (const t of trees) if (Math.abs(t.x - pos.x) < 2 && Math.abs(t.z - pos.z) < 2) pushOut(t.x, t.z, 0.35);
         for (const s of STATIONS) pushOut(s.pos.x, s.pos.z, s.radius);
+        pushOut(POND.x, POND.z, POND.r - 0.4);
+        for (const l of lampSpots) if (Math.abs(l.bx - pos.x) < 1.5 && Math.abs(l.bz - pos.z) < 1.5) pushOut(l.bx, l.bz, 0.12);
+        for (const sp of startPosts) pushOut(sp.x, sp.z, 0.2);
         const d = Math.hypot(pos.x, pos.z);
         if (d > BOUNDARY) { pos.x *= BOUNDARY / d; pos.z *= BOUNDARY / d; speed *= 0.9; }
 
@@ -911,17 +1365,170 @@
           camLook.set(0, 6, 0);
         } else {
           const fx = Math.sin(heading), fz = Math.cos(heading);
-          const back = 6.5 + Math.abs(speed) * 0.12;
-          desired.set(pos.x - fx * back, 2.8 + Math.abs(speed) * 0.03, pos.z - fz * back);
+          const back = (6.5 + Math.abs(speed) * 0.12) * camDist;
+          desired.set(pos.x - fx * back, 2.8 * camDist + Math.abs(speed) * 0.03, pos.z - fz * back);
           camera.position.lerp(desired, 1 - Math.exp(-dt * 4));
           lookTarget.set(pos.x + fx * 3, 1.2, pos.z + fz * 3);
           camLook.lerp(lookTarget, 1 - Math.exp(-dt * 6));
-          if (!reduced) {
-            camera.fov = 62 + Math.abs(speed) * 0.5;
-            camera.updateProjectionMatrix();
-          }
+          const fov = settings.motion ? 62 : 62 + Math.abs(speed) * 0.5;
+          if (Math.abs(camera.fov - fov) > 0.01) { camera.fov = fov; camera.updateProjectionMatrix(); }
         }
         camera.lookAt(camLook);
+      }
+
+      /* ================= SOUND EFFECTS (generated, no files needed) ================= */
+      let actx = null, sfxGain = null;
+      function audio() {
+        if (!actx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return null;
+          actx = new AC();
+          sfxGain = actx.createGain();
+          sfxGain.gain.value = settings.sound / 100;
+          sfxGain.connect(actx.destination);
+        }
+        if (actx.state === "suspended") actx.resume();
+        return actx;
+      }
+      function tone(freq, dur, type = "sine", vol = 0.3, when = 0) {
+        const a = audio();
+        if (!a || sfxGain.gain.value <= 0) return;
+        const o = a.createOscillator(), g = a.createGain(), t0 = a.currentTime + when;
+        o.type = type; o.frequency.value = freq;
+        g.gain.setValueAtTime(0.0001, t0);
+        g.gain.exponentialRampToValueAtTime(vol, t0 + 0.012);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        o.connect(g).connect(sfxGain);
+        o.start(t0); o.stop(t0 + dur + 0.05);
+      }
+      const notes = (list, gap, dur, type = "triangle", vol = 0.16) => list.forEach((f, i) => tone(f, dur, type, vol, i * gap));
+      const sfx = {
+        bell: () => { tone(1568, 0.9, "sine", 0.22); tone(2093, 0.6, "sine", 0.1, 0.01); tone(1568, 0.9, "sine", 0.18, 0.2); tone(2093, 0.6, "sine", 0.08, 0.21); },
+        orb: () => notes([880, 1318.5], 0.08, 0.25, "triangle", 0.2),
+        stamp: () => { tone(392, 0.12, "square", 0.06); notes([523.25, 783.99], 0.08, 0.3); },
+        lap: () => notes([523.25, 659.25, 783.99, 1046.5], 0.1, 0.3),
+        complete: () => notes([523.25, 659.25, 783.99, 1046.5, 1318.5], 0.12, 0.5),
+        click: () => tone(660, 0.06, "square", 0.05),
+      };
+
+      /* ================= PROGRESS: passport, orbs, laps ================= */
+      const stationId = (s) => slug(s.title);
+      let progress = persist.json("world-progress", { visited: [], orbs: [], completeShown: false });
+      let visited = new Set(progress.visited);
+      let orbsFound = new Set(progress.orbs);
+      let bestLap = parseFloat(persist.get("world-best-lap")) || 0;
+      const saveProgress = () =>
+        persist.set("world-progress", JSON.stringify({ visited: [...visited], orbs: [...orbsFound], completeShown: progress.completeShown }));
+      const syncOrbs = () => orbs.forEach((o) => (o.g.visible = !orbsFound.has(o.id)));
+      syncOrbs();
+
+      const fmtTime = (s) => { const m = Math.floor(s / 60); return `${m}:${(s - m * 60).toFixed(1).padStart(4, "0")}`; };
+      const passportPill = $("#passport-pill"), orbPill = $("#orb-pill"), lapPill = $("#lap-pill");
+      function updateProgressHUD() {
+        passportPill.innerHTML = `Landmarks <b>${visited.size}/${STATIONS.length}</b>`;
+        orbPill.innerHTML = `Orbs <b>${orbsFound.size}/${orbs.length}</b>`;
+      }
+
+      const toastEl = $("#toast");
+      let toastTimer = 0;
+      function toast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2400);
+      }
+
+      function stamp(s) {
+        const id = stationId(s);
+        if (visited.has(id)) return;
+        visited.add(id);
+        saveProgress();
+        updateProgressHUD();
+        sfx.stamp();
+        toast(`Stamped: ${s.title} · ${visited.size}/${STATIONS.length}`);
+        if (visited.size === STATIONS.length && !progress.completeShown) pendingComplete = true;
+      }
+
+      function collectOrb(o) {
+        orbsFound.add(o.id);
+        o.g.visible = false;
+        saveProgress();
+        updateProgressHUD();
+        sfx.orb();
+        if (orbsFound.size === orbs.length) {
+          toast(`All ${orbs.length} orbs found!`);
+          track("world-all-orbs", "Found every orb");
+        } else {
+          toast(`Orb found · ${orbsFound.size}/${orbs.length}`);
+        }
+      }
+
+      function showComplete() {
+        progress.completeShown = true;
+        saveProgress();
+        $("#cs-landmarks").textContent = `${visited.size}/${STATIONS.length}`;
+        $("#cs-orbs").textContent = `${orbsFound.size}/${orbs.length}`;
+        $("#cs-lap").textContent = bestLap ? fmtTime(bestLap) : "–";
+        $("#complete").hidden = false;
+        paused = true;
+        clearInput();
+        sfx.complete();
+        track("world-passport-complete", "Stamped every landmark");
+        $("#complete-close").focus({ preventScroll: true });
+      }
+      $("#complete-close").addEventListener("click", () => {
+        $("#complete").hidden = true;
+        paused = false;
+        canvas.focus({ preventScroll: true });
+      });
+
+      // Lap timer: pass three checkpoints in order, then cross the start line
+      const CHECKPOINTS = [0.25, 0.5, 0.75].map((u) => Math.round(u * SAMPLES));
+      let lapActive = false, lapTime = 0, nextCp = 0, lapHudTimer = 0;
+      function updateLap(dt) {
+        const rn = roadNearest(pos.x, pos.z);
+        if (lapActive) lapTime += dt;
+        if (rn.d < ROAD_W + 2) {
+          if (nextCp < CHECKPOINTS.length && Math.abs(rn.i - CHECKPOINTS[nextCp]) < 6) nextCp++;
+          if (rn.i < 4 || rn.i > SAMPLES - 4) {
+            if (nextCp === CHECKPOINTS.length) finishLap();
+            else if (nextCp === 0) { lapActive = true; lapTime = 0; }
+          }
+        }
+        lapHudTimer -= dt;
+        if (lapHudTimer <= 0) {
+          lapHudTimer = 0.1;
+          lapPill.innerHTML = `Lap <b>${fmtTime(lapActive ? lapTime : 0)}</b>${bestLap ? ` · Best <b>${fmtTime(bestLap)}</b>` : ""}`;
+        }
+      }
+      function finishLap() {
+        const time = lapTime;
+        nextCp = 0; lapTime = 0; lapActive = true;
+        if (time < 8) return;
+        const isBest = !bestLap || time < bestLap;
+        if (isBest) { bestLap = time; persist.set("world-best-lap", String(time)); }
+        sfx.lap();
+        toast(isBest ? `New best lap · ${fmtTime(time)}` : `Lap · ${fmtTime(time)}`);
+        track("world-lap-complete", "Finished a lap");
+      }
+
+      // Quick controls
+      let lightOn = true;
+      function toggleLight() {
+        lightOn = !lightOn;
+        headlight.intensity = lightOn ? 40 : 0;
+        sfx.click();
+        toast(lightOn ? "Headlight on" : "Headlight off");
+      }
+      const CAMERA_NAMES = { close: "Close", normal: "Normal", far: "Far" };
+      let camDist = 1;
+      function cycleCamera() {
+        const order = ["close", "normal", "far"];
+        settings.camera = order[(order.indexOf(settings.camera) + 1) % order.length];
+        persist.set("world-settings", JSON.stringify(settings));
+        camDist = { close: 0.72, normal: 1, far: 1.5 }[settings.camera];
+        sfx.click();
+        toast(`Camera: ${CAMERA_NAMES[settings.camera]}`);
       }
 
       /* ================= UI ================= */
@@ -941,6 +1548,7 @@
 
       function openPanel(s) {
         track(`world-open-${slug(s.title)}`, `Opened ${s.title} landmark`);
+        stamp(s);
         panelOpen = true;
         clearInput();
         $("#panel-kicker").textContent = s.kicker;
@@ -957,6 +1565,7 @@
         panel.classList.remove("open");
         nearest = null; // forces the prompt to refresh
         canvas.focus({ preventScroll: true });
+        if (pendingComplete) { pendingComplete = false; showComplete(); }
       }
       $("#panel-close").addEventListener("click", closePanel);
       $("#panel-body").addEventListener("click", (e) => {
@@ -990,11 +1599,22 @@
         roadPts.forEach((p, i) => (i ? mctx.lineTo(c + p.x * s, c + p.z * s) : mctx.moveTo(c + p.x * s, c + p.z * s)));
         mctx.closePath();
         mctx.stroke();
+        mctx.beginPath();
+        mctx.arc(c + POND.x * s, c + POND.z * s, POND.r * s, 0, Math.PI * 2);
+        mctx.fillStyle = "rgba(70,150,200,0.35)";
+        mctx.fill();
+        mctx.fillStyle = "#f2f4f5";
+        mctx.fillRect(c + roadPts[0].x * s - 2 * u, c + roadPts[0].z * s - 2 * u, 4 * u, 4 * u);
         for (const st of STATIONS) {
           mctx.beginPath();
           mctx.arc(c + st.pos.x * s, c + st.pos.z * s, (st === nearest ? 5 : 3.5) * u, 0, Math.PI * 2);
           mctx.fillStyle = st.color;
           mctx.fill();
+          if (visited.has(stationId(st))) {
+            mctx.lineWidth = 1.5 * u;
+            mctx.strokeStyle = "#f2f4f5";
+            mctx.stroke();
+          }
         }
         let px = pos.x * s, pz = pos.z * s;
         const pd = Math.hypot(px, pz), lim = c - 10 * u;
@@ -1021,7 +1641,15 @@
       const KEYMAP = { KeyW: "up", ArrowUp: "up", KeyS: "down", ArrowDown: "down", Space: "down", KeyA: "left", ArrowLeft: "left", KeyD: "right", ArrowRight: "right" };
       addEventListener("keydown", (e) => {
         if (!started) return;
+        if (settingsOpen) { if (e.code === "Escape") { e.preventDefault(); closeSettings(false); } return; }
+        if (!$("#complete").hidden) { if (e.code === "Escape") $("#complete-close").click(); return; }
         if (panelOpen) { if (e.code === "Escape") closePanel(); return; }
+        if (e.code === "KeyP" || e.code === "Escape") { e.preventDefault(); openSettings(); return; }
+        if (!e.repeat) {
+          if (e.code === "KeyB") sfx.bell();
+          if (e.code === "KeyL") toggleLight();
+          if (e.code === "KeyC") cycleCamera();
+        }
         const k = KEYMAP[e.code];
         if (k) { input[k] = true; e.preventDefault(); }
         if ((e.code === "KeyE" || e.code === "Enter") && nearest) { e.preventDefault(); openPanel(nearest); }
@@ -1031,11 +1659,12 @@
 
       if (matchMedia("(pointer: coarse)").matches) document.body.classList.add("touch");
       addEventListener("touchstart", () => document.body.classList.add("touch"), { once: true, passive: true });
+      document.querySelector('#touch [data-act="bell"]')?.addEventListener("pointerdown", (e) => { e.preventDefault(); sfx.bell(); });
       document.querySelectorAll("#touch [data-k]").forEach((b) => {
         const k = b.dataset.k;
         b.addEventListener("pointerdown", (e) => {
           e.preventDefault();
-          if (panelOpen) return;
+          if (panelOpen || paused) return;
           input[k] = true;
           b.classList.add("on");
           b.setPointerCapture?.(e.pointerId);
@@ -1054,16 +1683,201 @@
       addEventListener("resize", resize);
       resize();
 
+      /* ---------- Guestbook: optional name before riding ----------
+         Sign up at formspree.io, create a form, and paste its ID below.
+         Each named visitor then arrives in your email inbox. */
+      const GUESTBOOK_URL = "https://formspree.io/f/mrpeqrzg";
+      const nameInput = $("#guest-name"), orgInput = $("#guest-org");
+      const store = {
+        get: (k) => { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+        set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
+        once: (k) => { try { if (sessionStorage.getItem(k)) return false; sessionStorage.setItem(k, "1"); return true; } catch { return true; } },
+      };
+      nameInput.value = store.get("world-guest-name");
+      orgInput.value = store.get("world-guest-org");
+
+      function sendGuest(name, org) {
+        if (!name && !org) { track("world-guest-anonymous", "Entered the world anonymously"); return; }
+        track("world-guest-named", "Entered the world with a name");
+        if (GUESTBOOK_URL.includes("YOUR_FORM_ID") || !store.once("world-guest-sent")) return;
+        fetch(GUESTBOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            name: name || "(not given)",
+            organisation: org || "(not given)",
+            came_from: new URLSearchParams(location.search).get("ref") || document.referrer || "direct",
+            device: matchMedia("(pointer: coarse)").matches ? "phone / tablet" : "computer",
+            _subject: `${name || "Someone"} entered your 3D world`,
+          }),
+          keepalive: true,
+        }).catch(() => {});
+      }
+
+      // Floating name tag above the rider
+      function makeNameTag(text) {
+        const c = document.createElement("canvas");
+        c.width = 512; c.height = 128;
+        const g = c.getContext("2d");
+        let size = 64;
+        g.font = `700 ${size}px "JetBrains Mono", ui-monospace, monospace`;
+        while (g.measureText(text).width > 440 && size > 26) { size -= 4; g.font = `700 ${size}px "JetBrains Mono", ui-monospace, monospace`; }
+        const w = Math.min(500, g.measureText(text).width + 56);
+        g.fillStyle = "rgba(7, 8, 11, 0.72)";
+        g.strokeStyle = "rgba(61, 255, 166, 0.7)";
+        g.lineWidth = 4;
+        g.beginPath();
+        g.roundRect((512 - w) / 2, 20, w, 88, 44);
+        g.fill(); g.stroke();
+        g.fillStyle = "#3dffa6";
+        g.textAlign = "center"; g.textBaseline = "middle";
+        g.fillText(text, 256, 66);
+        const tex = new THREE.CanvasTexture(c);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false }));
+        spr.scale.set(2.4, 0.6, 1);
+        spr.position.y = 2.25;
+        return spr;
+      }
+
       const startBtn = $("#start");
       function start() {
         if (started) return;
         started = true;
+        const guestName = nameInput.value.trim().slice(0, 60);
+        const guestOrg = orgInput.value.trim().slice(0, 80);
+        store.set("world-guest-name", guestName);
+        store.set("world-guest-org", guestOrg);
+        sendGuest(guestName, guestOrg);
+        if (guestName) {
+          bikeRoot.add(makeNameTag(guestName));
+          const pill = $("#rider-pill");
+          pill.textContent = `Riding as ${guestName}`;
+          pill.hidden = false;
+        }
+        nameInput.blur(); orgInput.blur();
+        audio();
+        updateProgressHUD();
+        lapActive = true; lapTime = 0; nextCp = 0;
+        if (visited.size || orbsFound.size) toast(`Welcome back · ${visited.size}/${STATIONS.length} landmarks stamped`);
         track("world-start-riding", "Started riding in the 3D world");
         $("#intro").classList.add("gone");
         document.body.classList.add("playing");
         canvas.focus({ preventScroll: true });
       }
-      startBtn.addEventListener("click", start);
+      $("#guest-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!startBtn.disabled) start();
+      });
+
+      /* ================= SETTINGS ================= */
+      const settingsEl = $("#settings");
+      const f = {
+        quality: $("#set-quality"), fullscreen: $("#set-fullscreen"), sound: $("#set-sound"), music: $("#set-music"),
+        camera: $("#set-camera"), minimap: $("#set-minimap"), motion: $("#set-motion"), lang: $("#set-lang"),
+      };
+      const canFullscreen = !!(document.documentElement.requestFullscreen && document.fullscreenEnabled !== false);
+
+      function applySettings() {
+        const q = settings.quality, dpr = window.devicePixelRatio || 1;
+        renderer.setPixelRatio(q === "low" ? Math.min(dpr, 1) * 0.75 : q === "medium" ? Math.min(dpr, 1.5) : Math.min(dpr, 2));
+        const shadows = q !== "low";
+        if (renderer.shadowMap.enabled !== shadows) {
+          renderer.shadowMap.enabled = shadows;
+          scene.traverse((o) => { if (o.material) [].concat(o.material).forEach((m) => (m.needsUpdate = true)); });
+        }
+        moon.castShadow = shadows;
+        fireflies.visible = flowers.visible = q !== "low";
+        camDist = { close: 0.72, normal: 1, far: 1.5 }[settings.camera] || 1;
+        mm.style.display = settings.minimap ? "" : "none";
+        if (sfxGain) sfxGain.gain.value = settings.sound / 100;
+        resize();
+      }
+
+      const paintRange = (el) => {
+        el.style.setProperty("--val", `${el.value}%`);
+        el.parentElement.querySelector(".set-value").textContent = el.value;
+      };
+      [f.sound, f.music].forEach((el) => el.addEventListener("input", () => paintRange(el)));
+      f.sound.addEventListener("change", () => {
+        audio();
+        if (sfxGain) sfxGain.gain.value = f.sound.value / 100; // preview; Cancel restores it
+        sfx.orb();
+      });
+
+      function fillForm() {
+        f.quality.value = settings.quality;
+        f.sound.value = settings.sound;
+        f.music.value = settings.music;
+        f.camera.value = settings.camera;
+        f.minimap.checked = settings.minimap;
+        f.motion.checked = settings.motion;
+        f.lang.value = settings.lang;
+        f.fullscreen.checked = !!document.fullscreenElement;
+        f.fullscreen.disabled = !canFullscreen;
+        paintRange(f.sound);
+        paintRange(f.music);
+      }
+
+      const delBtn = $("#set-delete");
+      let delArmed = false;
+      const resetDelete = () => { delArmed = false; delBtn.classList.remove("confirm"); delBtn.textContent = "Delete saved data"; };
+      delBtn.addEventListener("click", () => {
+        if (!delArmed) { delArmed = true; delBtn.classList.add("confirm"); delBtn.textContent = "Click again to confirm"; return; }
+        ["world-progress", "world-best-lap", "world-settings", "world-guest-name", "world-guest-org"].forEach(persist.remove);
+        progress = { visited: [], orbs: [], completeShown: false };
+        visited = new Set();
+        orbsFound = new Set();
+        bestLap = 0;
+        syncOrbs();
+        updateProgressHUD();
+        settings = { ...DEFAULT_SETTINGS };
+        fillForm();
+        resetDelete();
+        toast("Saved data deleted");
+      });
+
+      function openSettings() {
+        if (!started || settingsOpen || !$("#complete").hidden) return;
+        if (panelOpen) closePanel();
+        if (!$("#complete").hidden) return;
+        settingsOpen = true;
+        paused = true;
+        clearInput();
+        fillForm();
+        resetDelete();
+        promptEl.classList.remove("show");
+        settingsEl.hidden = false;
+        f.quality.focus({ preventScroll: true });
+        track("world-open-settings", "Opened settings");
+      }
+      function closeSettings(save) {
+        if (!settingsOpen) return;
+        if (save) {
+          settings = {
+            quality: f.quality.value, sound: +f.sound.value, music: +f.music.value, camera: f.camera.value,
+            minimap: f.minimap.checked, motion: f.motion.checked, lang: f.lang.value,
+          };
+          persist.set("world-settings", JSON.stringify(settings));
+          if (canFullscreen) {
+            if (f.fullscreen.checked && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+            if (!f.fullscreen.checked && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+          }
+          toast("Settings saved");
+        }
+        applySettings();
+        settingsOpen = false;
+        paused = false;
+        settingsEl.hidden = true;
+        nearest = null;
+        canvas.focus({ preventScroll: true });
+      }
+      $("#settings-btn").addEventListener("click", openSettings);
+      $("#set-cancel").addEventListener("click", () => closeSettings(false));
+      $("#set-save").addEventListener("click", () => closeSettings(true));
+      settingsEl.addEventListener("click", (e) => { if (e.target === settingsEl) closeSettings(false); });
+      applySettings();
+      updateProgressHUD();
 
       /* ================= LOOP ================= */
       const clock = new THREE.Clock();
@@ -1072,8 +1886,16 @@
         const dt = Math.min(clock.getDelta(), 0.05);
         const t = clock.elapsedTime;
 
-        if (started) updateBike(dt);
+        if (started && !paused) {
+          updateBike(dt);
+          updateLap(dt);
+          for (const o of orbs) if (o.g.visible && Math.abs(o.x - pos.x) < 1.8 && Math.abs(o.z - pos.z) < 1.8 && Math.hypot(o.x - pos.x, o.z - pos.z) < 1.8) collectOrb(o);
+        } else if (paused) {
+          speed = 0;
+          crankVel = 0;
+        }
         animateBike(dt);
+        updateScenery(dt, t);
         for (const s of STATIONS) s.tick(t);
         core.rotation.y = t * 0.15;
         orbitA.rotation.set(Math.PI / 2 + Math.sin(t * 0.3) * 0.4, t * 0.25, 0);
@@ -1093,7 +1915,7 @@
         stars.position.copy(camera.position);
         moonDisc.position.copy(camera.position).addScaledVector(MOON_DIR, 500);
 
-        if (started) {
+        if (started && !paused) {
           let best = null, bd = INTERACT;
           for (const s of STATIONS) {
             const d = Math.hypot(pos.x - s.pos.x, pos.z - s.pos.z) - s.radius;
