@@ -102,6 +102,7 @@
       @keyframes eq { 0%, 100% { height: 3px; } 50% { height: 10px; } }
       #music-note { margin: 0.5rem 0 0; font-size: 0.75rem; color: var(--fog); min-height: 1em; }
       .guest-note { margin: 0.35rem 0 0; font-size: 0.78rem; line-height: 1.5; color: var(--fog); }
+      .pill[hidden] { display: none; }
       #rider-pill { color: var(--emerald); max-width: 14rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       #load-error { color: var(--amber); font-size: 0.85rem; line-height: 1.5; margin: 1rem 0 0; min-height: 1em; }
 
@@ -371,7 +372,7 @@
     </style>
 
     <!-- Visitor analytics (GoatCounter). Replace YOURCODE with the code you picked when signing up. -->
-    <script data-goatcounter="https://YOURCODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script data-goatcounter="https://dylanalves.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     <!-- Three.js (3D engine) loaded from a CDN, no install needed -->
     <script type="importmap">
       { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
@@ -647,10 +648,12 @@
           kicker: "01 — Presence", title: "About",
           html: `
             <img class="panel-photo" src="images/dylan.jpg" alt="Portrait of Dylan Ashley Alves" />
-            <p>I'm a Computer Engineering graduate from Temasek Polytechnic (Class of 2026), and I'm genuinely
-            excited by anything to do with Artificial Intelligence, Machine Learning, and Computer Vision.
-            There's something special about teaching a machine to see and understand the world, and that's
-            the space I hope to specialize in.</p>
+            <p>I'm a Computer Engineering graduate from Temasek Polytechnic (Class of 2026). I build software that
+            puts AI to practical use, like a study assistant that turns students' own notes into quizzes. I enjoy
+            the whole journey: designing the idea, wiring up the data, and making it something people actually
+            want to use.</p>
+            <p><b style="color: var(--amber)">Now:</b> serving National Service until 2028, open to software &amp; AI
+            roles after, and happy to connect now.</p>
             <p>I love coding. Whether it's building predictive models, wrangling data into clear visualizations,
             or just tinkering with a new idea in Python, I enjoy the process of figuring things out and making
             something work. I'm also a big believer in using AI as an everyday tool, and I happily use it to
@@ -658,23 +661,23 @@
             <p>Something that matters a lot to me is teaching. I love helping others understand tricky concepts,
             and nothing beats the moment when something finally "clicks" for someone. Sharing what I know is one
             of my favourite ways to learn, too.</p>
-            ${tags(["Python", "C", "C#", "Java", "HTML", "JavaScript", "Full-stack", "OOP", "Microcontrollers", "IoT", "Data visualisation", "Machine learning"])}`,
+            ${tags(["Python", "C", "C#", "Java", "HTML", "JavaScript", "Full-stack", "OOP", "Microcontrollers", "IoT", "Data visualisation", "Machine learning", "LangChain", "RAG"])}`,
         },
         {
-          kind: "portal", color: "#3dffa6", t: 0.17,
-          kicker: "02 — Work · 01", title: "Carpark Monitor",
+          kind: "portal", color: "#3dffa6", t: 0.53,
+          kicker: "02 — Work · 04", title: "Carpark Monitor",
           html: video("videos/Carpark.mp4", "Demo video of the Carpark Monitoring System") +
             project("A system that monitors a carpark and tracks which lots are available, so drivers can see the current status at a glance.", []),
         },
         {
-          kind: "portal", color: "#f0b45a", t: 0.29,
-          kicker: "02 — Work · 02", title: "Food Ordering",
+          kind: "portal", color: "#f0b45a", t: 0.41,
+          kicker: "02 — Work · 03", title: "Food Ordering",
           html: video("videos/FoodOrder.mp4", "Demo video of the Food Ordering System") +
             project("An online food ordering system where customers browse the menu and place orders, and staff manage and edit the inventory, built around object-oriented design.", ["OOP", "Ordering", "Inventory"]),
         },
         {
-          kind: "portal", color: "#3dffa6", t: 0.41,
-          kicker: "02 — Work · 03", title: "My Learning AI",
+          kind: "portal", color: "#3dffa6", t: 0.17,
+          kicker: "02 — Work · 01", title: "My Learning AI",
           html: shots([
               ["images/projects/rag-chatbot.jpg", "Chatbot", "Chatbot page answering a question about uploaded lecture slides"],
               ["images/projects/rag-quiz.jpg", "Quiz", "Quiz Builder page with subjects, file uploads and a model picker"],
@@ -682,8 +685,8 @@
             ]) + project("My major project: a RAG study assistant built with LangChain. Students upload their notes and slides, chat with an AI tutor that answers from that material, generate 10-question quizzes per subject, and track their accuracy and mistakes over time.", ["Python", "LangChain", "RAG", "Streamlit", "Qdrant"], [["Try it live ↗", "https://mylearningai.streamlit.app/"], ["View the code on GitHub ↗", "https://github.com/DylanAshleyAlves24/LangChainApp"]]),
         },
         {
-          kind: "portal", color: "#f0b45a", t: 0.53,
-          kicker: "02 — Work · 04", title: "This World",
+          kind: "portal", color: "#f0b45a", t: 0.29,
+          kicker: "02 — Work · 02", title: "This World",
           html: project("The world you're riding through right now: a 3D open world built with Three.js that runs right in the browser, with a bike you can steer and landmarks that open up my work.", ["Three.js", "JavaScript", "WebGL"], [["View the code on GitHub ↗", "https://github.com/dylanashleyalves/dylan-portfolio"]]),
         },
         {
@@ -691,6 +694,7 @@
           kicker: "03 — Trajectory", title: "Path",
           html: `
             <ol class="timeline">
+              <li><span class="when">2026 — 2028</span><h3>National Service</h3><p>Serving full-time National Service, while continuing to build and learn on the side, including this world.</p></li>
               <li><span class="when">Apr 2025 — Aug 2025</span><h3>Empire Code, Coding &amp; Robotics Intern</h3><p>Taught computer science and robotics to students aged 5–15 using Scratch, Thunkable, LEGO Spike, and Minecraft Education. Designed story-based coding exercises and small games, and coached National Robotics Competition teams on sensor placement, testing, and presentations.</p></li>
               <li><span class="when">Aug 2024 — Apr 2025</span><h3>Dusit Thani Laguna Singapore, Banquet Server</h3><p>Coordinated event logistics with managers, worked across diverse teams, and handled guest lists and orders accurately during busy events.</p></li>
               <li><span class="when">May 2024 — Jul 2024</span><h3>Sony Pictures Networks, Production &amp; Systems Freelancer</h3><p>Monitored live broadcast feeds from India to Singapore and other regions, operated channel-sorting equipment, and managed rosters and room assignments in Excel.</p></li>
@@ -749,7 +753,7 @@
           kind: "beacon", color: "#3dffa6", t: 0.88,
           kicker: "06 — Signal", title: "Contact",
           html: `
-            <p>Have a role, a project, or a question? I'd love to hear from you.</p>
+            <p>Have a role for after NS, a project idea, or a question? I'd love to hear from you.</p>
             <div class="links">
               <a href="mailto:${EMAIL}">Email me</a>
               <a href="${GITHUB}" target="_blank" rel="noreferrer">GitHub ↗</a>
