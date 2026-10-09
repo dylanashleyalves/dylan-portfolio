@@ -82,6 +82,25 @@
       }
       .guest input::placeholder { color: rgba(139, 149, 163, 0.55); }
       .guest input:focus { border-color: rgba(61, 255, 166, 0.5); box-shadow: 0 0 0 3px rgba(61, 255, 166, 0.12); }
+      .guest-share { display: flex !important; align-items: center; gap: 0.55rem; margin-top: 0.5rem !important; cursor: pointer; font-size: 0.8rem !important; letter-spacing: 0.02em !important; text-transform: none !important; color: var(--mist) !important; }
+      .guest-share input { width: 1rem; height: 1rem; accent-color: #3dffa6; cursor: pointer; }
+      #online-pill b { color: var(--emerald); }
+      .music-pick { margin: 0 0 1.5rem; }
+      .music-label { margin: 0 0 0.55rem; font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fog); }
+      .music-options { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+      .music-chip {
+        display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.5rem 0.85rem; border-radius: 999px; cursor: pointer;
+        border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.04); color: var(--mist); font: 500 0.78rem var(--mono);
+      }
+      .music-chip:hover { border-color: rgba(61, 255, 166, 0.45); }
+      .music-chip[aria-checked="true"] { border-color: var(--emerald); background: rgba(61, 255, 166, 0.12); color: var(--emerald); }
+      .music-chip .eq { display: inline-flex; gap: 2px; align-items: flex-end; height: 10px; }
+      .music-chip .eq i { width: 2px; height: 3px; background: currentColor; }
+      .music-chip[aria-checked="true"].playing .eq i { animation: eq 0.9s ease-in-out infinite; }
+      .music-chip .eq i:nth-child(2) { animation-delay: 0.2s !important; }
+      .music-chip .eq i:nth-child(3) { animation-delay: 0.4s !important; }
+      @keyframes eq { 0%, 100% { height: 3px; } 50% { height: 10px; } }
+      #music-note { margin: 0.5rem 0 0; font-size: 0.75rem; color: var(--fog); min-height: 1em; }
       .guest-note { margin: 0.35rem 0 0; font-size: 0.78rem; line-height: 1.5; color: var(--fog); }
       #rider-pill { color: var(--emerald); max-width: 14rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       #load-error { color: var(--amber); font-size: 0.85rem; line-height: 1.5; margin: 1rem 0 0; min-height: 1em; }
@@ -153,6 +172,90 @@
       .set-btn.primary { border-color: var(--emerald); color: var(--emerald); }
       .set-btn.primary:hover { background: var(--emerald); color: var(--obsidian); }
       .set-select:focus-visible, .set-range:focus-visible, .set-btn:focus-visible, .set-wide:focus-visible { outline: 2px solid var(--emerald); outline-offset: 2px; }
+
+      /* ---------- Darts mini-game ---------- */
+      body.in-darts .hud, body.in-darts #prompt { opacity: 0 !important; pointer-events: none !important; }
+      body.in-darts .hud > * { pointer-events: none !important; }
+      #darts-hud { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
+      #darts-hud[hidden] { display: none; }
+      #darts-hud > * { pointer-events: auto; }
+      .darts-top {
+        position: absolute; top: calc(1rem + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
+        width: max-content; max-width: calc(100% - 2rem); border-radius: 1.25rem; padding: 0.9rem 1.4rem; text-align: center;
+      }
+      .darts-top .kicker { margin: 0 0 0.6rem; }
+      .darts-row { display: flex; flex-wrap: wrap; gap: 0.6rem 1.5rem; justify-content: center; font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fog); }
+      .darts-row b { display: block; margin-top: 0.25rem; font-size: 1.25rem; letter-spacing: 0; color: var(--mist); white-space: nowrap; }
+      #darts-score { color: var(--emerald); }
+      #darts-left { color: var(--amber); letter-spacing: 0.1em; }
+      #darts-exit { position: absolute; top: calc(1rem + env(safe-area-inset-top)); left: calc(1rem + env(safe-area-inset-left)); cursor: pointer; }
+      .darts-hint {
+        position: absolute; left: 50%; bottom: calc(1.5rem + env(safe-area-inset-bottom)); transform: translateX(-50%); margin: 0; white-space: nowrap;
+        font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fog); pointer-events: none !important;
+      }
+      .hint-touch { display: none; }
+      body.touch .hint-desktop { display: none; }
+      body.touch .hint-touch { display: inline; }
+      #darts-throw { position: absolute; left: 50%; bottom: calc(3.5rem + env(safe-area-inset-bottom)); transform: translateX(-50%); display: none; min-width: 9rem; }
+      body.touch #darts-throw { display: block; }
+      .darts-result {
+        position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+        min-width: min(320px, calc(100% - 2rem)); border-radius: 1.5rem; padding: 1.75rem 2rem; text-align: center;
+      }
+      .darts-result[hidden] { display: none; }
+      .darts-result p { margin: 0; color: var(--fog); font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; }
+      .darts-result b { display: block; margin: 0.5rem 0; font-family: var(--mono); font-size: 3.4rem; font-weight: 800; color: var(--emerald); }
+      #darts-note { color: var(--amber); margin-bottom: 1.25rem; }
+      #darts-games { position: absolute; top: calc(1rem + env(safe-area-inset-top)); right: calc(1rem + env(safe-area-inset-right)); cursor: pointer; }
+      .darts-menu {
+        position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, calc(100% - 2rem));
+        max-height: calc(100% - 2rem); overflow-y: auto; border-radius: 1.5rem; padding: 1.5rem; text-align: center;
+      }
+      .darts-menu[hidden] { display: none; }
+      .darts-menu > p { margin: 0; font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fog); }
+      .darts-modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; margin: 1rem 0 1.25rem; }
+      .mode-btn {
+        display: flex; flex-direction: column; align-items: flex-start; gap: 0.25rem; padding: 0.85rem 1rem; text-align: left; cursor: pointer;
+        border-radius: 1rem; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.04); color: var(--mist); font-family: var(--mono);
+      }
+      .mode-btn:hover, .mode-btn:focus-visible { outline: none; border-color: rgba(61, 255, 166, 0.55); background: rgba(61, 255, 166, 0.08); }
+      .mode-btn strong { font-size: 1.15rem; color: var(--emerald); }
+      .mode-btn span { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fog); }
+      .mode-btn em { font-style: normal; font-size: 10px; color: var(--amber); }
+      .cricket-board { display: flex; flex-wrap: wrap; gap: 0.35rem; justify-content: center; margin-top: 0.7rem; }
+      .cricket-board[hidden] { display: none; }
+      .cricket-board span { display: flex; flex-direction: column; align-items: center; min-width: 2.5rem; padding: 0.3rem 0.25rem; border-radius: 0.5rem; border: 1px solid var(--glass-border); font: 700 0.95rem var(--mono); color: var(--mist); }
+      .cricket-board i { font-style: normal; font-size: 9px; letter-spacing: 0.1em; color: var(--fog); }
+      .cricket-board span.closed { border-color: rgba(61, 255, 166, 0.6); background: rgba(61, 255, 166, 0.12); color: var(--emerald); }
+      @media (max-width: 640px) { .darts-top { top: calc(4rem + env(safe-area-inset-top)); } }
+      .darts-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+
+      /* ---------- Sticker wheel ---------- */
+      .icon-btn { position: relative; }
+      .icon-btn.has-new::after { content: ""; position: absolute; top: 1px; right: 1px; width: 10px; height: 10px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 8px var(--emerald); }
+      #sticker-wheel { position: fixed; inset: 0; z-index: 38; display: grid; place-items: center; background: rgba(7, 8, 11, 0.35); }
+      #sticker-wheel[hidden] { display: none; }
+      .wheel {
+        --r: min(150px, 33vw); position: relative; width: calc(var(--r) * 2 + 96px); height: calc(var(--r) * 2 + 96px); border-radius: 50%;
+        background: radial-gradient(circle, rgba(14, 17, 22, 0.88) 0 36%, rgba(14, 17, 22, 0.55) 37% 100%);
+        border: 1px solid var(--glass-border); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      }
+      .wheel-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 46%; text-align: center; pointer-events: none; }
+      #wheel-title { margin: 0; font-size: 1rem; text-transform: uppercase; color: var(--mist); }
+      #wheel-hint { margin: 0.35rem 0 0; font-size: 10px; line-height: 1.45; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fog); }
+      .sticker-slot {
+        position: absolute; left: 50%; top: 50%; width: 72px; height: 72px; margin: -36px 0 0 -36px; padding: 0; border: 0; border-radius: 50%;
+        background: none; cursor: pointer; transform: rotate(var(--a)) translateY(calc(var(--r) * -1)) rotate(calc(var(--a) * -1)); transition: transform 0.2s var(--ease);
+      }
+      .sticker-slot:hover, .sticker-slot:focus-visible { outline: none; transform: rotate(var(--a)) translateY(calc(var(--r) * -1)) rotate(calc(var(--a) * -1)) scale(1.15); }
+      .sticker-slot img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5)); }
+      .sticker-slot.locked img { filter: grayscale(1) brightness(0.4); }
+      .sticker-slot .lock { position: absolute; inset: 0; display: grid; place-items: center; color: #f2f4f5; }
+      .sticker-slot .lock svg { width: 22px; height: 22px; }
+      .sticker-slot .key { position: absolute; right: -2px; bottom: -2px; min-width: 20px; height: 20px; border-radius: 6px; background: #0b0e12; border: 1px solid var(--glass-border); font: 600 10px/18px var(--mono); color: var(--fog); }
+      .sticker-slot .new { position: absolute; top: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 10px var(--emerald); }
+      body.touch .sticker-slot .key { display: none; }
+      @media (max-width: 480px) { .sticker-slot { width: 58px; height: 58px; margin: -29px 0 0 -29px; } }
 
       /* ---------- Passport complete ---------- */
       #complete { position: fixed; inset: 0; z-index: 35; display: flex; padding: 1rem; overflow-y: auto; background: rgba(7, 8, 11, 0.7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
@@ -226,6 +329,15 @@
         display: block; width: 96px; height: 96px; border-radius: 50%; object-fit: cover; object-position: 50% 12%;
         border: 2px solid var(--emerald); box-shadow: 0 0 24px rgba(61, 255, 166, 0.3); margin-bottom: 1.25rem;
       }
+      .panel-media { display: grid; gap: 0.75rem; margin: 0 0 1.25rem; }
+      .panel-media video { display: block; width: 100%; max-height: 58vh; border-radius: 1rem; background: #000; border: 1px solid var(--glass-border); }
+      .panel-media figure { margin: 0; }
+      .panel-media a { display: block; border-radius: 0.9rem; overflow: hidden; border: 1px solid var(--glass-border); }
+      .panel-media img { display: block; width: 100%; height: auto; transition: transform 0.4s var(--ease); }
+      .panel-media a:hover img { transform: scale(1.03); }
+      .panel-media figcaption { margin-top: 0.4rem; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fog); }
+      .panel-media.two { grid-template-columns: 1fr 1fr; }
+      .panel-sub { margin: 1.5rem 0 0.75rem; font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--emerald); }
       .esc { margin-top: 2rem; font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fog); opacity: 0.7; }
 
       /* ---------- Touch ---------- */
@@ -274,16 +386,22 @@
         <h1 id="intro-title" class="display">Ride the <span>atmosphere</span></h1>
         <p class="lead">
           Hop on the bike and follow the glowing road. Every landmark holds a piece of my work.
-          Stamp them all, set a lap time, and hunt for glowing orbs hidden off the road.
+          Stamp them all, set a lap time, hunt for hidden orbs, and play football and darts in the sports corner.
         </p>
         <div class="keys">
           <kbd>W / ↑</kbd><span>Pedal</span>
           <kbd>S / ↓ / Space</kbd><span>Brake, then reverse</span>
           <kbd>A D / ← →</kbd><span>Steer</span>
-          <kbd>E</kbd><span>Open the landmark you're near</span>
+          <kbd>E</kbd><span>Open a landmark or start darts</span>
           <kbd>B · L · C</kbd><span>Bell, headlight, camera view</span>
+          <kbd>T · 1–0</kbd><span>Stickers (unlock more by playing)</span>
           <kbd>P / Esc</kbd><span>Settings (pauses the ride)</span>
           <kbd>Phone</kbd><span>Use the on-screen pads</span>
+        </div>
+        <div class="music-pick">
+          <p class="music-label">Background music</p>
+          <div class="music-options" id="music-options" role="radiogroup" aria-label="Background music"></div>
+          <p id="music-note"></p>
         </div>
         <form id="guest-form" novalidate>
           <div class="guest">
@@ -292,6 +410,7 @@
             <label for="guest-org">Company or school <span>(optional)</span></label>
             <input id="guest-org" name="organisation" type="text" maxlength="80" autocomplete="organization" placeholder="e.g. Temasek Polytechnic" />
             <p class="guest-note">Shared only with me, so I know who stopped by. Leave it blank to ride anonymously.</p>
+            <label class="guest-share"><input id="guest-share" type="checkbox" /> Also show my name to other riders in the world</label>
           </div>
           <div class="intro-actions">
             <button id="start" class="btn" type="submit" disabled>Loading world…</button>
@@ -308,6 +427,7 @@
       <span class="pill glass mono" id="rider-pill" hidden></span>
     </div>
     <div class="hud top-right">
+      <button id="sticker-btn" class="icon-btn glass" type="button" aria-label="Stickers (T)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg></button>
       <button id="settings-btn" class="icon-btn glass" type="button" aria-label="Open settings (P)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
       <canvas id="minimap" aria-hidden="true"></canvas>
     </div>
@@ -315,8 +435,10 @@
       <span class="pill glass mono" id="passport-pill">Landmarks <b>0/0</b></span>
       <span class="pill glass mono" id="orb-pill">Orbs <b>0/0</b></span>
       <span class="pill glass mono" id="lap-pill">Lap <b>0:00.0</b></span>
+      <span class="pill glass mono" id="sport-pill">Goals <b>0</b> · Darts <b>–</b></span>
+      <span class="pill glass mono" id="online-pill" hidden>Online <b>1</b></span>
     </div>
-    <p class="hud hint mono">WASD to ride · E open · B bell · P settings</p>
+    <p class="hud hint mono">WASD to ride · E open · T stickers · P settings</p>
     <div id="toast" class="glass mono" role="status" aria-live="polite"></div>
 
     <button id="prompt" class="glass mono" type="button"></button>
@@ -354,7 +476,8 @@
         <div class="set-row">
           <h3 class="set-label pixel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg> Music:</h3>
           <div class="set-slider"><input id="set-music" class="set-range" type="range" min="0" max="100" step="5" aria-label="Music volume" /><span class="set-value"></span></div>
-          <p class="set-note">Background music coming soon</p>
+          <select id="set-track" class="set-select" aria-label="Music track" style="margin-top: 0.7rem; width: 100%"></select>
+          <p class="set-note" id="set-music-note"></p>
         </div>
 
         <div class="set-row">
@@ -371,6 +494,7 @@
           <div class="set-inline">
             <label class="set-check pixel"><input id="set-minimap" type="checkbox" /><span class="box"></span><span>Minimap</span></label>
             <label class="set-check pixel"><input id="set-motion" type="checkbox" /><span class="box"></span><span>Reduce motion</span></label>
+            <label class="set-check pixel"><input id="set-others" type="checkbox" /><span class="box"></span><span>Other riders</span></label>
           </div>
         </div>
 
@@ -391,6 +515,53 @@
           <button id="set-save" class="set-btn pixel primary" type="button">Save</button>
         </div>
       </section>
+    </div>
+
+    <!-- Darts mini-game -->
+    <div id="darts-hud" hidden>
+      <button id="darts-exit" class="pill glass mono" type="button">✕ Leave</button>
+      <button id="darts-games" class="pill glass mono" type="button">☰ Games</button>
+      <div class="darts-top glass">
+        <p class="kicker mono" id="darts-kicker">Darts</p>
+        <div class="darts-row" id="darts-row"></div>
+        <div class="cricket-board" id="cricket-board" hidden></div>
+      </div>
+      <p class="darts-hint mono">
+        <span class="hint-desktop">Aim with the mouse or arrow keys · Click or Space to throw · Esc to leave</span>
+        <span class="hint-touch">Drag to aim · Tap Throw</span>
+      </p>
+      <button id="darts-throw" class="btn" type="button">Throw</button>
+      <div id="darts-result" class="darts-result glass" hidden>
+        <p id="darts-result-label">Round score</p>
+        <b id="darts-final">0</b>
+        <p id="darts-note"></p>
+        <div class="darts-buttons">
+          <button id="darts-again" class="btn" type="button">Play again</button>
+          <button id="darts-change" class="set-btn" type="button">Change game</button>
+          <button id="darts-leave" class="set-btn" type="button">Back to riding</button>
+        </div>
+      </div>
+      <div id="darts-menu" class="darts-menu glass" hidden>
+        <p>Choose a game</p>
+        <div class="darts-modes">
+          <button class="mode-btn" type="button" data-game="practice"><strong>Practice</strong><span>3 darts · highest score</span><em data-rec="practice"></em></button>
+          <button class="mode-btn" type="button" data-game="301"><strong>301</strong><span>Count down to zero · 10 rounds</span><em data-rec="301"></em></button>
+          <button class="mode-btn" type="button" data-game="501"><strong>501</strong><span>Count down to zero · 15 rounds</span><em data-rec="501"></em></button>
+          <button class="mode-btn" type="button" data-game="701"><strong>701</strong><span>Count down to zero · 20 rounds</span><em data-rec="701"></em></button>
+          <button class="mode-btn" type="button" data-game="cricket"><strong>Cricket</strong><span>Close 15–20 + bull · 20 rounds</span><em data-rec="cricket"></em></button>
+        </div>
+        <button id="darts-menu-leave" class="set-btn" type="button">Back to riding</button>
+      </div>
+    </div>
+
+    <!-- Sticker wheel -->
+    <div id="sticker-wheel" hidden>
+      <div class="wheel" role="dialog" aria-label="Stickers">
+        <div class="wheel-center">
+          <p id="wheel-title" class="pixel">Stickers</p>
+          <p id="wheel-hint" class="mono">Pick one to show it</p>
+        </div>
+      </div>
     </div>
 
     <!-- Shown once every landmark has been stamped -->
@@ -449,7 +620,7 @@
         },
       };
       const coarse = matchMedia("(pointer: coarse)").matches;
-      const DEFAULT_SETTINGS = { quality: coarse ? "medium" : "high", sound: 70, music: 50, camera: "normal", minimap: true, motion: reduced, lang: "en" };
+      const DEFAULT_SETTINGS = { quality: coarse ? "medium" : "high", sound: 70, music: 50, camera: "normal", minimap: true, motion: reduced, lang: "en", others: true, track: "calm" };
       let settings = persist.json("world-settings", DEFAULT_SETTINGS);
 
       /* =====================================================
@@ -463,6 +634,11 @@
         <p>${desc}</p>
         ${tags(tagList)}
         ${links.length ? `<div class="links">${links.map(([label, url]) => `<a href="${url}"${url.startsWith("http") ? ' target="_blank" rel="noreferrer"' : ""}>${label}</a>`).join("")}</div>` : ""}`;
+
+      // media for panels (same files your main site uses)
+      const video = (src, label) => `<div class="panel-media"><video src="${src}" controls muted playsinline preload="metadata" aria-label="${label}"></video></div>`;
+      const shots = (list, cls = "") => `<div class="panel-media ${cls}">${list.map(([src, cap, alt]) =>
+        `<figure><a href="${src}" target="_blank" rel="noreferrer" aria-label="Open ${cap} full size"><img src="${src}" alt="${alt || cap}" loading="lazy" /></a><figcaption>${cap}</figcaption></figure>`).join("")}</div>`;
 
       // t = where on the road loop the landmark sits (0 to 1)
       const STATIONS = [
@@ -487,17 +663,23 @@
         {
           kind: "portal", color: "#3dffa6", t: 0.17,
           kicker: "02 — Work · 01", title: "Carpark Monitor",
-          html: project("A system that monitors a carpark and tracks which lots are available, so drivers can see the current status at a glance.", []),
+          html: video("videos/Carpark.mp4", "Demo video of the Carpark Monitoring System") +
+            project("A system that monitors a carpark and tracks which lots are available, so drivers can see the current status at a glance.", []),
         },
         {
           kind: "portal", color: "#f0b45a", t: 0.29,
           kicker: "02 — Work · 02", title: "Food Ordering",
-          html: project("An online food ordering system where customers browse the menu and place orders, and staff manage and edit the inventory, built around object-oriented design.", ["OOP", "Ordering", "Inventory"]),
+          html: video("videos/FoodOrder.mp4", "Demo video of the Food Ordering System") +
+            project("An online food ordering system where customers browse the menu and place orders, and staff manage and edit the inventory, built around object-oriented design.", ["OOP", "Ordering", "Inventory"]),
         },
         {
           kind: "portal", color: "#3dffa6", t: 0.41,
           kicker: "02 — Work · 03", title: "My Learning AI",
-          html: project("My major project: a RAG study assistant built with LangChain. Students upload their notes and slides, chat with an AI tutor that answers from that material, generate 10-question quizzes per subject, and track their accuracy and mistakes over time.", ["Python", "LangChain", "RAG", "Streamlit", "Qdrant"], [["Try it live ↗", "https://mylearningai.streamlit.app/"], ["View the code on GitHub ↗", "https://github.com/DylanAshleyAlves24/LangChainApp"]]),
+          html: shots([
+              ["images/projects/rag-chatbot.jpg", "Chatbot", "Chatbot page answering a question about uploaded lecture slides"],
+              ["images/projects/rag-quiz.jpg", "Quiz", "Quiz Builder page with subjects, file uploads and a model picker"],
+              ["images/projects/rag-statistics.jpg", "Statistics", "Progress page showing quiz accuracy over time and recent mistakes"],
+            ]) + project("My major project: a RAG study assistant built with LangChain. Students upload their notes and slides, chat with an AI tutor that answers from that material, generate 10-question quizzes per subject, and track their accuracy and mistakes over time.", ["Python", "LangChain", "RAG", "Streamlit", "Qdrant"], [["Try it live ↗", "https://mylearningai.streamlit.app/"], ["View the code on GitHub ↗", "https://github.com/DylanAshleyAlves24/LangChainApp"]]),
         },
         {
           kind: "portal", color: "#f0b45a", t: 0.53,
@@ -509,34 +691,63 @@
           kicker: "03 — Trajectory", title: "Path",
           html: `
             <ol class="timeline">
-              <li><span class="when">Apr 2025 — Aug 2025</span><h3>Empire Code, Coding &amp; Robotics Intern</h3><p>Taught computer science and robotics to students aged 5–15 using Scratch, Thunkable, LEGO Spike, and Minecraft Education. Designed story-based coding exercises and small games, and coached National Robotics Competition teams.</p></li>
-              <li><span class="when">Aug 2024 — Apr 2025</span><h3>Dusit Thani Laguna Singapore, Banquet Server</h3><p>Coordinated event logistics with managers and handled guest lists and orders accurately during busy events.</p></li>
-              <li><span class="when">May 2024 — Jul 2024</span><h3>Sony Pictures Networks, Production &amp; Systems Freelancer</h3><p>Monitored live broadcast feeds from India to Singapore and other regions, operated channel-sorting equipment, and managed rosters in Excel.</p></li>
-              <li><span class="when">Apr 2023 — Aug 2023</span><h3>MB Auto, Car Account Assistant</h3><p>Entered financial transactions, prepared and sent client invoices, and kept records organised.</p></li>
-              <li><span class="when">2023 — 2026</span><h3>Temasek Polytechnic, Diploma in Computer Engineering</h3><p>Full-stack Development, OOP, Microcontroller Application, IoT, Data Visualisation, and AI &amp; Machine Learning.</p></li>
+              <li><span class="when">Apr 2025 — Aug 2025</span><h3>Empire Code, Coding &amp; Robotics Intern</h3><p>Taught computer science and robotics to students aged 5–15 using Scratch, Thunkable, LEGO Spike, and Minecraft Education. Designed story-based coding exercises and small games, and coached National Robotics Competition teams on sensor placement, testing, and presentations.</p></li>
+              <li><span class="when">Aug 2024 — Apr 2025</span><h3>Dusit Thani Laguna Singapore, Banquet Server</h3><p>Coordinated event logistics with managers, worked across diverse teams, and handled guest lists and orders accurately during busy events.</p></li>
+              <li><span class="when">May 2024 — Jul 2024</span><h3>Sony Pictures Networks, Production &amp; Systems Freelancer</h3><p>Monitored live broadcast feeds from India to Singapore and other regions, operated channel-sorting equipment, and managed rosters and room assignments in Excel.</p></li>
+              <li><span class="when">Apr 2023 — Aug 2023</span><h3>MB Auto, Car Account Assistant</h3><p>Entered financial transactions into accounting software, prepared and sent client invoices, and kept digital and physical records organised.</p></li>
+              <li><span class="when">2023 — 2026</span><h3>Temasek Polytechnic, Diploma in Computer Engineering</h3><p>Modules included Full-stack Development, Object-Oriented Programming, Microcontroller Application, Internet of Things, Data Visualisation &amp; Analytics, and AI &amp; Machine Learning.</p></li>
             </ol>`,
         },
         {
           kind: "monolith", color: "#f0b45a", t: 0.77,
           kicker: "04 — Recognition", title: "Certs",
           html: `
+            <p class="panel-sub" style="margin-top: 0">Achievements</p>
             <ol class="timeline">
-              <li><span class="when">2018</span><h3>Young Engineers Award</h3></li>
-              <li><span class="when">2020 — 2022</span><h3>Football Captain, Top 8</h3><p>National B Division Championships.</p></li>
-              <li><span class="when">2020 — 2022</span><h3>Basketball Vice-Captain</h3></li>
-              <li><span class="when">Under-22 · Doubles</span><h3>Darts Top 8, U-22 JB Festival</h3><p>With doubles partner Kok Zhi Hao.</p></li>
+              <li><span class="when">2018</span><h3>Young Engineers Award</h3><p>Recognised early for engineering ability, years before choosing it as a career.</p></li>
+              <li><span class="when">2020 — 2022</span><h3>Football Captain, Top 8</h3><p>Led training and match-day strategy, taking the team to a Top 8 finish in the National B Division Championships.</p></li>
+              <li><span class="when">2020 — 2022</span><h3>Basketball Vice-Captain</h3><p>Organised and led team practices, and kept teammates motivated through games and training.</p></li>
+              <li><span class="when">Under-22 · Doubles</span><h3>Darts Top 8, U-22 JB Festival</h3><p>Reached the Top 8 in the Under-22 category at the JB Festival with my doubles partner, Kok Zhi Hao.</p></li>
             </ol>
-            <div class="links">
-              <a href="https://coursera.org/verify/specialization/LIRZ044B9N4W" target="_blank" rel="noreferrer">Google Cloud · Generative AI Learning Path ↗</a>
-              <a href="https://coursera.org/verify/PAM56PRETI77" target="_blank" rel="noreferrer">IBM · Generative AI for Data Science ↗</a>
-              <a href="https://coursera.org/verify/GKVML39AKR2I" target="_blank" rel="noreferrer">IBM · Data Scientist Career Guide ↗</a>
-              <a href="https://coursera.org/verify/DU48F48QFUUB" target="_blank" rel="noreferrer">Google · Crash Course on Python ↗</a>
-            </div>
-            <p>Also certified in First Aid with CPR + AED (STC Institute of Learning, valid until Sep 2028).</p>`,
+            <p class="panel-sub">Certifications</p>
+            <ol class="timeline">
+              <li><span class="when">Google Cloud · May 2025</span><h3>Introduction to Generative AI Learning Path</h3><p>4-course specialization.</p>
+                <div class="links" style="margin-top: 0.6rem">
+                  <a href="https://coursera.org/verify/specialization/LIRZ044B9N4W" target="_blank" rel="noreferrer">Verify specialization ↗</a>
+                  <a href="https://coursera.org/verify/A2G4CLO211HQ" target="_blank" rel="noreferrer">Generative AI ↗</a>
+                  <a href="https://coursera.org/verify/YXFFPTUCD4SI" target="_blank" rel="noreferrer">Large Language Models ↗</a>
+                  <a href="https://coursera.org/verify/LOXLTUAOB70V" target="_blank" rel="noreferrer">Responsible AI ↗</a>
+                  <a href="https://coursera.org/verify/8QFD6Y4535GE" target="_blank" rel="noreferrer">Applying AI Principles ↗</a>
+                </div></li>
+              <li><span class="when">IBM · May 2025</span><h3>Generative AI: Elevate Your Data Science Career</h3><div class="links" style="margin-top: 0.6rem"><a href="https://coursera.org/verify/PAM56PRETI77" target="_blank" rel="noreferrer">Verify ↗</a></div></li>
+              <li><span class="when">IBM · May 2025</span><h3>Data Scientist Career Guide and Interview Preparation</h3><div class="links" style="margin-top: 0.6rem"><a href="https://coursera.org/verify/GKVML39AKR2I" target="_blank" rel="noreferrer">Verify ↗</a></div></li>
+              <li><span class="when">Google · Feb 2025</span><h3>Crash Course on Python</h3><div class="links" style="margin-top: 0.6rem"><a href="https://coursera.org/verify/DU48F48QFUUB" target="_blank" rel="noreferrer">Verify ↗</a></div></li>
+              <li><span class="when">STC Institute of Learning · Sep 2026</span><h3>First Aid with CPR + AED (Hands-only) Provider</h3><p>Valid until Sep 2028.</p></li>
+            </ol>`,
         },
         {
-          kind: "beacon", color: "#3dffa6", t: 0.89,
-          kicker: "05 — Signal", title: "Contact",
+          kind: "portal", color: "#f0b45a", t: 0.95,
+          kicker: "05 — Off the keyboard", title: "Life",
+          html: `
+            <p>Life beyond the code: darts, football, the gym, and my time at Temasek Polytechnic.</p>
+            <p class="panel-sub">Darts · competing on DARTSLIVE, often as a doubles pair</p>
+            ${shots([["images/darts/u22-jb-festival-top8.jpg", "Top 8 · U-22 JB Festival", "Dylan with doubles partner Kok Zhi Hao and their coach, wearing Top 8 medals"]])}
+            ${shots([
+              ["images/darts/cricket-win.jpg", "Cricket win · 3.25 stats", "DARTSLIVE screen showing a Cricket win with a White Horse"],
+              ["images/darts/701-result.jpg", "701 finished in 25 darts", "DARTSLIVE 701 game result screen"],
+            ], "two")}
+            <p class="panel-sub">Fitness journey · progress, one session at a time</p>
+            ${shots([
+              ["images/fitness/start.jpg", "Where it started", "Gym mirror selfie, earlier in the journey"],
+              ["images/fitness/progress.jpg", "Progress · still going", "Gym mirror selfie showing progress"],
+            ], "two")}
+            <p class="panel-sub">Football · former team captain, still love the game</p>
+            <p>Try the pitch in the sports corner of this world, and score a goal or three.</p>
+            <div class="links"><a href="index.html#life">See more on my website</a></div>`,
+        },
+        {
+          kind: "beacon", color: "#3dffa6", t: 0.88,
+          kicker: "06 — Signal", title: "Contact",
           html: `
             <p>Have a role, a project, or a question? I'd love to hear from you.</p>
             <div class="links">
@@ -545,6 +756,41 @@
               <a href="https://www.linkedin.com/in/dylan-alves-757831281" target="_blank" rel="noreferrer">LinkedIn ↗</a>
             </div>`,
         },
+      ];
+
+      /* =====================================================
+         STICKERS: your custom emotes
+         To use your own art: put a square PNG with a transparent background
+         in images/stickers/ and set img, e.g. img: "images/stickers/wave.png".
+         With img left empty, a placeholder sticker is drawn instead.
+         unlock decides when a visitor earns it.
+         ===================================================== */
+      const STICKERS = [
+        { id: "hi", name: "Hi!", big: "HI!", small: "WAVE", tone: "emerald", img: "images/stickers/hi.webp", hint: "Free", unlock: () => true },
+        { id: "rose", name: "For You 🌹", big: "4U", small: "ROSE", tone: "pink", img: "images/stickers/rose.webp", hint: "Free", unlock: () => true },
+        { id: "sonion", name: "Sonion 😭", big: "😭", small: "SONION", tone: "amber", img: "images/stickers/sonion.webp", hint: "Miss the board completely in darts", unlock: () => !!progress.miss },
+        { id: "explorer", name: "Absolute Cinema", big: "ALL", small: "EXPLORER", tone: "emerald", img: "images/stickers/cinema.webp", hint: "Stamp every landmark", unlock: () => visited.size >= STATIONS.length },
+        { id: "orbs", name: "Orb hunter", big: "10", small: "ORBS", tone: "pink", img: "", hint: "Find 10 orbs", unlock: () => orbsFound.size >= 10 },
+        { id: "goal", name: "Goal!", big: "GOAL", small: "FOOTBALL", tone: "emerald", img: "images/stickers/goal.webp", hint: "Score a goal", unlock: () => (progress.goals || 0) >= 1 },
+        { id: "unchained", name: "Unchained", big: "x3", small: "HAT-TRICK", tone: "amber", img: "images/stickers/unchained.webp", hint: "Score 3 goals", unlock: () => (progress.goals || 0) >= 3 },
+        { id: "ton", name: "Ton", big: "100+", small: "DARTS", tone: "pink", img: "images/stickers/ton.webp", hint: "Score 100+ in a darts round", unlock: () => dartsBest >= 100 },
+        { id: "ishowdylan", name: "IShowDylan", big: "BULL", small: "50", tone: "amber", img: "images/stickers/mwah.webp", hint: "Hit the bull in darts", unlock: () => !!progress.bull },
+        { id: "speed", name: "Speedster", big: "<55s", small: "LAP", tone: "blue", img: "", hint: "Finish a lap in under 55 seconds", unlock: () => bestLap > 0 && bestLap < 55 },
+      ];
+
+      /* =====================================================
+         MUSIC: background tracks
+         The generated tracks are original music played live by the browser,
+         so there are no files and no copyright issues.
+         To add your own: put an MP3 in a music/ folder and add a line like
+           { id: "mytrack", name: "Track name", note: "Artist · licence", src: "music/my-track.mp3" },
+         Only use music you have the rights to (your own, CC0, or properly licensed).
+         ===================================================== */
+      const MUSIC_TRACKS = [
+        { id: "calm", name: "Calm piano", note: "Soft, sparse piano for a cosy block-game mood", gen: "calm" },
+        { id: "night", name: "Night drift", note: "Warm pads and slow bells under the stars", gen: "night" },
+        { id: "sunrise", name: "Sunrise", note: "Gentle, brighter arpeggios", gen: "sunrise" },
+        { id: "off", name: "No music", note: "Just the sound of the world" },
       ];
 
       /* ================= RENDERER & SCENE ================= */
@@ -821,6 +1067,11 @@
       scene.add(plazaRing);
 
       const POND = { x: 30, z: 20, r: 8 };
+      const PITCH = { x: -34, z: -8, hl: 12, hw: 7.5, goalHW: 2.2, goalDepth: 1.4 };
+      const DARTS = { x: -10, z: 30, boardY: 1.73, R: 0.45, oche: 2.6 };
+      const inSportsZone = (x, z, pad = 0) =>
+        (Math.abs(x - PITCH.x) < PITCH.hl + 4 + pad && Math.abs(z - PITCH.z) < PITCH.hw + 4 + pad) ||
+        Math.hypot(x - DARTS.x, z - (DARTS.z + 1.5)) < 6 + pad;
 
       /* ================= TREES, ROCKS, MOUNTAINS ================= */
       const trees = [];
@@ -829,6 +1080,7 @@
         const x = Math.cos(a) * r, z = Math.sin(a) * r;
         if (Math.hypot(x, z) < 14) continue;
         if (Math.hypot(x - POND.x, z - POND.z) < POND.r + 3) continue;
+        if (inSportsZone(x, z)) continue;
         if (roadDist(x, z) < ROAD_W + 3) continue;
         if (STATIONS.some((s) => Math.hypot(x - s.pos.x, z - s.pos.z) < 9)) continue;
         if (trees.some((t) => Math.hypot(x - t.x, z - t.z) < 3.2)) continue;
@@ -855,6 +1107,7 @@
         const x = Math.cos(a) * r, z = Math.sin(a) * r;
         if (roadDist(x, z) < ROAD_W + 1.5) continue;
         if (Math.hypot(x - POND.x, z - POND.z) < POND.r + 1) continue;
+        if (inSportsZone(x, z)) continue;
         const sc = 0.25 + rand() * 0.7;
         rocks.setMatrixAt(placed++, m4.compose(v4.set(x, sc * 0.3, z), q4.setFromEuler(new THREE.Euler(rand() * 3, rand() * 3, 0)), new THREE.Vector3(sc, sc * 0.7, sc)));
       }
@@ -987,6 +1240,7 @@
         Math.hypot(x, z) > 12 &&
         roadDist(x, z) > ROAD_W + 1.6 &&
         Math.hypot(x - POND.x, z - POND.z) > POND.r + 1.2 &&
+        !inSportsZone(x, z) &&
         !trees.some((t) => Math.abs(t.x - x) < gap && Math.abs(t.z - z) < gap) &&
         !STATIONS.some((s) => Math.hypot(x - s.pos.x, z - s.pos.z) < s.radius + 1.5) &&
         !lampSpots.some((l) => Math.hypot(x - l.bx, z - l.bz) < 1.2);
@@ -1079,6 +1333,7 @@
         const x = Math.cos(a) * r, z = Math.sin(a) * r;
         if (roadDist(x, z) < ROAD_W + 2.5) continue;
         if (Math.hypot(x - POND.x, z - POND.z) < POND.r + 1.5) continue;
+        if (inSportsZone(x, z, 1)) continue;
         if (STATIONS.some((s) => Math.hypot(x - s.pos.x, z - s.pos.z) < s.radius + 3)) continue;
         if (trees.some((t) => Math.hypot(x - t.x, z - t.z) < 1.8)) continue;
         if (orbs.some((o) => Math.hypot(x - o.x, z - o.z) < 18)) continue;
@@ -1147,6 +1402,256 @@
           shootMat.opacity = Math.sin(Math.PI * Math.min(shoot.t / 0.9, 1)) * 0.9;
           if (shoot.t > 0.9) { shoot.t = -1; shoot.wait = 6 + Math.random() * 10; shootMat.opacity = 0; }
         }
+      }
+
+      /* ================= SPORTS CORNER: football pitch + darts booth ================= */
+      const canvasTex = (cw, ch, draw) => {
+        const c = document.createElement("canvas"); c.width = cw; c.height = ch;
+        draw(c.getContext("2d"), cw, ch);
+        const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t;
+      };
+      const sportColliders = [];
+
+      // --- Football pitch ---
+      const pitch = new THREE.Group();
+      pitch.position.set(PITCH.x, 0, PITCH.z);
+      scene.add(pitch);
+      const PX = 40, pitchW = PITCH.hl * 2 + 2, pitchD = PITCH.hw * 2 + 2;
+      const pitchTex = canvasTex(pitchW * PX, pitchD * PX, (g, cw, ch) => {
+        for (let i = 0; i * 2 * PX < cw; i++) { g.fillStyle = i % 2 ? "#123524" : "#0f2d1f"; g.fillRect(i * 2 * PX, 0, 2 * PX, ch); }
+        g.strokeStyle = g.fillStyle = "rgba(235,245,238,0.9)";
+        g.lineWidth = 5;
+        const L = PX, T = PX, R = cw - PX, B = ch - PX, cx = cw / 2, cy = ch / 2;
+        g.strokeRect(L, T, R - L, B - T);
+        g.beginPath(); g.moveTo(cx, T); g.lineTo(cx, B); g.stroke();
+        g.beginPath(); g.arc(cx, cy, 3 * PX, 0, Math.PI * 2); g.stroke();
+        g.beginPath(); g.arc(cx, cy, 6, 0, Math.PI * 2); g.fill();
+        [[L, 1], [R, -1]].forEach(([gx, dir]) => {
+          g.strokeRect(dir > 0 ? gx : gx - 3.4 * PX, cy - 4.5 * PX, 3.4 * PX, 9 * PX);
+          g.strokeRect(dir > 0 ? gx : gx - 1.3 * PX, cy - 2.8 * PX, 1.3 * PX, 5.6 * PX);
+          g.beginPath(); g.arc(gx + dir * 2.4 * PX, cy, 5, 0, Math.PI * 2); g.fill();
+        });
+      });
+      const pitchMesh = new THREE.Mesh(new THREE.PlaneGeometry(pitchW, pitchD), new THREE.MeshStandardMaterial({ map: pitchTex, roughness: 0.95, emissive: 0xffffff, emissiveMap: pitchTex, emissiveIntensity: 0.22 }));
+      pitchMesh.rotation.x = -Math.PI / 2; pitchMesh.position.y = 0.03; pitchMesh.receiveShadow = true;
+      pitch.add(pitchMesh);
+      const pitchGlow = new THREE.Mesh(new THREE.PlaneGeometry(pitchW + 8, pitchD + 8), new THREE.MeshBasicMaterial({ map: radialTex("rgba(255,240,210,0.22)"), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
+      pitchGlow.rotation.x = -Math.PI / 2; pitchGlow.position.y = 0.05;
+      pitch.add(pitchGlow);
+
+      // low glowing boundary (the ball bounces off it; riders can cross it)
+      const rail = (rw, rd, x, z) => add(pitch, new THREE.BoxGeometry(rw, 0.18, rd), glow("#3dffa6"), x, 0.09, z);
+      rail(PITCH.hl * 2, 0.08, 0, -PITCH.hw);
+      rail(PITCH.hl * 2, 0.08, 0, PITCH.hw);
+      const endSeg = PITCH.hw - PITCH.goalHW;
+      [-1, 1].forEach((sx) => [-1, 1].forEach((sz) => rail(0.08, endSeg, sx * PITCH.hl, sz * (PITCH.goalHW + endSeg / 2))));
+
+      // goals at both ends
+      const GOAL_H = 2.1;
+      const goalMat = new THREE.MeshStandardMaterial({ color: 0xf2f4f5, roughness: 0.4, emissive: 0x555555 });
+      const netTex = canvasTex(128, 128, (g) => {
+        g.strokeStyle = "rgba(230,240,235,0.55)"; g.lineWidth = 3;
+        for (let i = 0; i <= 128; i += 16) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 128); g.moveTo(0, i); g.lineTo(128, i); g.stroke(); }
+      });
+      netTex.wrapS = netTex.wrapT = THREE.RepeatWrapping;
+      const netMat = (rx, ry) => {
+        const t = netTex.clone(); t.repeat.set(rx, ry); t.needsUpdate = true;
+        return new THREE.MeshBasicMaterial({ map: t, transparent: true, side: THREE.DoubleSide, depthWrite: false, toneMapped: false });
+      };
+      [-1, 1].forEach((sx) => {
+        const gx = sx * PITCH.hl, mid = gx + (sx * PITCH.goalDepth) / 2;
+        [-1, 1].forEach((sz) => {
+          add(pitch, new THREE.CylinderGeometry(0.07, 0.07, GOAL_H, 10), goalMat, gx, GOAL_H / 2, sz * PITCH.goalHW);
+          sportColliders.push({ x: PITCH.x + gx, z: PITCH.z + sz * PITCH.goalHW, r: 0.08 });
+          const side = new THREE.Mesh(new THREE.PlaneGeometry(PITCH.goalDepth, GOAL_H), netMat(PITCH.goalDepth / 0.35, GOAL_H / 0.35));
+          side.position.set(mid, GOAL_H / 2, sz * PITCH.goalHW);
+          pitch.add(side);
+        });
+        add(pitch, new THREE.CylinderGeometry(0.07, 0.07, PITCH.goalHW * 2, 10), goalMat, gx, GOAL_H, 0).rotation.x = Math.PI / 2;
+        const back = new THREE.Mesh(new THREE.PlaneGeometry(PITCH.goalHW * 2, GOAL_H), netMat((PITCH.goalHW * 2) / 0.35, GOAL_H / 0.35));
+        back.position.set(gx + sx * PITCH.goalDepth, GOAL_H / 2, 0); back.rotation.y = Math.PI / 2;
+        const top = new THREE.Mesh(new THREE.PlaneGeometry(PITCH.goalDepth, PITCH.goalHW * 2), netMat(PITCH.goalDepth / 0.35, (PITCH.goalHW * 2) / 0.35));
+        top.position.set(mid, GOAL_H, 0); top.rotation.x = -Math.PI / 2;
+        pitch.add(back, top);
+      });
+
+      // floodlights
+      const floodMat = new THREE.MeshBasicMaterial({ color: 0xffe9c4, toneMapped: false });
+      [-1, 1].forEach((sx) => [-1, 1].forEach((sz) => {
+        const fx = sx * (PITCH.hl + 1.6), fz = sz * (PITCH.hw + 1.6);
+        add(pitch, new THREE.CylinderGeometry(0.1, 0.14, 8, 8), darkMat, fx, 4, fz);
+        add(pitch, new THREE.BoxGeometry(0.9, 0.3, 0.5), floodMat, fx, 8.1, fz);
+        sportColliders.push({ x: PITCH.x + fx, z: PITCH.z + fz, r: 0.15 });
+      }));
+      const pitchLight = new THREE.PointLight(0xfff1d6, 140, 40, 2);
+      pitchLight.position.set(0, 10, 0);
+      pitch.add(pitchLight);
+      const pitchLabel = makeLabel("Hobbies · push the ball in", "Football", "#3dffa6", 1.1);
+      pitchLabel.position.set(0, 7.2, -PITCH.hw - 1);
+      pitch.add(pitchLabel);
+
+      // scoreboard
+      const scoreCanvas = document.createElement("canvas");
+      scoreCanvas.width = 512; scoreCanvas.height = 160;
+      const scoreTex = new THREE.CanvasTexture(scoreCanvas);
+      scoreTex.colorSpace = THREE.SRGBColorSpace;
+      function drawScoreboard(n) {
+        const g = scoreCanvas.getContext("2d");
+        g.clearRect(0, 0, 512, 160);
+        g.fillStyle = "rgba(7,8,11,0.85)"; g.fillRect(8, 8, 496, 144);
+        g.strokeStyle = "#3dffa6"; g.lineWidth = 4; g.strokeRect(8, 8, 496, 144);
+        g.textAlign = "center";
+        g.fillStyle = "#8b95a3"; g.font = '500 30px "JetBrains Mono", monospace'; g.fillText("GOALS SCORED", 256, 56);
+        g.fillStyle = "#f0b45a"; g.font = '800 72px "JetBrains Mono", monospace'; g.fillText(String(n), 256, 128);
+        scoreTex.needsUpdate = true;
+      }
+      drawScoreboard(0);
+      const scoreboard = new THREE.Sprite(new THREE.SpriteMaterial({ map: scoreTex, transparent: true, depthWrite: false, toneMapped: false }));
+      scoreboard.scale.set(4, 1.25, 1);
+      scoreboard.position.set(0, 4.6, PITCH.hw + 1.2);
+      pitch.add(scoreboard);
+
+      // the ball
+      const BALL_R = 0.42;
+      const ballTex = canvasTex(256, 128, (g, cw, ch) => {
+        g.fillStyle = "#f2f4f5"; g.fillRect(0, 0, cw, ch);
+        g.fillStyle = "#14181d";
+        for (let i = 0; i < 10; i++) {
+          const x = (i % 5) * 52 + (i < 5 ? 26 : 0) + 4, y = i < 5 ? 34 : 94;
+          g.beginPath();
+          for (let k = 0; k < 5; k++) { const a = (k * 2 * Math.PI) / 5 - Math.PI / 2; g.lineTo(x + Math.cos(a) * 15, y + Math.sin(a) * 15); }
+          g.closePath(); g.fill();
+        }
+      });
+      const ballMesh = new THREE.Mesh(new THREE.SphereGeometry(BALL_R, 24, 16), new THREE.MeshStandardMaterial({ map: ballTex, roughness: 0.45, emissive: 0x2a2a2a }));
+      ballMesh.castShadow = true;
+      scene.add(ballMesh);
+      const ball = { x: PITCH.x, z: PITCH.z, vx: 0, vz: 0, reset: 0, scored: false };
+      ballMesh.position.set(ball.x, BALL_R, ball.z);
+
+      // --- Darts booth ---
+      const booth = new THREE.Group();
+      booth.position.set(DARTS.x, 0, DARTS.z);
+      scene.add(booth);
+      add(booth, new THREE.BoxGeometry(3.2, 3, 0.2), darkMat, 0, 1.5, -0.15);
+      [-1, 1].forEach((s) => add(booth, new THREE.BoxGeometry(0.15, 3, 2.8), darkMat, s * 1.6, 1.5, 1.25));
+      add(booth, new THREE.BoxGeometry(3.4, 0.15, 3), darkMat, 0, 3.05, 1.3);
+      add(booth, new THREE.BoxGeometry(3.4, 0.06, 0.06), glow("#f0b45a"), 0, 2.95, 2.8);
+      add(booth, new THREE.BoxGeometry(1.4, 0.03, 0.08), glow("#f0b45a"), 0, 0.03, DARTS.oche);
+      const boardLight = new THREE.PointLight(0xffe2b0, 10, 6, 2);
+      boardLight.position.set(0, 2.7, 1.2);
+      booth.add(boardLight);
+      for (let x = -1.2; x <= 1.21; x += 0.8) sportColliders.push({ x: DARTS.x + x, z: DARTS.z - 0.15, r: 0.45 });
+      [-1, 1].forEach((s) => { for (let z = 0.2; z <= 2.61; z += 0.6) sportColliders.push({ x: DARTS.x + s * 1.6, z: DARTS.z + z, r: 0.25 }); });
+
+      const DART_ORDER = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5];
+      const RINGS = { bull: 6.35 / 170, outerBull: 15.9 / 170, tripleIn: 99 / 170, tripleOut: 107 / 170, doubleIn: 162 / 170 };
+      const BOARD_OUTER = 0.62;
+      const boardTex = canvasTex(1024, 1024, (g) => {
+        const c = 512, Rpx = (DARTS.R / BOARD_OUTER) * 512;
+        g.fillStyle = "#0b0e12"; g.beginPath(); g.arc(c, c, 512, 0, Math.PI * 2); g.fill();
+        const seg = (r0, r1, i, color) => {
+          const a0 = ((i * 18 - 9) * Math.PI) / 180, a1 = ((i * 18 + 9) * Math.PI) / 180;
+          g.beginPath();
+          for (let k = 0; k <= 8; k++) { const a = a0 + ((a1 - a0) * k) / 8; g.lineTo(c + Math.sin(a) * r1, c - Math.cos(a) * r1); }
+          for (let k = 8; k >= 0; k--) { const a = a0 + ((a1 - a0) * k) / 8; g.lineTo(c + Math.sin(a) * r0, c - Math.cos(a) * r0); }
+          g.closePath(); g.fillStyle = color; g.fill();
+        };
+        for (let i = 0; i < 20; i++) {
+          const dark = i % 2 === 0, single = dark ? "#16191d" : "#e9dfc6", ring = dark ? "#d4473f" : "#1f9d63";
+          seg(RINGS.outerBull * Rpx, RINGS.tripleIn * Rpx, i, single);
+          seg(RINGS.tripleIn * Rpx, RINGS.tripleOut * Rpx, i, ring);
+          seg(RINGS.tripleOut * Rpx, RINGS.doubleIn * Rpx, i, single);
+          seg(RINGS.doubleIn * Rpx, Rpx, i, ring);
+        }
+        g.fillStyle = "#1f9d63"; g.beginPath(); g.arc(c, c, RINGS.outerBull * Rpx, 0, Math.PI * 2); g.fill();
+        g.fillStyle = "#d4473f"; g.beginPath(); g.arc(c, c, RINGS.bull * Rpx, 0, Math.PI * 2); g.fill();
+        g.strokeStyle = "rgba(200,205,210,0.6)"; g.lineWidth = 2;
+        [RINGS.tripleIn, RINGS.tripleOut, RINGS.doubleIn, 1].forEach((r) => { g.beginPath(); g.arc(c, c, r * Rpx, 0, Math.PI * 2); g.stroke(); });
+        g.fillStyle = "#f2f4f5"; g.font = '700 46px "JetBrains Mono", monospace'; g.textAlign = "center"; g.textBaseline = "middle";
+        DART_ORDER.forEach((n, i) => { const a = (i * 18 * Math.PI) / 180, r = (Rpx + 512) / 2; g.fillText(String(n), c + Math.sin(a) * r, c - Math.cos(a) * r); });
+      });
+      const board = new THREE.Mesh(new THREE.CircleGeometry(BOARD_OUTER, 64), new THREE.MeshStandardMaterial({ map: boardTex, roughness: 0.85, emissive: 0xffffff, emissiveMap: boardTex, emissiveIntensity: 0.18 }));
+      board.position.set(0, DARTS.boardY, 0.02);
+      booth.add(board);
+      add(booth, new THREE.TorusGeometry(BOARD_OUTER + 0.03, 0.025, 8, 64), glow("#3dffa6"), 0, DARTS.boardY, 0.03);
+      const dartsLabel = makeLabel("Hobbies · press E to play", "Darts", "#f0b45a", 1.1);
+      dartsLabel.position.set(0, 4.8, 1.3);
+      booth.add(dartsLabel);
+
+      // a dart (tip at the origin, pointing toward the board)
+      const dartTemplate = (() => {
+        const d = new THREE.Group();
+        const metal = new THREE.MeshStandardMaterial({ color: 0xb8c0c8, metalness: 0.9, roughness: 0.25 });
+        const tip = new THREE.Mesh(new THREE.ConeGeometry(0.006, 0.05, 8), metal);
+        tip.rotation.x = -Math.PI / 2; tip.position.z = 0.025;
+        const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.07, 10), metal);
+        barrel.rotation.x = Math.PI / 2; barrel.position.z = 0.085;
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.06, 6), new THREE.MeshStandardMaterial({ color: 0x14181d }));
+        shaft.rotation.x = Math.PI / 2; shaft.position.z = 0.15;
+        const flightMat = new THREE.MeshBasicMaterial({ color: 0x3dffa6, side: THREE.DoubleSide, toneMapped: false });
+        const fl1 = new THREE.Mesh(new THREE.PlaneGeometry(0.06, 0.07), flightMat);
+        fl1.rotation.x = Math.PI / 2; fl1.position.z = 0.2;
+        const fl2 = new THREE.Mesh(new THREE.PlaneGeometry(0.07, 0.06), flightMat);
+        fl2.rotation.y = Math.PI / 2; fl2.position.z = 0.2;
+        d.add(tip, barrel, shaft, fl1, fl2);
+        d.scale.setScalar(2);
+        return d;
+      })();
+      const reticle = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: canvasTex(128, 128, (g) => {
+          g.strokeStyle = "#3dffa6"; g.lineWidth = 6;
+          g.beginPath(); g.arc(64, 64, 40, 0, Math.PI * 2); g.stroke();
+          g.beginPath(); g.moveTo(64, 8); g.lineTo(64, 40); g.moveTo(64, 88); g.lineTo(64, 120); g.moveTo(8, 64); g.lineTo(40, 64); g.moveTo(88, 64); g.lineTo(120, 64); g.stroke();
+          g.fillStyle = "#f0b45a"; g.beginPath(); g.arc(64, 64, 5, 0, Math.PI * 2); g.fill();
+        }),
+        transparent: true, depthWrite: false, depthTest: false, toneMapped: false,
+      }));
+      reticle.scale.set(0.12, 0.12, 1);
+      reticle.visible = false;
+      reticle.renderOrder = 10;
+      scene.add(reticle);
+
+      // places you can "play" (E key / tap), alongside the landmarks
+      const ACTIVITIES = [{ title: "Darts", color: "#f0b45a", pos: new THREE.Vector3(DARTS.x, 0, DARTS.z + DARTS.oche), radius: 0.6, play: () => enterDarts() }];
+
+      // particle bursts for goals and big darts hits
+      const BURST_N = 200;
+      const bPos = new Float32Array(BURST_N * 3).fill(-999), bCol = new Float32Array(BURST_N * 3), bVel = new Float32Array(BURST_N * 3), bLife = new Float32Array(BURST_N);
+      const bGeo = new THREE.BufferGeometry();
+      bGeo.setAttribute("position", new THREE.BufferAttribute(bPos, 3));
+      bGeo.setAttribute("color", new THREE.BufferAttribute(bCol, 3));
+      const bursts = new THREE.Points(bGeo, new THREE.PointsMaterial({ size: 0.22, map: radialTex("rgba(255,255,255,1)"), vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
+      bursts.frustumCulled = false;
+      scene.add(bursts);
+      const _bc = new THREE.Color();
+      function burst(x, y, z, colors, count = 40, spd = 5) {
+        let n = 0;
+        for (let i = 0; i < BURST_N && n < count; i++) {
+          if (bLife[i] > 0) continue;
+          const th = Math.random() * Math.PI * 2, ph = Math.random() * Math.PI, v = spd * (0.4 + Math.random() * 0.6);
+          bVel[i * 3] = Math.sin(ph) * Math.cos(th) * v;
+          bVel[i * 3 + 1] = Math.abs(Math.cos(ph)) * v + 1.5;
+          bVel[i * 3 + 2] = Math.sin(ph) * Math.sin(th) * v;
+          bPos[i * 3] = x; bPos[i * 3 + 1] = y; bPos[i * 3 + 2] = z;
+          _bc.set(colors[n % colors.length]);
+          bCol[i * 3] = _bc.r; bCol[i * 3 + 1] = _bc.g; bCol[i * 3 + 2] = _bc.b;
+          bLife[i] = 1 + Math.random() * 0.6;
+          n++;
+        }
+        bGeo.attributes.color.needsUpdate = true;
+      }
+      function updateBursts(dt) {
+        let any = false;
+        for (let i = 0; i < BURST_N; i++) {
+          if (bLife[i] <= 0) continue;
+          any = true;
+          bLife[i] -= dt;
+          bVel[i * 3 + 1] -= 9 * dt;
+          bPos[i * 3] += bVel[i * 3] * dt; bPos[i * 3 + 1] += bVel[i * 3 + 1] * dt; bPos[i * 3 + 2] += bVel[i * 3 + 2] * dt;
+          if (bLife[i] <= 0) bPos[i * 3 + 1] = -999;
+        }
+        if (any) bGeo.attributes.position.needsUpdate = true;
       }
 
       /* ================= BIKE & RIDER ================= */
@@ -1280,7 +1785,7 @@
       const tan0 = road.getTangentAt(0);
       let heading = Math.atan2(tan0.x, tan0.z);
       let speed = 0, steer = 0, wheelAngle = 0, crankAngle = 0, crankVel = 0;
-      let started = false, panelOpen = false, nearest = null, paused = false, settingsOpen = false, pendingComplete = false;
+      let started = false, panelOpen = false, nearest = null, paused = false, settingsOpen = false, pendingComplete = false, mode = "ride";
       const input = { up: false, down: false, left: false, right: false };
       const clearInput = () => {
         for (const k in input) input[k] = false;
@@ -1319,6 +1824,7 @@
         pushOut(POND.x, POND.z, POND.r - 0.4);
         for (const l of lampSpots) if (Math.abs(l.bx - pos.x) < 1.5 && Math.abs(l.bz - pos.z) < 1.5) pushOut(l.bx, l.bz, 0.12);
         for (const sp of startPosts) pushOut(sp.x, sp.z, 0.2);
+        for (const c of sportColliders) if (Math.abs(c.x - pos.x) < 2 && Math.abs(c.z - pos.z) < 2) pushOut(c.x, c.z, c.r);
         const d = Math.hypot(pos.x, pos.z);
         if (d > BOUNDARY) { pos.x *= BOUNDARY / d; pos.z *= BOUNDARY / d; speed *= 0.9; }
 
@@ -1409,24 +1915,219 @@
         lap: () => notes([523.25, 659.25, 783.99, 1046.5], 0.1, 0.3),
         complete: () => notes([523.25, 659.25, 783.99, 1046.5, 1318.5], 0.12, 0.5),
         click: () => tone(660, 0.06, "square", 0.05),
+        bust: () => { tone(220, 0.25, "sawtooth", 0.07); tone(150, 0.35, "sawtooth", 0.06, 0.12); },
+        pop: () => { tone(660, 0.08, "triangle", 0.15); tone(990, 0.12, "triangle", 0.12, 0.05); },
+        kick: () => { tone(110, 0.12, "square", 0.1); tone(70, 0.18, "sine", 0.2); },
+        goal: () => { notes([523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5], 0.09, 0.35, "square", 0.07); tone(1568, 0.8, "sine", 0.12, 0.55); },
+        whoosh: () => tone(900, 0.12, "sawtooth", 0.02),
+        thud: () => { tone(160, 0.08, "square", 0.08); tone(90, 0.12, "sine", 0.15); },
+        bull: () => { tone(160, 0.08, "square", 0.08); notes([987.77, 1318.5], 0.07, 0.25, "triangle", 0.18); },
       };
+
+      /* ================= MUSIC (generated live + optional files) ================= */
+      const MUSIC_BY_ID = Object.fromEntries(MUSIC_TRACKS.map((t) => [t.id, t]));
+      let musicGain = null, reverb = null, curBus = null, gen = null, genState = {}, genStep = 0, nextNoteTime = 0, fileAudio = null;
+      let musicStarted = false, currentTrack = null;
+      const musicLevel = (v = settings.music ?? 50) => Math.pow(v / 100, 2) * 0.55;
+      const mf = (m) => 440 * Math.pow(2, (m - 69) / 12);
+      function makeImpulse(a, secs, decay) {
+        const len = Math.floor(a.sampleRate * secs), buf = a.createBuffer(2, len, a.sampleRate);
+        for (let ch = 0; ch < 2; ch++) {
+          const d = buf.getChannelData(ch);
+          for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, decay);
+        }
+        return buf;
+      }
+      function musicOut() {
+        const a = audio();
+        if (!a) return null;
+        if (!musicGain) {
+          musicGain = a.createGain();
+          musicGain.gain.value = document.hidden ? 0 : musicLevel();
+          musicGain.connect(a.destination);
+          reverb = a.createConvolver();
+          reverb.buffer = makeImpulse(a, 3.2, 2.2);
+          const wet = a.createGain();
+          wet.gain.value = 0.45;
+          reverb.connect(wet).connect(musicGain);
+        }
+        return a;
+      }
+      function setMusicVolume(v) {
+        if (!musicGain) return;
+        musicGain.gain.setTargetAtTime(document.hidden ? 0 : musicLevel(v), actx.currentTime, 0.15);
+      }
+      document.addEventListener("visibilitychange", () => setMusicVolume());
+
+      // Instruments
+      function pianoNote(bus, freq, t, dur = 3, vol = 0.12) {
+        const o1 = actx.createOscillator(), o2 = actx.createOscillator(), g = actx.createGain(), g2 = actx.createGain(), lp = actx.createBiquadFilter();
+        o1.type = "triangle"; o1.frequency.value = freq;
+        o2.type = "sine"; o2.frequency.value = freq * 2;
+        g2.gain.value = 0.25;
+        lp.type = "lowpass";
+        lp.frequency.setValueAtTime(Math.min(5000, freq * 6), t);
+        lp.frequency.exponentialRampToValueAtTime(Math.max(250, freq * 1.5), t + dur);
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o2.connect(g2).connect(lp);
+        o1.connect(lp).connect(g).connect(bus);
+        o1.start(t); o2.start(t); o1.stop(t + dur + 0.1); o2.stop(t + dur + 0.1);
+      }
+      function padChord(bus, notesList, t, dur, vol = 0.035) {
+        for (const m of notesList) for (const det of [-6, 6]) {
+          const o = actx.createOscillator(), g = actx.createGain(), lp = actx.createBiquadFilter();
+          o.type = "sawtooth"; o.frequency.value = mf(m); o.detune.value = det;
+          lp.type = "lowpass"; lp.frequency.value = 850;
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.linearRampToValueAtTime(vol, t + 2.2);
+          g.gain.setValueAtTime(vol, t + dur - 2);
+          g.gain.linearRampToValueAtTime(0.0001, t + dur);
+          o.connect(lp).connect(g).connect(bus);
+          o.start(t); o.stop(t + dur + 0.1);
+        }
+      }
+      function bellNote(bus, freq, t, vol = 0.05) {
+        [[1, vol], [2.76, vol * 0.35]].forEach(([ratio, v]) => {
+          const o = actx.createOscillator(), g = actx.createGain();
+          o.type = "sine"; o.frequency.value = freq * ratio;
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.exponentialRampToValueAtTime(v, t + 0.01);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 4);
+          o.connect(g).connect(bus);
+          o.start(t); o.stop(t + 4.1);
+        });
+      }
+
+      // Original generative pieces: a new variation every time you listen
+      const GENERATORS = {
+        calm: {
+          step: 0.78,
+          play(s, n, t, bus) {
+            const roots = [48, 45, 41, 43], scale = [60, 62, 64, 67, 69, 72, 74, 76];
+            if (n % 32 === 0 || !s.motif) s.motif = Array.from({ length: 8 }, () => (Math.random() < 0.55 ? Math.floor(Math.random() * scale.length) : null));
+            if (n % 8 === 0) {
+              const r = roots[Math.floor(n / 8) % 4];
+              pianoNote(bus, mf(r), t, 6, 0.1);
+              if (Math.random() < 0.6) pianoNote(bus, mf(r + 7), t + 0.03, 5, 0.05);
+            }
+            const idx = s.motif[n % 8];
+            if (idx !== null && Math.random() < 0.85) pianoNote(bus, mf(scale[idx] + (Math.random() < 0.15 ? 12 : 0)), t + (Math.random() - 0.5) * 0.04, 3.2, 0.08);
+          },
+        },
+        night: {
+          step: 1,
+          play(s, n, t, bus) {
+            const chords = [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]];
+            if (n % 8 === 0) padChord(bus, chords[Math.floor(n / 8) % 4], t, 8.6);
+            if (Math.random() < 0.28) {
+              const bells = [72, 76, 79, 81, 84];
+              bellNote(bus, mf(bells[Math.floor(Math.random() * bells.length)]), t + Math.random() * 0.3);
+            }
+          },
+        },
+        sunrise: {
+          step: 0.36,
+          play(s, n, t, bus) {
+            const chords = [[62, 66, 69, 74], [59, 62, 66, 71], [55, 59, 62, 67], [57, 61, 64, 69]];
+            const ch = chords[Math.floor(n / 16) % 4];
+            if (n % 16 === 0) pianoNote(bus, mf(ch[0] - 12), t, 5, 0.09);
+            const pattern = [0, 1, 2, 3, 2, 1, 2, 3];
+            if (Math.random() < 0.9) pianoNote(bus, mf(ch[pattern[n % 8]] + (n % 32 >= 16 && n % 8 === 3 ? 12 : 0)), t, 1.8, 0.05);
+          },
+        },
+      };
+
+      setInterval(() => {
+        if (!gen || !actx) return;
+        if (nextNoteTime < actx.currentTime - 0.1) nextNoteTime = actx.currentTime + 0.05; // skip notes missed in a background tab
+        while (nextNoteTime < actx.currentTime + 0.3) {
+          gen.play(genState, genStep, nextNoteTime, curBus);
+          nextNoteTime += gen.step;
+          genStep++;
+        }
+      }, 100);
+
+      function setTrack(id) {
+        const tr = MUSIC_BY_ID[id] || MUSIC_BY_ID.off;
+        if (!musicOut()) return;
+        musicStarted = true;
+        if (curBus) {
+          const old = curBus;
+          old.gain.setTargetAtTime(0, actx.currentTime, 0.35);
+          setTimeout(() => old.disconnect(), 2500);
+          curBus = null;
+        }
+        gen = null;
+        if (fileAudio) { fileAudio.pause(); fileAudio = null; }
+        currentTrack = tr.id;
+        updateMusicChips();
+        if (tr.id === "off") return;
+        curBus = actx.createGain();
+        curBus.gain.value = 0.0001;
+        curBus.connect(musicGain);
+        curBus.gain.setTargetAtTime(1, actx.currentTime, 0.6);
+        if (tr.src) {
+          fileAudio = new Audio(tr.src);
+          fileAudio.loop = true;
+          actx.createMediaElementSource(fileAudio).connect(curBus);
+          fileAudio.play().catch(() => toast("Couldn't play that track"));
+        } else {
+          curBus.connect(reverb);
+          gen = GENERATORS[tr.gen];
+          genState = {};
+          genStep = 0;
+          nextNoteTime = actx.currentTime + 0.1;
+        }
+      }
+
+      // Picker on the intro card
+      const musicOptions = $("#music-options");
+      function updateMusicChips() {
+        const sel = currentTrack || settings.track;
+        musicOptions.querySelectorAll(".music-chip").forEach((b) => {
+          const on = b.dataset.track === sel;
+          b.setAttribute("aria-checked", String(on));
+          b.classList.toggle("playing", on && musicStarted && sel !== "off");
+        });
+        $("#music-note").textContent = (MUSIC_BY_ID[sel] || {}).note || "";
+      }
+      MUSIC_TRACKS.forEach((tr) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "music-chip";
+        b.setAttribute("role", "radio");
+        b.dataset.track = tr.id;
+        b.innerHTML = `${tr.id === "off" ? "" : '<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>'}${tr.name}`;
+        b.addEventListener("click", () => {
+          settings.track = tr.id;
+          persist.set("world-settings", JSON.stringify(settings));
+          setTrack(tr.id); // clicking also previews it
+        });
+        musicOptions.appendChild(b);
+      });
+      updateMusicChips();
 
       /* ================= PROGRESS: passport, orbs, laps ================= */
       const stationId = (s) => slug(s.title);
-      let progress = persist.json("world-progress", { visited: [], orbs: [], completeShown: false });
+      let progress = persist.json("world-progress", { visited: [], orbs: [], completeShown: false, goals: 0, bull: false, miss: false, stickers: [] });
       let visited = new Set(progress.visited);
       let orbsFound = new Set(progress.orbs);
       let bestLap = parseFloat(persist.get("world-best-lap")) || 0;
+      let dartsBest = parseInt(persist.get("world-darts-best"), 10) || 0;
+      drawScoreboard(progress.goals || 0);
       const saveProgress = () =>
-        persist.set("world-progress", JSON.stringify({ visited: [...visited], orbs: [...orbsFound], completeShown: progress.completeShown }));
+        persist.set("world-progress", JSON.stringify({ visited: [...visited], orbs: [...orbsFound], completeShown: progress.completeShown, goals: progress.goals || 0, bull: !!progress.bull, miss: !!progress.miss, stickers: progress.stickers || [] }));
       const syncOrbs = () => orbs.forEach((o) => (o.g.visible = !orbsFound.has(o.id)));
       syncOrbs();
 
       const fmtTime = (s) => { const m = Math.floor(s / 60); return `${m}:${(s - m * 60).toFixed(1).padStart(4, "0")}`; };
-      const passportPill = $("#passport-pill"), orbPill = $("#orb-pill"), lapPill = $("#lap-pill");
+      const passportPill = $("#passport-pill"), orbPill = $("#orb-pill"), lapPill = $("#lap-pill"), sportPill = $("#sport-pill");
       function updateProgressHUD() {
         passportPill.innerHTML = `Landmarks <b>${visited.size}/${STATIONS.length}</b>`;
         orbPill.innerHTML = `Orbs <b>${orbsFound.size}/${orbs.length}</b>`;
+        sportPill.innerHTML = `Goals <b>${progress.goals || 0}</b> · Darts <b>${dartsBest || "–"}</b>`;
       }
 
       const toastEl = $("#toast");
@@ -1447,6 +2148,7 @@
         sfx.stamp();
         toast(`Stamped: ${s.title} · ${visited.size}/${STATIONS.length}`);
         if (visited.size === STATIONS.length && !progress.completeShown) pendingComplete = true;
+        checkStickerUnlocks();
       }
 
       function collectOrb(o) {
@@ -1461,6 +2163,7 @@
         } else {
           toast(`Orb found · ${orbsFound.size}/${orbs.length}`);
         }
+        checkStickerUnlocks();
       }
 
       function showComplete() {
@@ -1510,6 +2213,7 @@
         sfx.lap();
         toast(isBest ? `New best lap · ${fmtTime(time)}` : `Lap · ${fmtTime(time)}`);
         track("world-lap-complete", "Finished a lap");
+        checkStickerUnlocks();
       }
 
       // Quick controls
@@ -1531,6 +2235,705 @@
         toast(`Camera: ${CAMERA_NAMES[settings.camera]}`);
       }
 
+      /* ================= FOOTBALL ================= */
+      let pitchHintShown = false;
+      const _axis = new THREE.Vector3();
+      function updateFootball(dt) {
+        if (!pitchHintShown && Math.abs(pos.x - PITCH.x) < PITCH.hl && Math.abs(pos.z - PITCH.z) < PITCH.hw) {
+          pitchHintShown = true;
+          toast("Football · push the ball into either goal");
+        }
+        if (ball.reset > 0) {
+          ball.reset -= dt;
+          ball.vx *= Math.exp(-4 * dt); ball.vz *= Math.exp(-4 * dt);
+          if (ball.reset <= 0) {
+            ball.x = PITCH.x; ball.z = PITCH.z; ball.vx = ball.vz = 0; ball.scored = false;
+            burst(ball.x, 0.6, ball.z, ["#3dffa6"], 18, 2.5);
+          }
+        } else {
+          // the bike pushes the ball
+          const dx = ball.x - pos.x, dz = ball.z - pos.z, d = Math.hypot(dx, dz), minD = BALL_R + 0.6;
+          if (d < minD && d > 1e-4) {
+            const nx = dx / d, nz = dz / d;
+            ball.x = pos.x + nx * minD; ball.z = pos.z + nz * minD;
+            const rel = Math.sin(heading) * speed * nx + Math.cos(heading) * speed * nz;
+            const vn = ball.vx * nx + ball.vz * nz;
+            const kick = Math.max(rel, 0) * 1.35 + 1.2;
+            if (vn < kick) {
+              ball.vx += nx * (kick - vn); ball.vz += nz * (kick - vn);
+              if (kick > 4) sfx.kick();
+            }
+            speed *= 0.97;
+          }
+        }
+        ball.x += ball.vx * dt; ball.z += ball.vz * dt;
+        const fr = Math.exp(-0.85 * dt);
+        ball.vx *= fr; ball.vz *= fr;
+        const sp = Math.hypot(ball.vx, ball.vz);
+        if (sp > 22) { ball.vx *= 22 / sp; ball.vz *= 22 / sp; }
+
+        let bx = ball.x - PITCH.x, bz = ball.z - PITCH.z;
+        if (Math.abs(bx) > PITCH.hl) {
+          // inside a goal
+          const lim = PITCH.goalHW - BALL_R, back = PITCH.hl + PITCH.goalDepth - BALL_R;
+          if (Math.abs(bz) > lim) { bz = Math.sign(bz) * lim; ball.vz *= -0.5; }
+          if (Math.abs(bx) > back) { bx = Math.sign(bx) * back; ball.vx *= -0.3; }
+          if (!ball.scored && Math.abs(bx) > PITCH.hl + BALL_R) scoreGoal(Math.sign(bx));
+        } else {
+          const inMouth = Math.abs(bz) < PITCH.goalHW - BALL_R;
+          if (Math.abs(bx) > PITCH.hl - BALL_R && !inMouth) { bx = Math.sign(bx) * (PITCH.hl - BALL_R); ball.vx = -ball.vx * 0.7; }
+          if (Math.abs(bz) > PITCH.hw - BALL_R) { bz = Math.sign(bz) * (PITCH.hw - BALL_R); ball.vz = -ball.vz * 0.7; }
+        }
+        ball.x = PITCH.x + bx; ball.z = PITCH.z + bz;
+        const rolled = Math.hypot(ball.vx, ball.vz) * dt;
+        if (rolled > 1e-5) {
+          _axis.set(ball.vz, 0, -ball.vx).normalize();
+          ballMesh.rotateOnWorldAxis(_axis, rolled / BALL_R);
+        }
+        ballMesh.position.set(ball.x, BALL_R, ball.z);
+      }
+      function scoreGoal(side) {
+        ball.scored = true;
+        ball.reset = 1.8;
+        progress.goals = (progress.goals || 0) + 1;
+        saveProgress();
+        updateProgressHUD();
+        drawScoreboard(progress.goals);
+        sfx.goal();
+        toast(`GOAL! · ${progress.goals} scored`);
+        burst(PITCH.x + side * (PITCH.hl + 0.6), 1.2, PITCH.z, ["#3dffa6", "#f0b45a", "#f2f4f5"], 60, 6);
+        track("world-football-goal", "Scored a goal");
+        checkStickerUnlocks();
+      }
+
+      /* ================= DARTS ================= */
+      const dartsHud = $("#darts-hud"), dartsResult = $("#darts-result");
+      const aim = { x: 0, y: 0 }, aimKeys = { up: false, down: false, left: false, right: false };
+      let dartsLeft = 3, roundScore = 0, flying = null, stuck = [], roundTimer = 0;
+      const boardZ = DARTS.z + 0.03;
+      const boardPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -boardZ);
+      const raycaster = new THREE.Raycaster(), ndc = new THREE.Vector2(), hitV = new THREE.Vector3();
+      const camDarts = new THREE.Vector3(DARTS.x, 1.62, DARTS.z + DARTS.oche);
+      const lookDarts = new THREE.Vector3(DARTS.x, DARTS.boardY, DARTS.z);
+
+      function scoreAt(x, y) {
+        const r = Math.hypot(x, y) / DARTS.R;
+        if (r <= RINGS.bull) return { value: 50, label: "BULL", num: 25, mult: 2 };
+        if (r <= RINGS.outerBull) return { value: 25, label: "25", num: 25, mult: 1 };
+        if (r > 1) return { value: 0, label: "MISS", num: 0, mult: 0 };
+        const deg = ((Math.atan2(x, y) * 180) / Math.PI + 360 + 9) % 360;
+        const n = DART_ORDER[Math.floor(deg / 18)];
+        if (r >= RINGS.tripleIn && r <= RINGS.tripleOut) return { value: n * 3, label: `T${n}`, num: n, mult: 3 };
+        if (r >= RINGS.doubleIn) return { value: n * 2, label: `D${n}`, num: n, mult: 2 };
+        return { value: n, label: String(n), num: n, mult: 1 };
+      }
+      /* ---- Game modes: Practice, 301/501/701 (open out), Cricket ---- */
+      const dartsMenu = $("#darts-menu"), cricketBoard = $("#cricket-board");
+      const GAME_ROUNDS = { 301: 10, 501: 15, 701: 20, cricket: 20 };
+      const CRICKET_TARGETS = [20, 19, 18, 17, 16, 15, 25];
+      let game = "practice", g = {}, lastLabel = "–";
+      let records = persist.json("world-darts-records", {});
+      const saveRecords = () => persist.set("world-darts-records", JSON.stringify(records));
+      const cell = (label, value, id = "") => `<div>${label}<b${id ? ` id="${id}"` : ""}>${value}</b></div>`;
+
+      function renderDartsHud() {
+        const left = "●".repeat(dartsLeft) + "○".repeat(3 - dartsLeft);
+        let row = "";
+        if (game === "practice") {
+          row = cell("Round", roundScore, "darts-score") + cell("Last", lastLabel) + cell("Darts", left, "darts-left") + cell("Best", dartsBest || "–");
+        } else if (game === "cricket") {
+          const mpr = g.thrown ? (g.totalMarks / (g.thrown / 3)).toFixed(2) : "–";
+          row = cell("Round", `${g.round}/${g.max}`) + cell("Last", lastLabel) + cell("Darts", left, "darts-left") + cell("MPR", mpr, "darts-score");
+          cricketBoard.innerHTML = CRICKET_TARGETS.map((t) => `<span class="${g.marks[t] >= 3 ? "closed" : ""}"><i>${t === 25 ? "BULL" : t}</i>${["·", "/", "X", "Ⓧ"][g.marks[t]]}</span>`).join("");
+        } else {
+          const ppd = g.thrown ? ((g.start - g.remaining) / g.thrown).toFixed(1) : "–";
+          row = cell("Left", g.remaining, "darts-score") + cell("Last", lastLabel) + cell("Darts", left, "darts-left") + cell("Round", `${g.round}/${g.max}`) + cell("PPD", ppd);
+        }
+        $("#darts-row").innerHTML = row;
+        cricketBoard.hidden = game !== "cricket";
+      }
+      // kept for older calls
+      const updateDartsHud = (last) => { if (last !== undefined) lastLabel = last; renderDartsHud(); };
+
+      function clearBoard() {
+        stuck.forEach((d) => scene.remove(d));
+        stuck = [];
+        if (flying) { scene.remove(flying.obj); flying = null; }
+      }
+      function startGame(kind) {
+        game = kind;
+        clearBoard();
+        dartsMenu.hidden = true;
+        dartsResult.hidden = true;
+        dartsLeft = 3; roundScore = 0; roundTimer = 0; lastLabel = "–";
+        if (kind === "practice") g = {};
+        else if (kind === "cricket") g = { round: 1, max: GAME_ROUNDS.cricket, marks: Object.fromEntries(CRICKET_TARGETS.map((t) => [t, 0])), totalMarks: 0, thrown: 0 };
+        else { const n = Number(kind); g = { start: n, remaining: n, turnStart: n, round: 1, max: GAME_ROUNDS[kind], thrown: 0 }; }
+        $("#darts-kicker").textContent =
+          kind === "practice" ? "Practice · 3 darts per round" :
+          kind === "cricket" ? "Cricket · close 15–20 and bull" : `${kind} · count down to exactly zero · bust if you go under`;
+        renderDartsHud();
+        track(`world-darts-${kind}`, `Started darts: ${kind}`);
+      }
+      const newRound = () => startGame(game);
+
+      function openDartsMenu() {
+        clearBoard();
+        dartsResult.hidden = true;
+        roundTimer = 0;
+        const rec = (k) => {
+          if (k === "practice") return dartsBest ? `Best ${dartsBest}` : "No score yet";
+          if (k === "cricket") return records.cricket ? `Best ${records.cricket.rounds} rounds · MPR ${records.cricket.mpr}` : "Not closed yet";
+          return records[k] ? `Best ${records[k].darts} darts · PPD ${records[k].ppd}` : "Not finished yet";
+        };
+        dartsMenu.querySelectorAll("[data-rec]").forEach((el) => (el.textContent = rec(el.dataset.rec)));
+        $("#darts-kicker").textContent = "Darts";
+        $("#darts-row").innerHTML = "";
+        cricketBoard.hidden = true;
+        dartsMenu.hidden = false;
+        dartsMenu.querySelector(".mode-btn").focus({ preventScroll: true });
+      }
+      dartsMenu.querySelectorAll("[data-game]").forEach((b) => b.addEventListener("click", () => startGame(b.dataset.game)));
+
+      function endTurn() {
+        if (game === "practice" || g.done) return showDartsResult();
+        g.round++;
+        if (g.round > g.max) { g.round = g.max; return showDartsResult(); }
+        clearBoard();
+        dartsLeft = 3;
+        g.turnStart = g.remaining;
+        lastLabel = "–";
+        renderDartsHud();
+      }
+
+      function enterDarts() {
+        closeWheel();
+        mode = "darts";
+        clearInput();
+        speed = 0; crankVel = 0; steer = 0;
+        pos.set(DARTS.x + 1.9, 0, DARTS.z + DARTS.oche + 1);
+        heading = Math.PI;
+        camera.position.copy(camDarts);
+        camLook.copy(lookDarts);
+        camera.fov = 40;
+        camera.updateProjectionMatrix();
+        aim.x = 0; aim.y = 0;
+        reticle.visible = true;
+        canvas.style.cursor = "none";
+        document.body.classList.add("in-darts");
+        promptEl.classList.remove("show");
+        nearest = null;
+        dartsHud.hidden = false;
+        openDartsMenu();
+        track("world-darts-start", "Opened darts");
+      }
+      function exitDarts() {
+        mode = "ride";
+        reticle.visible = false;
+        canvas.style.cursor = "";
+        document.body.classList.remove("in-darts");
+        dartsHud.hidden = true;
+        dartsResult.hidden = true;
+        dartsMenu.hidden = true;
+        for (const k in aimKeys) aimKeys[k] = false;
+        nearest = null;
+        canvas.focus({ preventScroll: true });
+      }
+      function throwDart() {
+        if (mode !== "darts" || dartsLeft <= 0 || flying || !dartsResult.hidden || !dartsMenu.hidden) return;
+        const tx = reticle.position.x - DARTS.x + (Math.random() - 0.5) * 0.012;
+        const ty = reticle.position.y - DARTS.boardY + (Math.random() - 0.5) * 0.012;
+        const obj = dartTemplate.clone();
+        const from = new THREE.Vector3(DARTS.x + 0.18, 1.35, DARTS.z + DARTS.oche - 0.4);
+        const to = new THREE.Vector3(DARTS.x + tx, DARTS.boardY + ty, boardZ);
+        obj.position.copy(from);
+        scene.add(obj);
+        flying = { obj, from, to, t: 0, tx, ty };
+        dartsLeft--;
+        updateDartsHud();
+        sfx.whoosh();
+      }
+      function landDart() {
+        const { obj, tx, ty } = flying;
+        flying = null;
+        obj.rotation.set(0.04, 0, 0);
+        obj.position.set(DARTS.x + tx, DARTS.boardY + ty, boardZ);
+        stuck.push(obj);
+        const hit = scoreAt(tx, ty);
+        lastLabel = hit.value ? `${hit.label} · ${hit.value}` : "MISS";
+        if (hit.value >= 50 && !progress.bull) { progress.bull = true; saveProgress(); checkStickerUnlocks(); }
+        if (hit.value === 0 && !progress.miss) { progress.miss = true; saveProgress(); checkStickerUnlocks(); }
+        if (hit.value >= 50 || hit.label.startsWith("T")) {
+          sfx.bull();
+          burst(DARTS.x + tx, DARTS.boardY + ty, boardZ + 0.05, hit.value >= 50 ? ["#d4473f", "#f0b45a"] : ["#3dffa6", "#f2f4f5"], 24, 1.6);
+        } else {
+          sfx.thud();
+        }
+        if (game === "practice") {
+          roundScore += hit.value;
+          if (dartsLeft === 0) roundTimer = 0.8;
+        } else if (game === "cricket") {
+          g.thrown++;
+          if (CRICKET_TARGETS.includes(hit.num)) {
+            const add = Math.min(hit.mult, 3 - g.marks[hit.num]);
+            g.marks[hit.num] += add;
+            g.totalMarks += add;
+            if (add && g.marks[hit.num] === 3) toast(`${hit.num === 25 ? "Bull" : hit.num} closed`);
+          }
+          if (CRICKET_TARGETS.every((t) => g.marks[t] >= 3)) { g.done = true; dartsLeft = 0; roundTimer = 0.8; }
+          else if (dartsLeft === 0) roundTimer = 0.9;
+        } else {
+          g.thrown++;
+          const next = g.remaining - hit.value;
+          if (next < 0) {
+            g.remaining = g.turnStart;
+            lastLabel = "BUST";
+            sfx.bust();
+            toast(`Bust · back to ${g.remaining}`);
+            dartsLeft = 0;
+            roundTimer = 1.1;
+          } else {
+            g.remaining = next;
+            if (next === 0) { g.done = true; dartsLeft = 0; roundTimer = 0.8; }
+            else if (dartsLeft === 0) roundTimer = 0.9;
+          }
+        }
+        renderDartsHud();
+      }
+      function showDartsResult() {
+        if (game !== "practice") return showGameResult();
+        const isBest = roundScore > dartsBest;
+        if (isBest) { dartsBest = roundScore; persist.set("world-darts-best", String(dartsBest)); updateProgressHUD(); }
+        $("#darts-final").textContent = roundScore;
+        $("#darts-note").textContent =
+          roundScore === 180 ? "ONE HUNDRED AND EIGHTY!" :
+          isBest ? "New personal best!" :
+          roundScore >= 100 ? "Ton plus. Nice throwing!" :
+          roundScore >= 60 ? "Solid round." : "Warm-up round. Go again?";
+        dartsResult.hidden = false;
+        if (isBest || roundScore >= 100) sfx.lap();
+        updateDartsHud();
+        $("#darts-again").focus({ preventScroll: true });
+        $("#darts-result-label").textContent = "Round score";
+        track("world-darts-round", `Darts round: ${roundScore}`);
+        checkStickerUnlocks();
+      }
+      function showGameResult() {
+        let big, label, note, isBest = false;
+        if (game === "cricket") {
+          const mpr = g.thrown ? g.totalMarks / (g.thrown / 3) : 0;
+          if (g.done) {
+            const r = records.cricket;
+            isBest = !r || g.round < r.rounds || (g.round === r.rounds && mpr > r.mpr);
+            if (isBest) { records.cricket = { rounds: g.round, mpr: +mpr.toFixed(2) }; saveRecords(); }
+            label = "Cricket closed in"; big = `${g.round} rounds`; note = `MPR ${mpr.toFixed(2)}${isBest ? " · New personal best!" : ""}`;
+          } else {
+            label = "Targets closed"; big = `${CRICKET_TARGETS.filter((t) => g.marks[t] >= 3).length}/7`; note = `Out of rounds · MPR ${mpr.toFixed(2)}`;
+          }
+        } else {
+          const ppd = g.thrown ? (g.start - g.remaining) / g.thrown : 0;
+          if (g.done) {
+            const r = records[game];
+            isBest = !r || g.thrown < r.darts;
+            if (isBest) { records[game] = { darts: g.thrown, ppd: +ppd.toFixed(1) }; saveRecords(); }
+            label = `${game} checked out in`; big = `${g.thrown} darts`; note = `PPD ${ppd.toFixed(1)}${isBest ? " · New personal best!" : ""}`;
+          } else {
+            label = "Points left"; big = String(g.remaining); note = `Out of rounds · PPD ${ppd.toFixed(1)}`;
+          }
+        }
+        $("#darts-result-label").textContent = label;
+        $("#darts-final").textContent = big;
+        $("#darts-note").textContent = note;
+        dartsResult.hidden = false;
+        if (g.done) sfx.lap();
+        $("#darts-again").focus({ preventScroll: true });
+        track(`world-darts-${game}-${g.done ? "finished" : "unfinished"}`, `Darts ${game} ${g.done ? "finished" : "unfinished"}`);
+        checkStickerUnlocks();
+      }
+      function updateDarts(dt, t) {
+        const ks = 0.55 * dt;
+        aim.x = THREE.MathUtils.clamp(aim.x + ((aimKeys.right ? 1 : 0) - (aimKeys.left ? 1 : 0)) * ks, -0.7, 0.7);
+        aim.y = THREE.MathUtils.clamp(aim.y + ((aimKeys.up ? 1 : 0) - (aimKeys.down ? 1 : 0)) * ks, -0.7, 0.7);
+        const sway = settings.motion ? 0.025 : 0.045;
+        const sx = (Math.sin(t * 2.1) * 0.6 + Math.sin(t * 3.7 + 1) * 0.4) * sway;
+        const sy = (Math.cos(t * 1.7) * 0.6 + Math.sin(t * 2.9 + 2) * 0.4) * sway;
+        reticle.position.set(DARTS.x + aim.x + sx, DARTS.boardY + aim.y + sy, boardZ + 0.02);
+        camera.position.copy(camDarts);
+        camera.lookAt(lookDarts);
+        if (flying) {
+          flying.t += dt / 0.28;
+          const k = Math.min(flying.t, 1);
+          flying.obj.position.lerpVectors(flying.from, flying.to, k);
+          flying.obj.position.y += Math.sin(Math.PI * k) * 0.12;
+          flying.obj.rotation.x = (0.5 - k) * 0.35;
+          if (k >= 1) landDart();
+        }
+        if (roundTimer > 0) { roundTimer -= dt; if (roundTimer <= 0) endTurn(); }
+      }
+      function aimFromPointer(e) {
+        const r = canvas.getBoundingClientRect();
+        ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+        raycaster.setFromCamera(ndc, camera);
+        if (raycaster.ray.intersectPlane(boardPlane, hitV)) {
+          aim.x = THREE.MathUtils.clamp(hitV.x - DARTS.x, -0.7, 0.7);
+          aim.y = THREE.MathUtils.clamp(hitV.y - DARTS.boardY, -0.7, 0.7);
+        }
+      }
+      let pDown = null;
+      canvas.addEventListener("pointerdown", (e) => {
+        if (mode !== "darts") return;
+        pDown = { x: e.clientX, y: e.clientY, type: e.pointerType };
+        aimFromPointer(e);
+      });
+      canvas.addEventListener("pointermove", (e) => { if (mode === "darts" && (e.pointerType === "mouse" || pDown)) aimFromPointer(e); });
+      addEventListener("pointerup", (e) => {
+        if (mode !== "darts" || !pDown) return;
+        const moved = Math.hypot(e.clientX - pDown.x, e.clientY - pDown.y), wasMouse = pDown.type === "mouse";
+        pDown = null;
+        if (wasMouse && moved < 8 && e.target === canvas) throwDart();
+      });
+      $("#darts-again").addEventListener("click", newRound);
+      $("#darts-change").addEventListener("click", openDartsMenu);
+      $("#darts-games").addEventListener("click", openDartsMenu);
+      $("#darts-menu-leave").addEventListener("click", exitDarts);
+      $("#darts-leave").addEventListener("click", exitDarts);
+      $("#darts-exit").addEventListener("click", exitDarts);
+      $("#darts-throw").addEventListener("pointerdown", (e) => { e.preventDefault(); throwDart(); });
+      const AIMMAP = { KeyW: "up", ArrowUp: "up", KeyS: "down", ArrowDown: "down", KeyA: "left", ArrowLeft: "left", KeyD: "right", ArrowRight: "right" };
+      function dartsKey(e, down) {
+        const k = AIMMAP[e.code];
+        if (k) { aimKeys[k] = down; e.preventDefault(); return; }
+        if (!down) return;
+        if (e.code === "Escape") { e.preventDefault(); exitDarts(); }
+        else if ((e.code === "Space" || e.code === "Enter") && !e.repeat) {
+          if (!dartsMenu.hidden) return; // let the focused menu button handle it
+          e.preventDefault();
+          if (!dartsResult.hidden) newRound(); else throwDart();
+        }
+      }
+      const activate = (s) => (s.play ? s.play() : openPanel(s));
+
+      /* ================= MULTIPLAYER (Supabase Realtime) =================
+         Other visitors appear as riders in your world. Only position,
+         direction, an optional display name, and bell rings are shared. */
+      const SUPABASE_URL = "https://mfvdcalcumgdqafgvlwl.supabase.co";
+      const SUPABASE_KEY = "sb_publishable_VZQIlXAUljwEvqd7seNYYw_KPCY-GCl"; // publishable key: safe to be public
+      const MAX_RIDERS = 20;
+      const myId = Math.random().toString(36).slice(2, 10);
+      const remotes = new Map();
+      let mpChannel = null, mpReady = false, lastBell = 0;
+      const mpLast = { x: 0, z: 0, h: 0 };
+      lean.name = "lean"; steerGroup.name = "steer"; frontWheel.name = "frontWheel"; rearWheel.name = "rearWheel";
+      const BLOCKED = /(fuck|shit|bitch|cunt|nigg|fag|slut|whore|dick|pussy|rape|nazi|porn)/i;
+      const safeName = (n) => {
+        n = String(n || "").replace(/[\u0000-\u001f<>]/g, "").trim().slice(0, 24);
+        return n && !BLOCKED.test(n.replace(/[^a-z]/gi, "")) ? n : "";
+      };
+      const onlinePill = $("#online-pill");
+      const updateOnline = () => { onlinePill.hidden = !mpReady; onlinePill.innerHTML = `Online <b>${remotes.size + 1}</b>`; };
+
+      function makeRemote(id, name) {
+        const root = bikeRoot.clone(true);
+        const drop = [];
+        root.traverse((o) => { if (o.isSprite || o.isLight) drop.push(o); });
+        drop.forEach((o) => o.parent && o.parent.remove(o));
+        let hash = 0;
+        for (const ch of id) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+        const jacket = new THREE.MeshStandardMaterial({ color: new THREE.Color().setHSL((hash % 360) / 360, 0.55, 0.45), roughness: 0.8 });
+        root.traverse((o) => { if (o.isMesh && o.material === jacketMat) o.material = jacket; });
+        if (name) root.add(makeNameTag(name));
+        root.visible = false;
+        scene.add(root);
+        return {
+          root, jacket, name,
+          lean: root.getObjectByName("lean"), steer: root.getObjectByName("steer"),
+          front: root.getObjectByName("frontWheel"), rear: root.getObjectByName("rearWheel"),
+          x: 0, z: 0, h: 0, tx: 0, tz: 0, th: 0, s: 0, st: 0, wheel: 0, last: performance.now(), placed: false,
+        };
+      }
+      function ensureRemote(id, name) {
+        if (typeof id !== "string" || id === myId || id.length > 20) return null;
+        if (remotes.has(id)) {
+          const r = remotes.get(id), nm = safeName(name);
+          if (nm && !r.name) { r.name = nm; r.root.add(makeNameTag(nm)); }
+          return r;
+        }
+        if (remotes.size >= MAX_RIDERS - 1) return null;
+        const r = makeRemote(id, safeName(name));
+        remotes.set(id, r);
+        return r;
+      }
+      function removeRemote(id) {
+        const r = remotes.get(id);
+        if (!r) return;
+        scene.remove(r.root);
+        r.jacket.dispose();
+        remotes.delete(id);
+      }
+      const num = (v, lim) => (Number.isFinite(v) ? Math.max(-lim, Math.min(lim, v)) : 0);
+      function onRemotePos(p) {
+        if (!p) return;
+        const r = remotes.get(p.id) || ensureRemote(p.id);
+        if (!r) return;
+        r.tx = num(p.x, 400); r.tz = num(p.z, 400); r.th = num(p.h, 1000); r.s = num(p.s, 20); r.st = num(p.st, 1.5);
+        r.last = performance.now();
+        if (!r.placed) { r.x = r.tx; r.z = r.tz; r.h = r.th; r.placed = true; r.root.visible = settings.others !== false; }
+      }
+      function onRemoteBell(p) {
+        const r = p && remotes.get(p.id);
+        if (r && r.placed && Math.hypot(r.x - pos.x, r.z - pos.z) < 30) sfx.bell();
+      }
+      function ringBell() {
+        const now = performance.now();
+        if (now - lastBell < 700) return;
+        lastBell = now;
+        sfx.bell();
+        if (mpReady) mpChannel.send({ type: "broadcast", event: "bell", payload: { id: myId } });
+      }
+
+      async function connectMultiplayer(name) {
+        if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_KEY.startsWith("YOUR")) return;
+        let createClient;
+        try {
+          ({ createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"));
+        } catch {
+          return; // offline or blocked: the world keeps working in single-player
+        }
+        const sb = createClient(SUPABASE_URL, SUPABASE_KEY, {
+          auth: { persistSession: false, autoRefreshToken: false },
+          realtime: { worker: true }, // heartbeats run in a worker, so background windows stay connected
+        });
+        mpChannel = sb.channel("dylan-world", { config: { presence: { key: myId }, broadcast: { self: false } } });
+        mpChannel
+          .on("broadcast", { event: "pos" }, ({ payload }) => onRemotePos(payload))
+          .on("broadcast", { event: "bell" }, ({ payload }) => onRemoteBell(payload))
+          .on("broadcast", { event: "emote" }, ({ payload }) => onRemoteEmote(payload))
+          .on("presence", { event: "join" }, ({ key, newPresences }) => {
+            if (key === myId) return;
+            const nm = safeName(newPresences?.[0]?.name);
+            if (ensureRemote(key, nm)) toast(nm ? `${nm} is riding in the world` : "Another rider is in the world");
+            updateOnline();
+          })
+          .on("presence", { event: "leave" }, ({ key }) => { removeRemote(key); updateOnline(); })
+          .on("presence", { event: "sync" }, () => {
+            const state = mpChannel.presenceState();
+            for (const key of Object.keys(state)) if (key !== myId) ensureRemote(key, state[key]?.[0]?.name);
+            for (const id of [...remotes.keys()]) if (!state[id]) removeRemote(id);
+            updateOnline();
+          })
+          .subscribe(async (status) => {
+            if (status === "SUBSCRIBED") {
+              mpReady = true;
+              await mpChannel.track({ name: name || null });
+              updateOnline();
+              sendMyState(true);
+              track("world-multiplayer-connected", "Joined multiplayer");
+            } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
+              mpReady = false;
+              updateOnline();
+            }
+          });
+        addEventListener("pagehide", () => { try { mpChannel.untrack(); sb.removeChannel(mpChannel); } catch {} });
+      }
+
+      /* ================= STICKERS: wheel, emotes, unlocks ================= */
+      const STICKER_TONES = { emerald: ["#0f2d22", "#3dffa6"], amber: ["#33240c", "#f0b45a"], pink: ["#33122a", "#ff7eb6"], blue: ["#0f2238", "#7ab8ff"] };
+      const STICKER_BY_ID = Object.fromEntries(STICKERS.map((s) => [s.id, s]));
+      function stickerCanvas(st) {
+        const c = document.createElement("canvas"); c.width = c.height = 256;
+        const g = c.getContext("2d"), [bg, fg] = STICKER_TONES[st.tone] || STICKER_TONES.emerald;
+        g.fillStyle = "#f2f4f5"; g.beginPath(); g.arc(128, 128, 122, 0, Math.PI * 2); g.fill();
+        g.fillStyle = bg; g.beginPath(); g.arc(128, 128, 110, 0, Math.PI * 2); g.fill();
+        g.strokeStyle = "rgba(255,255,255,0.22)"; g.lineWidth = 4; g.beginPath(); g.arc(128, 128, 96, 0, Math.PI * 2); g.stroke();
+        g.fillStyle = fg; g.textAlign = "center"; g.textBaseline = "middle";
+        let size = 92;
+        g.font = `800 ${size}px "JetBrains Mono", monospace`;
+        while (g.measureText(st.big).width > 168 && size > 30) { size -= 4; g.font = `800 ${size}px "JetBrains Mono", monospace`; }
+        g.fillText(st.big, 128, st.small ? 116 : 128);
+        if (st.small) {
+          let s2 = 22;
+          g.font = `700 ${s2}px "JetBrains Mono", monospace`;
+          while (g.measureText(st.small).width > 150 && s2 > 12) { s2 -= 2; g.font = `700 ${s2}px "JetBrains Mono", monospace`; }
+          g.fillText(st.small, 128, 178);
+        }
+        return c;
+      }
+      const stickerURLs = new Map(), stickerTexCache = new Map();
+      const stickerURL = (st) => {
+        if (!stickerURLs.has(st.id)) stickerURLs.set(st.id, st.img || stickerCanvas(st).toDataURL("image/png"));
+        return stickerURLs.get(st.id);
+      };
+      function stickerTex(st) {
+        if (!stickerTexCache.has(st.id)) {
+          const tex = st.img ? new THREE.TextureLoader().load(st.img) : new THREE.CanvasTexture(stickerCanvas(st));
+          tex.colorSpace = THREE.SRGBColorSpace;
+          stickerTexCache.set(st.id, tex);
+        }
+        return stickerTexCache.get(st.id);
+      }
+
+      // Emotes float above a rider's head, then fade
+      const activeEmotes = [];
+      function showEmote(parent, id) {
+        const st = STICKER_BY_ID[id];
+        if (!st) return;
+        for (const e of activeEmotes) if (e.parent === parent) e.t = Math.max(e.t, 2.6);
+        const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: stickerTex(st), transparent: true, depthWrite: false, toneMapped: false }));
+        spr.position.y = 3.1;
+        spr.scale.set(0.01, 0.01, 1);
+        parent.add(spr);
+        activeEmotes.push({ sprite: spr, parent, t: 0 });
+      }
+      function updateEmotes(dt) {
+        for (let i = activeEmotes.length - 1; i >= 0; i--) {
+          const e = activeEmotes[i];
+          e.t += dt;
+          const t = e.t, pop = t < 0.18 ? (t / 0.18) * 1.25 : t < 0.3 ? 1.25 - ((t - 0.18) / 0.12) * 0.25 : 1, s = 1.3 * pop;
+          e.sprite.scale.set(s, s, 1);
+          e.sprite.position.y = 3.1 + Math.min(t, 3) * 0.12;
+          e.sprite.material.opacity = t > 2.6 ? Math.max(0, 1 - (t - 2.6) / 0.5) : 1;
+          if (t > 3.1) { e.parent.remove(e.sprite); e.sprite.material.dispose(); activeEmotes.splice(i, 1); }
+        }
+      }
+
+      // Unlocks
+      let seenStickers = new Set(progress.stickers || []);
+      const freshStickers = new Set();
+      const isUnlocked = (st) => { try { return !!st.unlock(); } catch { return false; } };
+      const updateStickerBadge = () => $("#sticker-btn").classList.toggle("has-new", freshStickers.size > 0);
+      function checkStickerUnlocks(silent = false) {
+        let newest = null;
+        for (const st of STICKERS) {
+          if (!isUnlocked(st) || seenStickers.has(st.id)) continue;
+          seenStickers.add(st.id);
+          if (!silent) { newest = st; freshStickers.add(st.id); }
+        }
+        progress.stickers = [...seenStickers];
+        saveProgress();
+        if (newest) {
+          updateStickerBadge();
+          setTimeout(() => { toast(`New sticker unlocked: ${newest.name} · press T`); sfx.stamp(); }, 1600);
+          track(`world-unlock-${newest.id}`, `Unlocked sticker: ${newest.name}`);
+        }
+      }
+      checkStickerUnlocks(true);
+
+      // Using a sticker (shared with other riders when multiplayer is on)
+      let lastEmoteAt = 0;
+      function useSticker(id) {
+        const st = STICKER_BY_ID[id];
+        if (!st || !started || mode !== "ride") return;
+        if (!isUnlocked(st)) { toast(`Locked · ${st.hint}`); sfx.click(); return; }
+        const now = performance.now();
+        if (now - lastEmoteAt < 1000) return;
+        lastEmoteAt = now;
+        showEmote(bikeRoot, id);
+        sfx.pop();
+        if (mpReady) mpChannel.send({ type: "broadcast", event: "emote", payload: { id: myId, s: id } });
+        track(`world-sticker-${id}`, `Used sticker: ${st.name}`);
+      }
+      function onRemoteEmote(p) {
+        const r = p && remotes.get(p.id);
+        if (!r || !r.placed || !STICKER_BY_ID[p.s] || settings.others === false) return;
+        const now = performance.now();
+        if (now - (r.lastEmote || 0) < 800) return;
+        r.lastEmote = now;
+        showEmote(r.root, p.s);
+        if (Math.hypot(r.x - pos.x, r.z - pos.z) < 30) sfx.pop();
+      }
+
+      // The wheel
+      const wheelEl = $("#sticker-wheel"), wheelBox = wheelEl.querySelector(".wheel");
+      const LOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+      let wheelOpen = false;
+      function describeSticker(st, i) {
+        $("#wheel-title").textContent = st.name;
+        $("#wheel-hint").textContent = isUnlocked(st) ? (isTouch() ? "Tap to use" : `Click or press ${(i + 1) % 10}`) : `Locked · ${st.hint}`;
+      }
+      const slots = STICKERS.map((st, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "sticker-slot";
+        b.style.setProperty("--a", `${(i / STICKERS.length) * 360}deg`);
+        b.setAttribute("aria-label", st.name);
+        b.addEventListener("click", () => { useSticker(st.id); if (isUnlocked(st)) closeWheel(); });
+        b.addEventListener("mouseenter", () => describeSticker(st, i));
+        b.addEventListener("focus", () => describeSticker(st, i));
+        wheelBox.appendChild(b);
+        return b;
+      });
+      function refreshWheel() {
+        slots.forEach((b, i) => {
+          const st = STICKERS[i], ok = isUnlocked(st);
+          b.classList.toggle("locked", !ok);
+          b.innerHTML = `<img alt="" src="${stickerURL(st)}" />${ok ? "" : `<span class="lock">${LOCK_SVG}</span>`}${freshStickers.has(st.id) ? '<span class="new"></span>' : ""}<span class="key">${(i + 1) % 10}</span>`;
+        });
+        const count = STICKERS.filter(isUnlocked).length;
+        $("#wheel-title").textContent = "Stickers";
+        $("#wheel-hint").textContent = `${count}/${STICKERS.length} unlocked · pick one to show it`;
+      }
+      function openWheel() {
+        if (!started || mode !== "ride" || settingsOpen || panelOpen || !$("#complete").hidden) return;
+        refreshWheel();
+        wheelEl.hidden = false;
+        wheelOpen = true;
+      }
+      function closeWheel() {
+        if (!wheelOpen) return;
+        wheelEl.hidden = true;
+        wheelOpen = false;
+        freshStickers.clear();
+        updateStickerBadge();
+        canvas.focus({ preventScroll: true });
+      }
+      const toggleWheel = () => (wheelOpen ? closeWheel() : openWheel());
+      $("#sticker-btn").addEventListener("click", toggleWheel);
+      wheelEl.addEventListener("click", (e) => { if (e.target === wheelEl) closeWheel(); });
+      const DIGITS = ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9", "Digit0"];
+
+      function updateMultiplayer(dt) {
+        const now = performance.now();
+        const k = 1 - Math.exp(-dt * 10);
+        for (const r of remotes.values()) {
+          if (!r.placed) continue;
+          r.root.visible = settings.others !== false;
+          r.x += (r.tx - r.x) * k;
+          r.z += (r.tz - r.z) * k;
+          let dh = r.th - r.h;
+          dh = Math.atan2(Math.sin(dh), Math.cos(dh));
+          r.h += dh * k;
+          r.root.position.set(r.x, 0, r.z);
+          r.root.rotation.y = r.h;
+          const sp = Math.min(Math.abs(r.s) / MAX, 1);
+          if (r.lean) r.lean.rotation.z += (-r.st * sp * 0.38 - r.lean.rotation.z) * k;
+          if (r.steer) r.steer.rotation.y = r.st * 0.45 * (1 - 0.6 * sp);
+          r.wheel += (r.s * dt) / 0.36;
+          if (r.front) r.front.rotation.x = r.wheel;
+          if (r.rear) r.rear.rotation.x = r.wheel;
+        }
+        sendMyState(false);
+      }
+
+      // send my position ~8 times a second while moving, and at least once a second as a heartbeat
+      let lastSentAt = 0;
+      function sendMyState(force) {
+        if (!mpReady) return;
+        const now = performance.now();
+        if (!force && now - lastSentAt < 125) return;
+        const moved = Math.hypot(pos.x - mpLast.x, pos.z - mpLast.z) > 0.05 || Math.abs(heading - mpLast.h) > 0.01;
+        if (!force && !moved && now - lastSentAt < 1000) return;
+        lastSentAt = now;
+        mpLast.x = pos.x; mpLast.z = pos.z; mpLast.h = heading;
+        mpChannel.send({
+          type: "broadcast", event: "pos",
+          payload: { id: myId, x: +pos.x.toFixed(2), z: +pos.z.toFixed(2), h: +heading.toFixed(3), s: document.hidden ? 0 : +speed.toFixed(2), st: +steer.toFixed(2) },
+        });
+      }
+      setInterval(() => { if (document.hidden) sendMyState(false); }, 1000);
+      document.addEventListener("visibilitychange", () => { if (!document.hidden) sendMyState(true); });
+
+
+
       /* ================= UI ================= */
       const promptEl = $("#prompt"), panel = $("#panel"), speedEl = $("#speed");
       const isTouch = () => document.body.classList.contains("touch");
@@ -1539,7 +2942,7 @@
         if (s === nearest) return;
         nearest = s;
         if (s && !panelOpen) {
-          promptEl.innerHTML = `${isTouch() ? "Tap" : "Press <b>E</b>"} to open <b>${s.title}</b>`;
+          promptEl.innerHTML = `${isTouch() ? "Tap" : "Press <b>E</b>"} to ${s.play ? "play" : "open"} <b>${s.title}</b>`;
           promptEl.classList.add("show");
         } else {
           promptEl.classList.remove("show");
@@ -1547,6 +2950,7 @@
       }
 
       function openPanel(s) {
+        closeWheel();
         track(`world-open-${slug(s.title)}`, `Opened ${s.title} landmark`);
         stamp(s);
         panelOpen = true;
@@ -1561,6 +2965,7 @@
         $("#panel-close").focus({ preventScroll: true });
       }
       function closePanel() {
+        panel.querySelectorAll("video").forEach((v) => v.pause());
         panelOpen = false;
         panel.classList.remove("open");
         nearest = null; // forces the prompt to refresh
@@ -1575,7 +2980,7 @@
         try { host = new URL(a.href).hostname.replace(/^www\./, ""); } catch {}
         track(`world-link-${slug(host)}`, `World link: ${a.textContent.trim()}`);
       });
-      promptEl.addEventListener("click", () => nearest && openPanel(nearest));
+      promptEl.addEventListener("click", () => nearest && activate(nearest));
 
       // Minimap
       const mm = $("#minimap"), mctx = mm.getContext("2d");
@@ -1605,6 +3010,15 @@
         mctx.fill();
         mctx.fillStyle = "#f2f4f5";
         mctx.fillRect(c + roadPts[0].x * s - 2 * u, c + roadPts[0].z * s - 2 * u, 4 * u, 4 * u);
+        mctx.strokeStyle = "rgba(61,255,166,0.6)";
+        mctx.lineWidth = 1.5 * u;
+        mctx.strokeRect(c + (PITCH.x - PITCH.hl) * s, c + (PITCH.z - PITCH.hw) * s, PITCH.hl * 2 * s, PITCH.hw * 2 * s);
+        mctx.fillStyle = "#f2f4f5";
+        mctx.beginPath(); mctx.arc(c + ball.x * s, c + ball.z * s, 1.6 * u, 0, Math.PI * 2); mctx.fill();
+        mctx.strokeStyle = "#f0b45a";
+        mctx.beginPath(); mctx.arc(c + DARTS.x * s, c + DARTS.z * s, 3.5 * u, 0, Math.PI * 2); mctx.stroke();
+        mctx.fillStyle = "#f0b45a";
+        mctx.beginPath(); mctx.arc(c + DARTS.x * s, c + DARTS.z * s, 1.2 * u, 0, Math.PI * 2); mctx.fill();
         for (const st of STATIONS) {
           mctx.beginPath();
           mctx.arc(c + st.pos.x * s, c + st.pos.z * s, (st === nearest ? 5 : 3.5) * u, 0, Math.PI * 2);
@@ -1642,24 +3056,33 @@
       addEventListener("keydown", (e) => {
         if (!started) return;
         if (settingsOpen) { if (e.code === "Escape") { e.preventDefault(); closeSettings(false); } return; }
+        if (mode === "darts") { dartsKey(e, true); return; }
         if (!$("#complete").hidden) { if (e.code === "Escape") $("#complete-close").click(); return; }
         if (panelOpen) { if (e.code === "Escape") closePanel(); return; }
+        if (wheelOpen && e.code === "Escape") { e.preventDefault(); closeWheel(); return; }
+        if (e.code === "KeyT" && !e.repeat) { e.preventDefault(); toggleWheel(); return; }
+        const dIdx = DIGITS.indexOf(e.code);
+        if (dIdx >= 0 && dIdx < STICKERS.length && !e.repeat) { useSticker(STICKERS[dIdx].id); closeWheel(); return; }
         if (e.code === "KeyP" || e.code === "Escape") { e.preventDefault(); openSettings(); return; }
         if (!e.repeat) {
-          if (e.code === "KeyB") sfx.bell();
+          if (e.code === "KeyB") ringBell();
           if (e.code === "KeyL") toggleLight();
           if (e.code === "KeyC") cycleCamera();
         }
         const k = KEYMAP[e.code];
         if (k) { input[k] = true; e.preventDefault(); }
-        if ((e.code === "KeyE" || e.code === "Enter") && nearest) { e.preventDefault(); openPanel(nearest); }
+        if ((e.code === "KeyE" || e.code === "Enter") && nearest) { e.preventDefault(); activate(nearest); }
       });
-      addEventListener("keyup", (e) => { const k = KEYMAP[e.code]; if (k) input[k] = false; });
+      addEventListener("keyup", (e) => {
+        if (mode === "darts") { dartsKey(e, false); return; }
+        const k = KEYMAP[e.code];
+        if (k) input[k] = false;
+      });
       addEventListener("blur", clearInput);
 
       if (matchMedia("(pointer: coarse)").matches) document.body.classList.add("touch");
       addEventListener("touchstart", () => document.body.classList.add("touch"), { once: true, passive: true });
-      document.querySelector('#touch [data-act="bell"]')?.addEventListener("pointerdown", (e) => { e.preventDefault(); sfx.bell(); });
+      document.querySelector('#touch [data-act="bell"]')?.addEventListener("pointerdown", (e) => { e.preventDefault(); ringBell(); });
       document.querySelectorAll("#touch [data-k]").forEach((b) => {
         const k = b.dataset.k;
         b.addEventListener("pointerdown", (e) => {
@@ -1686,7 +3109,7 @@
       /* ---------- Guestbook: optional name before riding ----------
          Sign up at formspree.io, create a form, and paste its ID below.
          Each named visitor then arrives in your email inbox. */
-      const GUESTBOOK_URL = "https://formspree.io/f/mrpeqrzg";
+      const GUESTBOOK_URL = "https://formspree.io/f/YOUR_FORM_ID";
       const nameInput = $("#guest-name"), orgInput = $("#guest-org");
       const store = {
         get: (k) => { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
@@ -1695,6 +3118,7 @@
       };
       nameInput.value = store.get("world-guest-name");
       orgInput.value = store.get("world-guest-org");
+      $("#guest-share").checked = store.get("world-guest-share") === "1";
 
       function sendGuest(name, org) {
         if (!name && !org) { track("world-guest-anonymous", "Entered the world anonymously"); return; }
@@ -1748,6 +3172,8 @@
         const guestOrg = orgInput.value.trim().slice(0, 80);
         store.set("world-guest-name", guestName);
         store.set("world-guest-org", guestOrg);
+        const shareName = $("#guest-share").checked;
+        store.set("world-guest-share", shareName ? "1" : "");
         sendGuest(guestName, guestOrg);
         if (guestName) {
           bikeRoot.add(makeNameTag(guestName));
@@ -1757,10 +3183,12 @@
         }
         nameInput.blur(); orgInput.blur();
         audio();
+        if (!musicStarted || currentTrack !== settings.track) setTrack(settings.track);
         updateProgressHUD();
         lapActive = true; lapTime = 0; nextCp = 0;
         if (visited.size || orbsFound.size) toast(`Welcome back · ${visited.size}/${STATIONS.length} landmarks stamped`);
         track("world-start-riding", "Started riding in the 3D world");
+        connectMultiplayer(shareName ? safeName(guestName) : "");
         $("#intro").classList.add("gone");
         document.body.classList.add("playing");
         canvas.focus({ preventScroll: true });
@@ -1774,9 +3202,13 @@
       const settingsEl = $("#settings");
       const f = {
         quality: $("#set-quality"), fullscreen: $("#set-fullscreen"), sound: $("#set-sound"), music: $("#set-music"),
-        camera: $("#set-camera"), minimap: $("#set-minimap"), motion: $("#set-motion"), lang: $("#set-lang"),
+        camera: $("#set-camera"), minimap: $("#set-minimap"), motion: $("#set-motion"), lang: $("#set-lang"), others: $("#set-others"), track: $("#set-track"),
       };
       const canFullscreen = !!(document.documentElement.requestFullscreen && document.fullscreenEnabled !== false);
+      f.track.innerHTML = MUSIC_TRACKS.map((t) => `<option value="${t.id}">${t.name}</option>`).join("");
+      const paintTrackNote = () => ($("#set-music-note").textContent = (MUSIC_BY_ID[f.track.value] || {}).note || "");
+      f.track.addEventListener("change", () => { paintTrackNote(); setTrack(f.track.value); }); // preview; Cancel restores it
+      f.music.addEventListener("input", () => setMusicVolume(+f.music.value));
 
       function applySettings() {
         const q = settings.quality, dpr = window.devicePixelRatio || 1;
@@ -1790,7 +3222,10 @@
         fireflies.visible = flowers.visible = q !== "low";
         camDist = { close: 0.72, normal: 1, far: 1.5 }[settings.camera] || 1;
         mm.style.display = settings.minimap ? "" : "none";
+        remotes.forEach((r) => (r.root.visible = settings.others && r.placed));
         if (sfxGain) sfxGain.gain.value = settings.sound / 100;
+        setMusicVolume();
+        if (musicStarted && currentTrack !== (settings.track || "calm")) setTrack(settings.track || "calm");
         resize();
       }
 
@@ -1812,7 +3247,10 @@
         f.camera.value = settings.camera;
         f.minimap.checked = settings.minimap;
         f.motion.checked = settings.motion;
+        f.others.checked = settings.others !== false;
         f.lang.value = settings.lang;
+        f.track.value = settings.track || "calm";
+        paintTrackNote();
         f.fullscreen.checked = !!document.fullscreenElement;
         f.fullscreen.disabled = !canFullscreen;
         paintRange(f.sound);
@@ -1824,8 +3262,15 @@
       const resetDelete = () => { delArmed = false; delBtn.classList.remove("confirm"); delBtn.textContent = "Delete saved data"; };
       delBtn.addEventListener("click", () => {
         if (!delArmed) { delArmed = true; delBtn.classList.add("confirm"); delBtn.textContent = "Click again to confirm"; return; }
-        ["world-progress", "world-best-lap", "world-settings", "world-guest-name", "world-guest-org"].forEach(persist.remove);
-        progress = { visited: [], orbs: [], completeShown: false };
+        ["world-progress", "world-best-lap", "world-darts-best", "world-darts-records", "world-settings", "world-guest-name", "world-guest-org", "world-guest-share"].forEach(persist.remove);
+        progress = { visited: [], orbs: [], completeShown: false, goals: 0, bull: false, miss: false, stickers: [] };
+        dartsBest = 0;
+        records = {};
+        drawScoreboard(0);
+        seenStickers = new Set();
+        freshStickers.clear();
+        updateStickerBadge();
+        checkStickerUnlocks(true);
         visited = new Set();
         orbsFound = new Set();
         bestLap = 0;
@@ -1838,9 +3283,10 @@
       });
 
       function openSettings() {
-        if (!started || settingsOpen || !$("#complete").hidden) return;
+        if (!started || settingsOpen || mode === "darts" || !$("#complete").hidden) return;
         if (panelOpen) closePanel();
         if (!$("#complete").hidden) return;
+        closeWheel();
         settingsOpen = true;
         paused = true;
         clearInput();
@@ -1856,7 +3302,7 @@
         if (save) {
           settings = {
             quality: f.quality.value, sound: +f.sound.value, music: +f.music.value, camera: f.camera.value,
-            minimap: f.minimap.checked, motion: f.motion.checked, lang: f.lang.value,
+            minimap: f.minimap.checked, motion: f.motion.checked, lang: f.lang.value, others: f.others.checked, track: f.track.value,
           };
           persist.set("world-settings", JSON.stringify(settings));
           if (canFullscreen) {
@@ -1879,6 +3325,8 @@
       applySettings();
       updateProgressHUD();
 
+      const POIS = [...STATIONS, ...ACTIVITIES];
+
       /* ================= LOOP ================= */
       const clock = new THREE.Clock();
       let lastSpeedText = "";
@@ -1886,16 +3334,20 @@
         const dt = Math.min(clock.getDelta(), 0.05);
         const t = clock.elapsedTime;
 
-        if (started && !paused) {
+        if (started && !paused && mode === "ride") {
           updateBike(dt);
           updateLap(dt);
+          updateFootball(dt);
           for (const o of orbs) if (o.g.visible && Math.abs(o.x - pos.x) < 1.8 && Math.abs(o.z - pos.z) < 1.8 && Math.hypot(o.x - pos.x, o.z - pos.z) < 1.8) collectOrb(o);
-        } else if (paused) {
+        } else if (paused || mode === "darts") {
           speed = 0;
           crankVel = 0;
         }
         animateBike(dt);
         updateScenery(dt, t);
+        updateBursts(dt);
+        if (started) updateMultiplayer(dt);
+        updateEmotes(dt);
         for (const s of STATIONS) s.tick(t);
         core.rotation.y = t * 0.15;
         orbitA.rotation.set(Math.PI / 2 + Math.sin(t * 0.3) * 0.4, t * 0.25, 0);
@@ -1909,15 +3361,16 @@
         }
         ffGeo.attributes.position.needsUpdate = true;
 
-        updateCamera(dt, t);
+        if (mode === "darts") updateDarts(dt, t);
+        else updateCamera(dt, t);
         moon.position.set(pos.x - 25, 40, pos.z - 21);
         moon.target.position.copy(pos);
         stars.position.copy(camera.position);
         moonDisc.position.copy(camera.position).addScaledVector(MOON_DIR, 500);
 
-        if (started && !paused) {
+        if (started && !paused && mode === "ride") {
           let best = null, bd = INTERACT;
-          for (const s of STATIONS) {
+          for (const s of POIS) {
             const d = Math.hypot(pos.x - s.pos.x, pos.z - s.pos.z) - s.radius;
             if (d < bd) { bd = d; best = s; }
           }
