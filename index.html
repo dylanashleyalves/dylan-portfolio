@@ -37,7 +37,7 @@
       };
     </script>
     <link rel="stylesheet" href="css/styles.css" />
-    <!-- Visitor analytics (GoatCounter). Replace YOURCODE with the code you picked when signing up. -->
+    <!-- Visitor analytics (GoatCounter) -->
     <script data-goatcounter="https://dylanalves.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   </head>
   <body class="bg-obsidian text-mist antialiased">
@@ -51,8 +51,9 @@
       <!-- Navigation -->
       <header class="nav-shell">
         <nav class="glass flex items-center justify-between rounded-full px-4 py-3 md:px-6">
-          <a href="#top" class="mono text-[11px] tracking-[0.28em] uppercase text-emerald">
-            DYLN / 00
+          <a href="#top" class="brand-top mono text-[11px] tracking-[0.28em] uppercase text-emerald" title="Back to top" aria-label="DYLAN / 00, back to top">
+            DYLAN / 00
+            <span class="brand-hint" aria-hidden="true">↑ Back to top</span>
           </a>
           <button
             id="nav-toggle"
@@ -92,7 +93,7 @@
                 Dylan
               </h1>
               <p class="mt-6 max-w-xl text-base md:text-xl font-light text-fog leading-relaxed">
-                I build <span class="text-mist">practical apps powered by AI</span>,
+                I build <span class="text-mist">practical apps/websites powered by AI</span>,
                 and I love helping others understand how they work.
               </p>
               <p class="mt-5 inline-flex flex-wrap items-center gap-x-2 gap-y-1 mono text-[10px] md:text-[11px] tracking-[0.16em] uppercase text-fog">
@@ -108,7 +109,7 @@
                 </a>
                 <a
                   href="#contact"
-                  class="magnetic rounded-full px-7 py-3 text-sm bg-emerald text-obsidian font-medium"
+                  class="magnetic glass rounded-full px-7 py-3 text-sm tracking-wide hover:border-emerald/40"
                 >
                   Start a conversation
                 </a>
@@ -144,10 +145,6 @@
                 </a>
               </div>
             </div>
-          </div>
-          <div class="absolute bottom-8 left-5 md:left-10 hidden md:flex items-center gap-3 text-fog mono text-[10px] tracking-[0.25em] uppercase">
-            <span class="w-8 h-px bg-emerald/50"></span>
-            Scroll to enter
           </div>
         </section>
 
@@ -185,7 +182,7 @@
                   <p>
                     I'm a Computer Engineering graduate from Temasek Polytechnic (Class of 2026).
                     I build software that puts AI to practical use, like a study assistant that turns
-                    students' own notes into quizzes. I enjoy the whole journey: designing the idea,
+                    students own notes into quizzes. I enjoy the whole journey: designing the idea,
                     wiring up the data, and making it something people actually want to use.
                   </p>
                   <p>
@@ -626,6 +623,12 @@
         <span>Crafted in the quiet hours</span>
       </footer>
     </div>
+
+    <!-- Back to top: appears once you scroll down, until you're back at the top -->
+    <a href="#top" id="to-top" class="to-top glass" aria-label="Back to top" title="Back to top" data-goatcounter-click="back-to-top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      <span class="mono">Top</span>
+    </a>
 
     <!-- Full-screen screenshot viewer -->
     <dialog id="lightbox" class="lightbox" aria-label="Screenshot viewer">

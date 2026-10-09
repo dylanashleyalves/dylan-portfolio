@@ -147,6 +147,96 @@ section[id] {
   background: linear-gradient(90deg, var(--emerald), var(--amber));
 }
 
+/* Logo doubles as a "back to top" button */
+.brand-top {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.brand-hint {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0.9rem);
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.45rem;
+  white-space: nowrap;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--obsidian);
+  background: var(--emerald);
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s var(--ease-out-expo);
+}
+
+.brand-hint::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+  transform: rotate(45deg);
+}
+
+.brand-top:hover .brand-hint,
+.brand-top:focus-visible .brand-hint,
+.brand-top.show-hint .brand-hint {
+  opacity: 1;
+  transform: none;
+}
+
+/* Floating back-to-top button (top right, below the nav) */
+.to-top {
+  position: fixed;
+  top: 5.6rem;
+  right: max(1rem, calc((100vw - 1080px) / 2));
+  z-index: 39;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem 0.5rem 0.7rem;
+  border-radius: 999px;
+  color: var(--mist);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s var(--ease-out-expo),
+    visibility 0s linear 0.3s,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.to-top svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s var(--ease-out-expo),
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.to-top:hover,
+.to-top:focus-visible {
+  color: var(--emerald);
+  border-color: rgba(61, 255, 166, 0.45);
+}
+
 /* ---------- Hero ---------- */
 
 .hero-name {
@@ -949,6 +1039,7 @@ section[id] {
   .portrait-ring-spin,
   .gallery-item img,
   .shots-track,
+  .to-top,
   .achv-card,
   .cert-card,
   .blob {

@@ -240,6 +240,14 @@
     draw();
   }
 
+  /* ----- Back-to-top button: visible whenever you're scrolled down ----- */
+  const toTop = document.getElementById("to-top");
+  if (toTop) {
+    const syncToTop = () => toTop.classList.toggle("show", scrollY > innerHeight * 0.6);
+    window.addEventListener("scroll", syncToTop, { passive: true });
+    syncToTop();
+  }
+
   /* ----- Scroll progress ----- */
   const bar = document.querySelector(".nav-progress span");
   const onScroll = () => {
@@ -310,7 +318,7 @@
      Create a form at formspree.io and paste its ID below.
      Until then, the form opens the visitor's email app instead,
      so no message is ever lost. */
-  const CONTACT_FORM_URL = "https://formspree.io/f/xnpjdlqj";
+  const CONTACT_FORM_URL = "https://formspree.io/f/YOUR_CONTACT_FORM_ID";
   const form = document.getElementById("contact-form");
   const status = document.getElementById("form-status");
   const setStatus = (text, isError = false) => {
