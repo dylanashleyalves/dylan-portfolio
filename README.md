@@ -37,9 +37,9 @@ const dylan = {
   role:      "Software Engineer",
   location:  "Singapore 🇸🇬",
   education: "Diploma in Computer Engineering · Temasek Polytechnic (2026)",
-  builds:    "practical apps powered by AI",
+  builds:    "practical apps/websites powered by AI",
   loves:     ["coding", "teaching", "darts 🎯", "football ⚽", "the gym 💪"],
-  status:    "Serving National Service until 2028",
+  status:    "National Service from Nov 2026 to 2028",
   openTo:    "software & AI roles after NS · happy to connect now",
 };
 ```
