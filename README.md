@@ -68,7 +68,8 @@ const dylan = {
 - 🛂 Passport stamps, 🔮 20 hidden orbs, ⏱️ lap timer
 - ⚽ Football pitch · 🎯 darts (301/501/701, Cricket)
 - 😎 Unlockable **sticker emotes**
-- 👥 **Live multiplayer** riders
+- 👥 **Live multiplayer** riders + 👻 **ghost riders** from past visits
+- 🌗 **Day/night cycle** with rain and fog
 - 🎵 Original generative music · ⚙️ retro settings
 
 </td>
@@ -161,6 +162,7 @@ code .
 | Contact form | `js/main.js` | `CONTACT_FORM_URL` |
 | World guestbook | `world.html` | `GUESTBOOK_URL` |
 | Multiplayer | `world.html` | `SUPABASE_URL`, `SUPABASE_KEY` |
+| Ghost riders | Supabase | `ghost_rides` table |
 
 > [!WARNING]
 > Only ever use Supabase's **publishable** key in front-end code, never the secret key.

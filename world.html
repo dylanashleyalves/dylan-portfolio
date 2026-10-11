@@ -431,6 +431,7 @@
             <input id="guest-org" name="organisation" type="text" maxlength="80" autocomplete="organization" placeholder="e.g. Temasek Polytechnic" />
             <p class="guest-note">Shared only with me, so I know who stopped by. Leave it blank to ride anonymously.</p>
             <label class="guest-share"><input id="guest-share" type="checkbox" /> Also show my name to other riders in the world</label>
+            <p class="guest-note" style="margin-top: 0.25rem">Your ride may also replay as an anonymous ghost rider for future visitors (no name attached).</p>
           </div>
           <div class="intro-actions">
             <button id="start" class="btn" type="submit" disabled>Loading world…</button>
@@ -510,11 +511,31 @@
         </div>
 
         <div class="set-row">
+          <h3 class="set-label pixel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg> Sky:</h3>
+          <div class="set-inline">
+            <select id="set-time" class="set-select" aria-label="Time of day">
+              <option value="cycle">Day &amp; night cycle</option>
+              <option value="night">Always night</option>
+              <option value="sunrise">Sunrise</option>
+              <option value="day">Day</option>
+              <option value="sunset">Sunset</option>
+            </select>
+            <select id="set-weather" class="set-select" aria-label="Weather">
+              <option value="auto">Changing weather</option>
+              <option value="clear">Clear</option>
+              <option value="rain">Rain</option>
+              <option value="fog">Fog</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="set-row">
           <h3 class="set-label pixel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg> Display:</h3>
           <div class="set-inline">
             <label class="set-check pixel"><input id="set-minimap" type="checkbox" /><span class="box"></span><span>Minimap</span></label>
             <label class="set-check pixel"><input id="set-motion" type="checkbox" /><span class="box"></span><span>Reduce motion</span></label>
             <label class="set-check pixel"><input id="set-others" type="checkbox" /><span class="box"></span><span>Other riders</span></label>
+            <label class="set-check pixel"><input id="set-ghosts" type="checkbox" /><span class="box"></span><span>Ghost riders</span></label>
           </div>
         </div>
 
@@ -640,7 +661,7 @@
         },
       };
       const coarse = matchMedia("(pointer: coarse)").matches;
-      const DEFAULT_SETTINGS = { quality: coarse ? "medium" : "high", sound: 70, music: 50, camera: "normal", minimap: true, motion: reduced, lang: "en", others: true, track: "calm" };
+      const DEFAULT_SETTINGS = { quality: coarse ? "medium" : "high", sound: 70, music: 50, camera: "normal", minimap: true, motion: reduced, lang: "en", others: true, track: "calm", time: "cycle", weather: "auto", ghosts: true };
       let settings = persist.json("world-settings", DEFAULT_SETTINGS);
 
       /* =====================================================
@@ -858,7 +879,8 @@
       };
 
       /* ================= LIGHTS ================= */
-      scene.add(new THREE.HemisphereLight(0x6f8cff, 0x0b1a14, 0.9));
+      const hemi = new THREE.HemisphereLight(0x6f8cff, 0x0b1a14, 0.9);
+      scene.add(hemi);
       const moon = new THREE.DirectionalLight(0xbfd4ff, 1.4);
       moon.castShadow = true;
       moon.shadow.mapSize.set(1024, 1024);
@@ -1410,7 +1432,7 @@
         shimmer.material.opacity = 0.5 + Math.sin(t * 1.3) * 0.25;
         if (shoot.t < 0) {
           shoot.wait -= dt;
-          if (shoot.wait <= 0 && !settings.motion) {
+          if (shoot.wait <= 0 && !settings.motion && skyDark > 0.6) {
             shoot.t = 0;
             shoot.from.set(camera.position.x + (Math.random() - 0.5) * 500, 170 + Math.random() * 110, camera.position.z + (Math.random() - 0.5) * 500);
             shoot.dir.set(Math.random() - 0.5, -0.35, Math.random() - 0.5).normalize();
@@ -1675,6 +1697,120 @@
           if (bLife[i] <= 0) bPos[i * 3 + 1] = -999;
         }
         if (any) bGeo.attributes.position.needsUpdate = true;
+      }
+
+      /* ================= SKY: day/night cycle + weather ================= */
+      const C = (h) => new THREE.Color(h);
+      const SKY_KEYS = {
+        night: { bg: C(0x07080b), hs: C(0x6f8cff), hg: C(0x0b1a14), hi: 0.9, sun: C(0xbfd4ff), si: 1.4, fog: 0.0115, stars: 0.75, disc: C(0xdfe8ff), ds: 60, ground: C(0x0c1117), mtn: C(0x111820), exp: 1.15, dark: 1 },
+        dawn:  { bg: C(0x3b2f45), hs: C(0xffb38a), hg: C(0x2a2030), hi: 1.1, sun: C(0xffa070), si: 1.6, fog: 0.009, stars: 0.25, disc: C(0xffc58a), ds: 90, ground: C(0x1a1d22), mtn: C(0x2a2433), exp: 1.1, dark: 0.55 },
+        day:   { bg: C(0x7fa6c4), hs: C(0xd6ebff), hg: C(0x3a4a3a), hi: 1.5, sun: C(0xfff3df), si: 2.3, fog: 0.0055, stars: 0, disc: C(0xfff6d8), ds: 80, ground: C(0x26362f), mtn: C(0x4a5a6c), exp: 1.0, dark: 0 },
+        dusk:  { bg: C(0x45243a), hs: C(0xff9a7a), hg: C(0x24182a), hi: 1.05, sun: C(0xff8a5a), si: 1.5, fog: 0.0095, stars: 0.3, disc: C(0xff9a60), ds: 100, ground: C(0x17161c), mtn: C(0x2c1f2e), exp: 1.1, dark: 0.6 },
+      };
+      // where each look sits in the cycle (0 → 1)
+      const CYCLE = [[0, "night"], [0.3, "night"], [0.4, "dawn"], [0.5, "day"], [0.7, "day"], [0.8, "dusk"], [0.9, "night"], [1, "night"]];
+      const FIXED_TIME = { night: 0.15, sunrise: 0.4, day: 0.6, sunset: 0.8 };
+      const CYCLE_SECONDS = 600; // a full day lasts 10 minutes
+      let skyT = 0.12, skyDark = 1;
+      const skyNow = { bg: new THREE.Color(), hs: new THREE.Color(), hg: new THREE.Color(), sun: new THREE.Color(), disc: new THREE.Color(), ground: new THREE.Color(), mtn: new THREE.Color() };
+      const RAIN_TINT = C(0x2b333c);
+      const smooth = (k) => k * k * (3 - 2 * k);
+      function blendSky(t) {
+        let i = 0;
+        while (i < CYCLE.length - 2 && t > CYCLE[i + 1][0]) i++;
+        const [ta, na] = CYCLE[i], [tb, nb] = CYCLE[i + 1];
+        const k = smooth(tb > ta ? Math.min(1, Math.max(0, (t - ta) / (tb - ta))) : 0);
+        const A = SKY_KEYS[na], B = SKY_KEYS[nb], L = (p) => A[p] + (B[p] - A[p]) * k;
+        for (const key of ["bg", "hs", "hg", "sun", "disc", "ground", "mtn"]) skyNow[key].copy(A[key]).lerp(B[key], k);
+        skyNow.hi = L("hi"); skyNow.si = L("si"); skyNow.fog = L("fog"); skyNow.stars = L("stars"); skyNow.ds = L("ds"); skyNow.exp = L("exp"); skyNow.dark = L("dark");
+      }
+
+      // Weather: rain streaks + fog, changing every few minutes when set to "Changing"
+      const RAIN_MAX = 1600;
+      const rainPos = new Float32Array(RAIN_MAX * 6), rainDrops = new Float32Array(RAIN_MAX * 4);
+      const rainGeo = new THREE.BufferGeometry();
+      rainGeo.setAttribute("position", new THREE.BufferAttribute(rainPos, 3));
+      const rainMat = new THREE.LineBasicMaterial({ color: 0xaecbe6, transparent: true, opacity: 0, depthWrite: false, toneMapped: false });
+      const rainLines = new THREE.LineSegments(rainGeo, rainMat);
+      rainLines.frustumCulled = false;
+      rainLines.visible = false;
+      scene.add(rainLines);
+      const spawnDrop = (i, anyHeight) => {
+        rainDrops[i * 4] = camera.position.x + (Math.random() - 0.5) * 70;
+        rainDrops[i * 4 + 1] = anyHeight ? Math.random() * 30 : 24 + Math.random() * 8;
+        rainDrops[i * 4 + 2] = camera.position.z + (Math.random() - 0.5) * 70;
+        rainDrops[i * 4 + 3] = 26 + Math.random() * 10;
+      };
+      let rainReady = false;
+      let weather = "clear", rainAmt = 0, fogAmt = 0, weatherTimer = 70 + Math.random() * 60;
+      const WEATHER_TOAST = { rain: "Rain rolling in 🌧", fog: "Fog drifting in 🌫", clear: "Skies clearing ✨" };
+      function setWeather(next, announce) {
+        if (next === weather) return;
+        weather = next;
+        if (announce && started) toast(WEATHER_TOAST[next]);
+      }
+      function pickWeather() {
+        const r = Math.random();
+        return r < 0.55 ? "clear" : r < 0.8 ? "rain" : "fog";
+      }
+
+      function updateSky(dt) {
+        // time of day
+        const mode = settings.time || "cycle";
+        if (mode === "cycle") skyT = (skyT + dt / CYCLE_SECONDS) % 1;
+        else skyT += (((FIXED_TIME[mode] ?? 0.15) - skyT) * Math.min(1, dt * 1.5));
+        blendSky(skyT);
+
+        // weather
+        const wset = settings.weather || "auto";
+        if (wset === "auto") {
+          weatherTimer -= dt;
+          if (weatherTimer <= 0) { setWeather(pickWeather(), true); weatherTimer = 120 + Math.random() * 120; }
+        } else setWeather(wset, false);
+        const ease = Math.min(1, dt * 0.35);
+        rainAmt += ((weather === "rain" ? 1 : 0) - rainAmt) * ease;
+        fogAmt += ((weather === "fog" ? 1 : 0) - fogAmt) * ease;
+        const cloudy = Math.max(rainAmt, fogAmt);
+
+        // apply
+        skyNow.bg.lerp(RAIN_TINT, 0.35 * rainAmt + 0.25 * fogAmt);
+        scene.background.copy(skyNow.bg);
+        scene.fog.color.copy(skyNow.bg);
+        scene.fog.density = skyNow.fog + 0.013 * fogAmt + 0.006 * rainAmt;
+        hemi.color.copy(skyNow.hs);
+        hemi.groundColor.copy(skyNow.hg);
+        hemi.intensity = skyNow.hi * (1 - 0.2 * rainAmt);
+        moon.color.copy(skyNow.sun);
+        moon.intensity = skyNow.si * (1 - 0.5 * rainAmt - 0.35 * fogAmt);
+        stars.material.opacity = skyNow.stars * (1 - cloudy);
+        moonDisc.material.color.copy(skyNow.disc);
+        moonDisc.material.opacity = 1 - 0.85 * cloudy;
+        moonDisc.scale.set(skyNow.ds, skyNow.ds, 1);
+        ground.material.color.copy(skyNow.ground);
+        mountainMat.color.copy(skyNow.mtn);
+        renderer.toneMappingExposure = skyNow.exp;
+        skyDark = Math.min(1, skyNow.dark + 0.35 * cloudy);
+        fireflies.material.opacity = 0.15 + 0.85 * skyDark;
+        pools.material.opacity = 0.2 + 0.8 * skyDark;
+
+        // rain streaks
+        rainMat.opacity = 0.38 * rainAmt;
+        rainLines.visible = rainAmt > 0.02;
+        if (!rainLines.visible) return;
+        if (!rainReady) { for (let i = 0; i < RAIN_MAX; i++) spawnDrop(i, true); rainReady = true; }
+        const q = settings.quality === "low" ? 0.35 : settings.quality === "medium" ? 0.65 : 1;
+        const active = Math.floor(RAIN_MAX * q * (settings.motion ? 0.4 : 1) * Math.min(1, rainAmt * 1.5));
+        const fall = settings.motion ? 0.45 : 1;
+        for (let i = 0; i < active; i++) {
+          const o = i * 4;
+          rainDrops[o + 1] -= rainDrops[o + 3] * fall * dt;
+          if (rainDrops[o + 1] < 0 || Math.abs(rainDrops[o] - camera.position.x) > 40 || Math.abs(rainDrops[o + 2] - camera.position.z) > 40) spawnDrop(i, false);
+          const p = i * 6, x = rainDrops[o], y = rainDrops[o + 1], z = rainDrops[o + 2];
+          rainPos[p] = x; rainPos[p + 1] = y; rainPos[p + 2] = z;
+          rainPos[p + 3] = x + 0.08; rainPos[p + 4] = y - 0.9; rainPos[p + 5] = z;
+        }
+        rainGeo.setDrawRange(0, active * 2);
+        rainGeo.attributes.position.needsUpdate = true;
       }
 
       /* ================= BIKE & RIDER ================= */
@@ -2714,18 +2850,118 @@
         if (mpReady) mpChannel.send({ type: "broadcast", event: "bell", payload: { id: myId } });
       }
 
+      /* ================= SUPABASE CLIENT (shared by multiplayer + ghosts) ================= */
+      let sbLoading = null;
+      function getSupabase() {
+        if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_KEY.startsWith("YOUR")) return Promise.resolve(null);
+        if (!sbLoading) {
+          sbLoading = import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm")
+            .then(({ createClient }) => createClient(SUPABASE_URL, SUPABASE_KEY, {
+              auth: { persistSession: false, autoRefreshToken: false },
+              realtime: { worker: true }, // heartbeats run in a worker, so background windows stay connected
+            }))
+            .catch(() => null);
+        }
+        return sbLoading;
+      }
+
+      /* ================= GHOST RIDERS =================
+         Records ~75 seconds of your ride (position + direction only, no name)
+         and replays recent rides from past visitors as see-through riders.
+         Needs the "ghost_rides" table in Supabase (SQL in the README / chat). */
+      const GHOST_HZ = 4, GHOST_MAX = 300, GHOST_MIN = 120, GHOST_COUNT = coarse ? 3 : 5;
+      const ghosts = [];
+      let ghostRides = [];
+      function makeGhost() {
+        const root = bikeRoot.clone(true);
+        const drop = [];
+        root.traverse((o) => { if (o.isSprite || o.isLight) drop.push(o); });
+        drop.forEach((o) => o.parent && o.parent.remove(o));
+        const mat = new THREE.MeshBasicMaterial({ color: 0x9fe8ff, transparent: true, opacity: 0, depthWrite: false, toneMapped: false });
+        root.traverse((o) => { if (o.isMesh) { o.material = mat; o.castShadow = false; o.receiveShadow = false; } });
+        root.visible = false;
+        scene.add(root);
+        return {
+          root, mat, wheel: 0, t: 0, wait: 0, ride: null,
+          lean: root.getObjectByName("lean"), steer: root.getObjectByName("steer"),
+          front: root.getObjectByName("frontWheel"), rear: root.getObjectByName("rearWheel"),
+        };
+      }
+      const nextRide = (g) => { g.ride = ghostRides[Math.floor(Math.random() * ghostRides.length)]; g.t = 0; };
+      async function loadGhosts() {
+        const sb = await getSupabase();
+        if (!sb) return;
+        const { data, error } = await sb.from("ghost_rides").select("hz,frames").order("created_at", { ascending: false }).limit(20);
+        if (error || !Array.isArray(data)) return;
+        ghostRides = data
+          .map((r) => ({ hz: Math.min(10, Math.max(1, Number(r.hz) || GHOST_HZ)), frames: Array.isArray(r.frames) ? r.frames.map(Number) : [] }))
+          .filter((r) => r.frames.length >= 90 && r.frames.length % 3 === 0 && r.frames.every((v) => Number.isFinite(v) && Math.abs(v) < 1000));
+        if (!ghostRides.length) return;
+        const n = Math.min(GHOST_COUNT, ghostRides.length * 2);
+        for (let i = 0; i < n; i++) { const g = makeGhost(); g.wait = 1 + i * 4 + Math.random() * 3; ghosts.push(g); }
+        track("world-ghosts-shown", "Ghost riders shown");
+      }
+      function updateGhosts(dt) {
+        const show = settings.ghosts !== false;
+        for (const g of ghosts) {
+          if (!show) { g.root.visible = false; continue; }
+          if (g.wait > 0) {
+            g.wait -= dt;
+            g.root.visible = false;
+            if (g.wait <= 0) nextRide(g);
+            continue;
+          }
+          const f = g.ride.frames, hz = g.ride.hz, n = f.length / 3, dur = (n - 1) / hz;
+          g.t += dt;
+          if (g.t >= dur) { g.wait = 2 + Math.random() * 6; g.root.visible = false; continue; }
+          const p = g.t * hz, i = Math.floor(p), k = p - i, a = i * 3, b = Math.min(i + 1, n - 1) * 3;
+          const x = f[a] + (f[b] - f[a]) * k, z = f[a + 1] + (f[b + 1] - f[a + 1]) * k;
+          const dh = Math.atan2(Math.sin(f[b + 2] - f[a + 2]), Math.cos(f[b + 2] - f[a + 2]));
+          const spd = Math.hypot(f[b] - f[a], f[b + 1] - f[a + 1]) * hz;
+          const st = THREE.MathUtils.clamp((dh * hz) / 1.6, -1, 1);
+          g.root.position.set(x, 0, z);
+          g.root.rotation.y = f[a + 2] + dh * k;
+          const sp = Math.min(spd / MAX, 1), e = 1 - Math.exp(-dt * 6);
+          if (g.lean) g.lean.rotation.z += (-st * sp * 0.38 - g.lean.rotation.z) * e;
+          if (g.steer) g.steer.rotation.y = st * 0.45 * (1 - 0.6 * sp);
+          g.wheel += (spd * dt) / 0.36;
+          if (g.front) g.front.rotation.x = g.wheel;
+          if (g.rear) g.rear.rotation.x = g.wheel;
+          g.mat.opacity = 0.3 * Math.max(0, Math.min(1, g.t / 0.8, (dur - g.t) / 0.8));
+          g.root.visible = true;
+        }
+      }
+
+      // Recording your ride (only while moving; one upload every 10 minutes at most)
+      const rec = { frames: [], acc: 0, done: false };
+      function recordGhost(dt) {
+        if (rec.done) return;
+        rec.acc += dt;
+        if (rec.acc < 1 / GHOST_HZ) return;
+        rec.acc = 0;
+        if (Math.abs(speed) < 0.4) return;
+        const n = rec.frames.length;
+        if (n >= 3 && Math.hypot(pos.x - rec.frames[n - 3], pos.z - rec.frames[n - 2]) > 8) { finishGhost(); return; }
+        rec.frames.push(+pos.x.toFixed(1), +pos.z.toFixed(1), +heading.toFixed(2));
+        if (rec.frames.length >= GHOST_MAX * 3) finishGhost();
+      }
+      async function finishGhost() {
+        if (rec.done) return;
+        if (rec.frames.length < GHOST_MIN * 3) { rec.frames = []; return; } // too short: keep recording
+        rec.done = true;
+        const last = parseInt(persist.get("world-ghost-upload"), 10) || 0;
+        if (Date.now() - last < 10 * 60 * 1000) return;
+        const sb = await getSupabase();
+        if (!sb) return;
+        const { error } = await sb.from("ghost_rides").insert({ hz: GHOST_HZ, frames: rec.frames });
+        if (!error) { persist.set("world-ghost-upload", String(Date.now())); track("world-ghost-saved", "Saved a ghost ride"); }
+      }
+      document.addEventListener("visibilitychange", () => { if (document.hidden && started) finishGhost(); });
+
       async function connectMultiplayer(name) {
         if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_KEY.startsWith("YOUR")) return;
-        let createClient;
-        try {
-          ({ createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"));
-        } catch {
-          return; // offline or blocked: the world keeps working in single-player
-        }
-        const sb = createClient(SUPABASE_URL, SUPABASE_KEY, {
-          auth: { persistSession: false, autoRefreshToken: false },
-          realtime: { worker: true }, // heartbeats run in a worker, so background windows stay connected
-        });
+        const sb = await getSupabase();
+        if (!sb) return; // offline or blocked: the world keeps working in single-player
         mpChannel = sb.channel("dylan-world", { config: { presence: { key: myId }, broadcast: { self: false } } });
         mpChannel
           .on("broadcast", { event: "pos" }, ({ payload }) => onRemotePos(payload))
@@ -3212,6 +3448,7 @@
         if (visited.size || orbsFound.size) toast(`Welcome back · ${visited.size}/${STATIONS.length} landmarks stamped`);
         track("world-start-riding", "Started riding in the 3D world");
         connectMultiplayer(shareName ? safeName(guestName) : "");
+        loadGhosts();
         $("#intro").classList.add("gone");
         document.body.classList.add("playing");
         canvas.focus({ preventScroll: true });
@@ -3225,7 +3462,7 @@
       const settingsEl = $("#settings");
       const f = {
         quality: $("#set-quality"), fullscreen: $("#set-fullscreen"), sound: $("#set-sound"), music: $("#set-music"),
-        camera: $("#set-camera"), minimap: $("#set-minimap"), motion: $("#set-motion"), lang: $("#set-lang"), others: $("#set-others"), track: $("#set-track"),
+        camera: $("#set-camera"), minimap: $("#set-minimap"), motion: $("#set-motion"), lang: $("#set-lang"), others: $("#set-others"), track: $("#set-track"), time: $("#set-time"), weather: $("#set-weather"), ghosts: $("#set-ghosts"),
       };
       const canFullscreen = !!(document.documentElement.requestFullscreen && document.fullscreenEnabled !== false);
       f.track.innerHTML = MUSIC_TRACKS.map((t) => `<option value="${t.id}">${t.name}</option>`).join("");
@@ -3271,6 +3508,9 @@
         f.minimap.checked = settings.minimap;
         f.motion.checked = settings.motion;
         f.others.checked = settings.others !== false;
+        f.time.value = settings.time || "cycle";
+        f.weather.value = settings.weather || "auto";
+        f.ghosts.checked = settings.ghosts !== false;
         f.lang.value = settings.lang;
         f.track.value = settings.track || "calm";
         paintTrackNote();
@@ -3326,6 +3566,7 @@
           settings = {
             quality: f.quality.value, sound: +f.sound.value, music: +f.music.value, camera: f.camera.value,
             minimap: f.minimap.checked, motion: f.motion.checked, lang: f.lang.value, others: f.others.checked, track: f.track.value,
+            time: f.time.value, weather: f.weather.value, ghosts: f.ghosts.checked,
           };
           persist.set("world-settings", JSON.stringify(settings));
           if (canFullscreen) {
@@ -3361,6 +3602,7 @@
           updateBike(dt);
           updateLap(dt);
           updateFootball(dt);
+          recordGhost(dt);
           for (const o of orbs) if (o.g.visible && Math.abs(o.x - pos.x) < 1.8 && Math.abs(o.z - pos.z) < 1.8 && Math.hypot(o.x - pos.x, o.z - pos.z) < 1.8) collectOrb(o);
         } else if (paused || mode === "darts") {
           speed = 0;
@@ -3371,6 +3613,7 @@
         updateBursts(dt);
         if (started) updateMultiplayer(dt);
         updateEmotes(dt);
+        updateGhosts(dt);
         for (const s of STATIONS) s.tick(t);
         core.rotation.y = t * 0.15;
         orbitA.rotation.set(Math.PI / 2 + Math.sin(t * 0.3) * 0.4, t * 0.25, 0);
@@ -3390,6 +3633,7 @@
         moon.target.position.copy(pos);
         stars.position.copy(camera.position);
         moonDisc.position.copy(camera.position).addScaledVector(MOON_DIR, 500);
+        updateSky(dt);
 
         if (started && !paused && mode === "ride") {
           let best = null, bd = INTERACT;
