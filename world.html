@@ -194,8 +194,8 @@
       .set-select:focus-visible, .set-range:focus-visible, .set-btn:focus-visible, .set-wide:focus-visible { outline: 2px solid var(--emerald); outline-offset: 2px; }
 
       /* ---------- Darts mini-game ---------- */
-      body.in-darts .hud, body.in-darts #prompt { opacity: 0 !important; pointer-events: none !important; }
-      body.in-darts .hud > * { pointer-events: none !important; }
+      body.in-darts .hud, body.in-darts #prompt, body.in-code .hud, body.in-code #prompt { opacity: 0 !important; pointer-events: none !important; }
+      body.in-darts .hud > *, body.in-code .hud > * { pointer-events: none !important; }
       #darts-hud { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
       #darts-hud[hidden] { display: none; }
       #darts-hud > * { pointer-events: auto; }
@@ -276,6 +276,60 @@
       .sticker-slot .new { position: absolute; top: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 10px var(--emerald); }
       body.touch .sticker-slot .key { display: none; }
       @media (max-width: 480px) { .sticker-slot { width: 58px; height: 58px; margin: -29px 0 0 -29px; } }
+
+      /* ---------- Code Lab ---------- */
+      #code-hud { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
+      #code-hud[hidden] { display: none; }
+      #code-hud > * { pointer-events: auto; }
+      #code-exit { position: absolute; top: calc(1rem + env(safe-area-inset-top)); left: calc(1rem + env(safe-area-inset-left)); cursor: pointer; }
+      .code-panel {
+        position: absolute; top: 1rem; right: 1rem; bottom: 1rem; width: min(470px, calc(100% - 2rem));
+        display: flex; flex-direction: column; gap: 0.7rem; padding: 1.1rem; border-radius: 1.25rem; overflow-y: auto;
+      }
+      .code-panel .kicker { margin: 0; }
+      .code-panel h2 { margin: 0; font-size: 1.5rem; text-transform: uppercase; }
+      #code-task { margin: 0; font-size: 0.84rem; line-height: 1.55; color: var(--fog); }
+      #code-task b { color: var(--mist); }
+      #code-task code, .code-status code { font-family: var(--mono); color: var(--amber); }
+      .code-goal { display: block; margin-top: 0.35rem; color: var(--amber); font-size: 0.75rem; }
+      .code-palette { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+      .code-palette button {
+        padding: 0.35rem 0.6rem; border-radius: 0.5rem; cursor: pointer; font: 500 0.72rem var(--mono);
+        color: var(--emerald); background: rgba(61, 255, 166, 0.08); border: 1px solid rgba(61, 255, 166, 0.3);
+      }
+      .code-palette button:hover { background: rgba(61, 255, 166, 0.18); }
+      .code-editor { position: relative; display: flex; flex: 1 1 200px; min-height: 180px; border-radius: 0.8rem; border: 1px solid var(--glass-border); background: #05070a; overflow: hidden; }
+      .code-gutter { padding: 0.75rem 0.45rem; min-width: 2.4rem; text-align: right; font: 13px/1.65 var(--mono); color: rgba(139, 149, 163, 0.6); border-right: 1px solid var(--glass-border); overflow: hidden; user-select: none; }
+      .code-gutter span { display: block; padding: 0 0.3rem; border-radius: 4px; }
+      .code-gutter span.active { color: var(--obsidian); background: var(--emerald); }
+      .code-gutter span.error { color: #fff; background: #d4473f; }
+      #code-input {
+        flex: 1; margin: 0; padding: 0.75rem; border: 0; outline: none; resize: none; background: transparent;
+        color: var(--mist); font: 13px/1.65 var(--mono); tab-size: 2; white-space: pre; overflow: auto; caret-color: var(--emerald);
+      }
+      .code-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      .code-actions .btn { padding: 0.65rem 1.3rem; }
+      .code-actions .set-btn { min-width: 0; padding: 0.55rem 0.9rem; font-family: var(--mono); font-size: 0.75rem; }
+      .code-status { margin: 0; min-height: 2.6rem; padding: 0.65rem 0.8rem; border-radius: 0.7rem; font-size: 0.78rem; line-height: 1.5; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.03); color: var(--mist); }
+      .code-status.ok { border-color: rgba(61, 255, 166, 0.5); background: rgba(61, 255, 166, 0.08); }
+      .code-status.err { border-color: rgba(212, 71, 63, 0.6); background: rgba(212, 71, 63, 0.1); }
+      .code-keys { color: var(--fog); }
+      .code-next { margin-left: 0.4rem; padding: 0.25rem 0.6rem; border-radius: 999px; border: 0; cursor: pointer; font: 600 0.72rem var(--mono); background: var(--emerald); color: var(--obsidian); }
+      .code-levels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.35rem; }
+      .code-levels button {
+        display: flex; flex-direction: column; align-items: center; gap: 0.1rem; padding: 0.4rem 0.2rem; border-radius: 0.6rem; cursor: pointer;
+        border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.03); color: var(--mist); font: 700 0.85rem var(--mono);
+      }
+      .code-levels small { font-size: 8px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fog); font-weight: 500; }
+      .code-levels i { font-style: normal; font-size: 9px; color: var(--amber); letter-spacing: 0.1em; }
+      .code-levels button.done { border-color: rgba(61, 255, 166, 0.4); }
+      .code-levels button.current { background: rgba(61, 255, 166, 0.14); border-color: var(--emerald); }
+      @media (max-width: 760px) {
+        .code-panel { top: auto; left: 0.5rem; right: 0.5rem; bottom: 0.5rem; width: auto; height: 60vh; padding: 0.85rem; gap: 0.55rem; }
+        .code-panel h2 { font-size: 1.15rem; }
+        #code-task { font-size: 0.78rem; }
+        .code-editor { min-height: 140px; }
+      }
 
       /* ---------- Passport complete ---------- */
       #complete { position: fixed; inset: 0; z-index: 35; display: flex; padding: 1rem; overflow-y: auto; background: rgba(7, 8, 11, 0.7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
@@ -412,7 +466,7 @@
           <kbd>W / ↑</kbd><span>Pedal</span>
           <kbd>S / ↓ / Space</kbd><span>Brake, then reverse</span>
           <kbd>A D / ← →</kbd><span>Steer</span>
-          <kbd>E</kbd><span>Open a landmark or start darts</span>
+          <kbd>E</kbd><span>Open a landmark, play darts, or code in the Code Lab</span>
           <kbd>B · L · C</kbd><span>Bell, headlight, camera view</span>
           <kbd>T · 1–0</kbd><span>Stickers (unlock more by playing)</span>
           <kbd>P / Esc</kbd><span>Settings (pauses the ride)</span>
@@ -603,6 +657,29 @@
           <p id="wheel-hint" class="mono">Pick one to show it</p>
         </div>
       </div>
+    </div>
+
+    <!-- Code Lab: learn to code by steering a robot bike -->
+    <div id="code-hud" hidden>
+      <button id="code-exit" class="pill glass mono" type="button">✕ Leave</button>
+      <section class="code-panel glass" aria-label="Code Lab">
+        <p class="kicker mono" id="code-kicker">Code Lab</p>
+        <h2 class="display" id="code-title"></h2>
+        <p id="code-task"></p>
+        <div class="code-palette" id="code-palette" aria-label="Tap a command to add it"></div>
+        <div class="code-editor">
+          <div class="code-gutter" id="code-gutter" aria-hidden="true"></div>
+          <textarea id="code-input" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Your code"></textarea>
+        </div>
+        <div class="code-actions">
+          <button id="code-run" class="btn" type="button">▶ Run</button>
+          <button id="code-hint" class="set-btn" type="button">💡 Hint</button>
+          <button id="code-reset" class="set-btn" type="button">↺ Reset</button>
+          <button id="code-speed" class="set-btn" type="button">1× speed</button>
+        </div>
+        <p id="code-status" class="code-status mono" role="status" aria-live="polite"></p>
+        <div class="code-levels" id="code-levels"></div>
+      </section>
     </div>
 
     <!-- Shown once every landmark has been stamped -->
@@ -819,6 +896,7 @@
         { id: "unchained", name: "Unchained", big: "x3", small: "HAT-TRICK", tone: "amber", img: "images/stickers/unchained.webp", hint: "Score 3 goals", unlock: () => (progress.goals || 0) >= 3 },
         { id: "ton", name: "Ton", big: "100+", small: "DARTS", tone: "pink", img: "images/stickers/ton.webp", hint: "Score 100+ in a darts round", unlock: () => dartsBest >= 100 },
         { id: "ishowdylan", name: "IShowDylan", big: "BULL", small: "50", tone: "amber", img: "images/stickers/mwah.webp", hint: "Hit the bull in darts", unlock: () => !!progress.bull },
+        { id: "coder", name: "Coder", big: "</>", small: "CODER", tone: "emerald", img: "", hint: "Finish every Code Lab level", unlock: () => CODE_LEVELS.every((l) => (progress.code || {})[l.id]) },
         { id: "speed", name: "Speedster", big: "<55s", small: "LAP", tone: "blue", img: "", hint: "Finish a lap in under 55 seconds", unlock: () => bestLap > 0 && bestLap < 55 },
       ];
 
@@ -1114,9 +1192,11 @@
       const POND = { x: 30, z: 20, r: 8 };
       const PITCH = { x: -34, z: -8, hl: 12, hw: 7.5, goalHW: 2.2, goalDepth: 1.4 };
       const DARTS = { x: -10, z: 30, boardY: 1.73, R: 0.45, oche: 2.6 };
+      const LAB = { x: 22, z: -30, tile: 1.5, n: 8 };
       const inSportsZone = (x, z, pad = 0) =>
         (Math.abs(x - PITCH.x) < PITCH.hl + 4 + pad && Math.abs(z - PITCH.z) < PITCH.hw + 4 + pad) ||
-        Math.hypot(x - DARTS.x, z - (DARTS.z + 1.5)) < 6 + pad;
+        Math.hypot(x - DARTS.x, z - (DARTS.z + 1.5)) < 6 + pad ||
+        (Math.abs(x - LAB.x) < 9.5 + pad && Math.abs(z - LAB.z) < 10 + pad);
 
       /* ================= TREES, ROCKS, MOUNTAINS ================= */
       const trees = [];
@@ -2270,14 +2350,14 @@
 
       /* ================= PROGRESS: passport, orbs, laps ================= */
       const stationId = (s) => slug(s.title);
-      let progress = persist.json("world-progress", { visited: [], orbs: [], completeShown: false, goals: 0, bull: false, miss: false, stickers: [] });
+      let progress = persist.json("world-progress", { visited: [], orbs: [], completeShown: false, goals: 0, bull: false, miss: false, stickers: [], code: {} });
       let visited = new Set(progress.visited);
       let orbsFound = new Set(progress.orbs);
       let bestLap = parseFloat(persist.get("world-best-lap")) || 0;
       let dartsBest = parseInt(persist.get("world-darts-best"), 10) || 0;
       drawScoreboard(progress.goals || 0);
       const saveProgress = () =>
-        persist.set("world-progress", JSON.stringify({ visited: [...visited], orbs: [...orbsFound], completeShown: progress.completeShown, goals: progress.goals || 0, bull: !!progress.bull, miss: !!progress.miss, stickers: progress.stickers || [] }));
+        persist.set("world-progress", JSON.stringify({ visited: [...visited], orbs: [...orbsFound], completeShown: progress.completeShown, goals: progress.goals || 0, bull: !!progress.bull, miss: !!progress.miss, stickers: progress.stickers || [], code: progress.code || {} }));
       const syncOrbs = () => orbs.forEach((o) => (o.g.visible = !orbsFound.has(o.id)));
       syncOrbs();
 
@@ -2770,6 +2850,600 @@
           if (!dartsResult.hidden) newRound(); else throwDart();
         }
       }
+      /* ================= CODE LAB: learn to code by driving a bike =================
+         Visitors write tiny programs that steer a robot bike across a grid.
+         The code is read by a small built-in interpreter (never eval), so it's safe. */
+      const LAB_HALF = (LAB.n * LAB.tile) / 2;
+      const P1 = [["forward(1)", "forward(1)"], ["turnLeft()", "turnLeft()"], ["turnRight()", "turnRight()"]];
+      const P2 = [...P1, ["repeat(4) { }", "repeat(4) {\n  \n}"]];
+      const P3 = [...P2, ["if (coneAhead()) { } else { }", "if (coneAhead()) {\n  \n} else {\n  \n}"], ["while (!atFlag()) { }", "while (!atFlag()) {\n  \n}"]];
+      const P4 = [...P3, ["function hop() { }", "function hop() {\n  \n}"], ["hop()", "hop()"]];
+      const P5 = [...P4, ["let steps = 1", "let steps = 1"], ["steps = steps + 1", "steps = steps + 1"], ["forward(steps)", "forward(steps)"]];
+      const CODE_LEVELS = [
+        {
+          id: "sequence", concept: "Sequence", title: "First steps",
+          task: "Computers follow instructions <b>in order</b>, one line at a time. Ride the bike to the green flag.",
+          start: [1, 6, 0], flag: [4, 3], cones: [[0, 2], [5, 6], [6, 1], [3, 5]], goal: 3, palette: P1,
+          starter: "// Each line is one instruction.\n// Press Run to see what happens!\nforward(3)\nturnRight()\n",
+          hint: "After turning right, the flag is 3 steps ahead. Add forward(3) on a new line.",
+        },
+        {
+          id: "loops", concept: "Loops", title: "The staircase",
+          task: "When you need to do the same thing many times, use a <b>loop</b>. <code>repeat(4) { }</code> runs everything inside the braces 4 times.",
+          start: [1, 6, 1], flag: [5, 2], cones: [[3, 6], [4, 5], [5, 4], [6, 3], [1, 5], [2, 4], [3, 3], [4, 2]], goal: 6, palette: P2,
+          starter: "repeat(4) {\n  forward(1)\n  turnLeft()\n  // what comes next on each step?\n}\n",
+          hint: "One stair is: forward(1), turnLeft(), forward(1), turnRight(). Put all four inside the loop.",
+        },
+        {
+          id: "conditions", concept: "Conditions", title: "Look before you ride",
+          task: "Programs can make <b>decisions</b>. <code>if (coneAhead())</code> checks for a cone (or the edge) in front. Turn when blocked, otherwise keep riding.",
+          start: [0, 7, 0], flag: [6, 5], cones: [[0, 0], [7, 1], [2, 3], [3, 4], [4, 3], [2, 5], [4, 5]], goal: 7, palette: P3,
+          starter: "repeat(20) {\n  if (coneAhead()) {\n    // what should the bike do when it's blocked?\n  } else {\n    forward(1)\n  }\n}\n",
+          hint: "When a cone is ahead, turn right. Put turnRight() inside the if part.",
+        },
+        {
+          id: "functions", concept: "Functions", title: "Make your own command",
+          task: "A <b>function</b> is your own command made of other commands. Write <code>hop()</code> once to ride around a cone, then use it twice.",
+          start: [0, 4, 1], flag: [7, 4], cones: [[2, 4], [5, 4], [0, 1], [7, 1], [3, 6], [6, 6]], goal: 14, palette: P4,
+          starter: "function hop() {\n  turnLeft()\n  forward(1)\n  turnRight()\n  // finish riding around the cone\n}\n\nforward(1)\nhop()\n",
+          hint: "To get around a cone: turnLeft(), forward(1), turnRight(), forward(2), turnRight(), forward(1), turnLeft(). Then forward(1), hop(), forward(1).",
+        },
+        {
+          id: "variables", concept: "Variables", title: "The spiral",
+          task: "A <b>variable</b> is a named box that holds a value. Make <code>steps</code> grow by 1 each time to ride a spiral.",
+          start: [3, 4, 0], flag: [7, 1], cones: [[3, 5], [6, 7], [0, 0], [7, 5], [4, 4]], goal: 6, palette: P5,
+          starter: "let steps = 1\n\nrepeat(6) {\n  forward(steps)\n  turnRight()\n  // make steps one bigger here\n}\n",
+          hint: "Inside the loop, add: steps = steps + 1",
+        },
+      ];
+      // directions: 0 = north (-z), 1 = east (+x), 2 = south (+z), 3 = west (-x)
+      const DIRS = [{ dc: 0, dr: -1, h: Math.PI }, { dc: 1, dr: 0, h: Math.PI / 2 }, { dc: 0, dr: 1, h: 0 }, { dc: -1, dr: 0, h: -Math.PI / 2 }];
+      const tileX = (c) => LAB.x + (c - (LAB.n - 1) / 2) * LAB.tile;
+      const tileZ = (r) => LAB.z + (r - (LAB.n - 1) / 2) * LAB.tile;
+
+      // --- the lab itself ---
+      const lab = new THREE.Group();
+      lab.position.set(LAB.x, 0, LAB.z);
+      scene.add(lab);
+      add(lab, new THREE.BoxGeometry(LAB_HALF * 2 + 1, 0.06, LAB_HALF * 2 + 1), darkMat, 0, 0.03, 0).castShadow = false;
+      const tileMats = [new THREE.MeshStandardMaterial({ color: 0x10202a, roughness: 0.6, emissive: 0x0a2a22, emissiveIntensity: 0.6 }), new THREE.MeshStandardMaterial({ color: 0x0c1820, roughness: 0.6, emissive: 0x061a16, emissiveIntensity: 0.6 })];
+      for (let c = 0; c < LAB.n; c++) for (let r = 0; r < LAB.n; r++) {
+        const t = new THREE.Mesh(new THREE.PlaneGeometry(LAB.tile * 0.94, LAB.tile * 0.94), tileMats[(c + r) % 2]);
+        t.rotation.x = -Math.PI / 2;
+        t.position.set(tileX(c) - LAB.x, 0.07, tileZ(r) - LAB.z);
+        t.receiveShadow = true;
+        lab.add(t);
+      }
+      [[0, -1], [0, 1], [-1, 0], [1, 0]].forEach(([sx, sz]) => {
+        const along = sx === 0;
+        add(lab, new THREE.BoxGeometry(along ? LAB_HALF * 2 + 0.6 : 0.08, 0.1, along ? 0.08 : LAB_HALF * 2 + 0.6), glow("#3dffa6"), sx * (LAB_HALF + 0.3), 0.08, sz * (LAB_HALF + 0.3));
+      });
+      // kiosk
+      const kioskX = -LAB_HALF - 1.6, kioskZ = LAB_HALF + 0.6;
+      add(lab, new THREE.BoxGeometry(1.2, 1.3, 0.7), darkMat, kioskX, 0.65, kioskZ);
+      const kScreen = add(lab, new THREE.PlaneGeometry(1, 0.6), new THREE.MeshBasicMaterial({
+        map: canvasTex(256, 160, (g) => { g.fillStyle = "#06120e"; g.fillRect(0, 0, 256, 160); g.fillStyle = "#3dffa6"; g.font = '700 64px "JetBrains Mono", monospace'; g.textAlign = "center"; g.fillText("</>", 128, 100); }),
+        toneMapped: false,
+      }), kioskX, 1.2, kioskZ + 0.36);
+      kScreen.rotation.x = -0.35;
+      kScreen.castShadow = false;
+      sportColliders.push({ x: LAB.x + kioskX, z: LAB.z + kioskZ, r: 0.6 });
+      const labLabel = makeLabel("Learn to code · press E", "Code Lab", "#3dffa6", 1.1);
+      labLabel.position.set(0, 4.2, LAB_HALF + 0.8);
+      lab.add(labLabel);
+
+      // level objects (cones, flag) and the robot bike
+      const levelGroup = new THREE.Group();
+      lab.add(levelGroup);
+      const coneMat = new THREE.MeshStandardMaterial({ color: 0xff8a3d, roughness: 0.5, emissive: 0x401a00 });
+      const coneGeo = new THREE.ConeGeometry(0.32, 0.85, 16);
+      const stripeGeo = new THREE.TorusGeometry(0.2, 0.035, 6, 20);
+      const robot = bikeRoot.clone(true);
+      {
+        const drop = [];
+        robot.traverse((o) => { if (o.isSprite || o.isLight) drop.push(o); });
+        drop.forEach((o) => o.parent && o.parent.remove(o));
+      }
+      robot.scale.setScalar(0.72);
+      scene.add(robot);
+      const robotWheels = [robot.getObjectByName("frontWheel"), robot.getObjectByName("rearWheel")].filter(Boolean);
+      const trailGeo = new THREE.CircleGeometry(0.18, 16);
+      const trailMat = new THREE.MeshBasicMaterial({ color: 0x3dffa6, transparent: true, opacity: 0.55, toneMapped: false });
+      let trail = [];
+
+      // --- state ---
+      let codeProgress = progress.code && typeof progress.code === "object" && !Array.isArray(progress.code) ? progress.code : {};
+      let levelIdx = Math.min(CODE_LEVELS.length - 1, parseInt(persist.get("world-code-level"), 10) || 0);
+      const sim = { c: 0, r: 0, dir: 0 };
+      const blockedAt = (c, r) => c < 0 || r < 0 || c >= LAB.n || r >= LAB.n || CODE_LEVELS[levelIdx].cones.some(([x, y]) => x === c && y === r);
+      sim.blockedAhead = () => blockedAt(sim.c + DIRS[sim.dir].dc, sim.r + DIRS[sim.dir].dr);
+      sim.atFlag = () => sim.c === CODE_LEVELS[levelIdx].flag[0] && sim.r === CODE_LEVELS[levelIdx].flag[1];
+      let run = null; // { gen, cur, actions }
+      let codeSpeed = 1, robotWheel = 0;
+
+      function placeRobot() {
+        const L = CODE_LEVELS[levelIdx];
+        sim.c = L.start[0]; sim.r = L.start[1]; sim.dir = L.start[2];
+        robot.position.set(tileX(sim.c), 0.07, tileZ(sim.r));
+        robot.rotation.y = DIRS[sim.dir].h;
+        trail.forEach((m) => lab.remove(m));
+        trail = [];
+      }
+      function buildLevel() {
+        while (levelGroup.children.length) levelGroup.remove(levelGroup.children[0]);
+        const L = CODE_LEVELS[levelIdx];
+        for (const [c, r] of L.cones) {
+          const g = new THREE.Group();
+          g.position.set(tileX(c) - LAB.x, 0.07, tileZ(r) - LAB.z);
+          const cone = new THREE.Mesh(coneGeo, coneMat);
+          cone.position.y = 0.43;
+          cone.castShadow = true;
+          const stripe = new THREE.Mesh(stripeGeo, glow("#f2f4f5"));
+          stripe.rotation.x = Math.PI / 2;
+          stripe.position.y = 0.48;
+          g.add(cone, stripe);
+          levelGroup.add(g);
+        }
+        const fx = tileX(L.flag[0]) - LAB.x, fz = tileZ(L.flag[1]) - LAB.z;
+        add(levelGroup, new THREE.CylinderGeometry(0.035, 0.035, 1.6, 8), metalMat, fx, 0.85, fz);
+        const flagShape = new THREE.Shape();
+        flagShape.moveTo(0, 0); flagShape.lineTo(0.7, -0.22); flagShape.lineTo(0, -0.44); flagShape.lineTo(0, 0);
+        const flagMesh = new THREE.Mesh(new THREE.ShapeGeometry(flagShape), new THREE.MeshBasicMaterial({ color: 0x3dffa6, side: THREE.DoubleSide, toneMapped: false }));
+        flagMesh.position.set(fx + 0.035, 1.62, fz);
+        levelGroup.add(flagMesh);
+        const pad = new THREE.Mesh(new THREE.PlaneGeometry(LAB.tile * 0.94, LAB.tile * 0.94), new THREE.MeshBasicMaterial({ color: 0x3dffa6, transparent: true, opacity: 0.25, toneMapped: false }));
+        pad.rotation.x = -Math.PI / 2;
+        pad.position.set(fx, 0.08, fz);
+        levelGroup.add(pad);
+        placeRobot();
+      }
+      buildLevel();
+
+      // --- tiny language: tokenizer → parser → step-by-step interpreter ---
+      const codeError = (line, msg) => Object.assign(new Error(msg), { line, isCode: true });
+      const KNOWN = ["forward", "turnLeft", "turnRight", "ringBell", "repeat", "coneAhead", "atFlag", "while", "function", "let"];
+      function editDistance(a, b) {
+        const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+        for (let j = 1; j <= b.length; j++) d[0][j] = j;
+        for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+          d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1].toLowerCase() === b[j - 1].toLowerCase() ? 0 : 1));
+        return d[a.length][b.length];
+      }
+      function didYouMean(name, extra = []) {
+        let best = null, bd = 3;
+        for (const k of [...KNOWN, ...extra]) { const dd = editDistance(name, k); if (dd < bd) { bd = dd; best = k; } }
+        return best ? ` Did you mean ${best}()?` : "";
+      }
+      function tokenize(src) {
+        const toks = [];
+        let i = 0, line = 1;
+        while (i < src.length) {
+          const ch = src[i];
+          if (ch === "\n") { line++; i++; continue; }
+          if (/\s/.test(ch)) { i++; continue; }
+          if (src.startsWith("//", i)) { while (i < src.length && src[i] !== "\n") i++; continue; }
+          if (/[0-9]/.test(ch)) { let j = i; while (j < src.length && /[0-9]/.test(src[j])) j++; toks.push({ t: "num", v: Number(src.slice(i, j)), line }); i = j; continue; }
+          if (/[A-Za-z_]/.test(ch)) { let j = i; while (j < src.length && /[A-Za-z0-9_]/.test(src[j])) j++; toks.push({ t: "id", v: src.slice(i, j), line }); i = j; continue; }
+          const three = src.slice(i, i + 3), two = src.slice(i, i + 2);
+          if (three === "===" || three === "!==") { toks.push({ t: "op", v: two, line }); i += 3; continue; }
+          if (["<=", ">=", "==", "!=", "&&", "||"].includes(two)) { toks.push({ t: "op", v: two, line }); i += 2; continue; }
+          if ("(){};=+-*<>!,".includes(ch)) { toks.push({ t: "op", v: ch, line }); i++; continue; }
+          throw codeError(line, `I don't understand the symbol "${ch}".`);
+        }
+        toks.push({ t: "eof", v: "the end of your code", line });
+        return toks;
+      }
+      function parse(src) {
+        const T = tokenize(src);
+        let p = 0;
+        const next = () => T[p++];
+        const at = (v) => T[p].t !== "num" && T[p].v === v;
+        const expect = (v, what) => {
+          if (!at(v)) throw codeError(T[p].line, `I expected ${what || `"${v}"`} here, but found "${T[p].v}".`);
+          return next();
+        };
+        const semi = () => { if (at(";")) p++; };
+        function block() {
+          expect("{", '"{" to start the block');
+          const body = [];
+          while (!at("}")) {
+            if (T[p].t === "eof") throw codeError(T[p].line, 'A block is missing its closing "}".');
+            body.push(stmt());
+          }
+          next();
+          return body;
+        }
+        function stmt() {
+          const tk = T[p], line = tk.line;
+          if (tk.t !== "id") throw codeError(line, `I didn't expect "${tk.v}" here.`);
+          if (tk.v === "repeat") { next(); expect("(", '"(" after repeat'); const count = expr(); expect(")", '")" after the number'); return { k: "repeat", count, body: block(), line }; }
+          if (tk.v === "if") {
+            next(); expect("(", '"(" after if'); const c = cond(); expect(")", '")" to close the condition');
+            const yes = block();
+            let no = null;
+            if (at("else")) { next(); no = at("if") ? [stmt()] : block(); }
+            return { k: "if", c, yes, no, line };
+          }
+          if (tk.v === "while") { next(); expect("(", '"(" after while'); const c = cond(); expect(")", '")" to close the condition'); return { k: "while", c, body: block(), line }; }
+          if (tk.v === "function") {
+            next();
+            const nm = next();
+            if (nm.t !== "id") throw codeError(line, "A function needs a name, like function hop() { }.");
+            expect("("); expect(")");
+            return { k: "fn", name: nm.v, body: block(), line };
+          }
+          if (tk.v === "let" || tk.v === "var" || tk.v === "const") {
+            next();
+            const nm = next();
+            if (nm.t !== "id") throw codeError(line, "A variable needs a name, like let steps = 1.");
+            expect("=", '"=" after the variable name');
+            const e = expr(); semi();
+            return { k: "let", name: nm.v, e, line };
+          }
+          next();
+          if (at("=")) { next(); const e = expr(); semi(); return { k: "set", name: tk.v, e, line }; }
+          if (at("(")) {
+            next();
+            const args = [];
+            if (!at(")")) { args.push(expr()); while (at(",")) { next(); args.push(expr()); } }
+            expect(")", '")" to close the command');
+            semi();
+            return { k: "call", name: tk.v, args, line };
+          }
+          throw codeError(line, `"${tk.v}" needs brackets to run, like ${tk.v}().${didYouMean(tk.v)}`);
+        }
+        function expr() { let l = term(); while (at("+") || at("-")) { const op = next().v; l = { k: "bin", op, l, r: term() }; } return l; }
+        function term() { let l = factor(); while (at("*")) { next(); l = { k: "bin", op: "*", l, r: factor() }; } return l; }
+        function factor() {
+          const tk = next();
+          if (tk.t === "num") return { k: "num", v: tk.v };
+          if (tk.t === "id") {
+            if (at("(")) { next(); expect(")"); return { k: "q", name: tk.v, line: tk.line }; }
+            return { k: "var", name: tk.v, line: tk.line };
+          }
+          if (tk.v === "(") { const e = expr(); expect(")"); return e; }
+          if (tk.v === "-") return { k: "bin", op: "-", l: { k: "num", v: 0 }, r: factor() };
+          throw codeError(tk.line, `I expected a number here, but found "${tk.v}".`);
+        }
+        function cond() { let l = condAnd(); while (at("||")) { next(); l = { k: "or", l, r: condAnd() }; } return l; }
+        function condAnd() { let l = condNot(); while (at("&&")) { next(); l = { k: "and", l, r: condNot() }; } return l; }
+        function condNot() {
+          if (at("!")) { next(); return { k: "not", c: condNot() }; }
+          if (at("true") || at("false")) return { k: "bool", v: next().v === "true" };
+          const l = expr();
+          if (["<", ">", "<=", ">=", "==", "!="].some(at)) { const op = next().v; return { k: "cmp", op, l, r: expr() }; }
+          return { k: "truthy", e: l };
+        }
+        const prog = [];
+        while (T[p].t !== "eof") prog.push(stmt());
+        return prog;
+      }
+      function* interpret(prog) {
+        const fns = {};
+        for (const s of prog) if (s.k === "fn") fns[s.name] = s;
+        const vars = {};
+        let ops = 0, depth = 0;
+        const tick = (line) => { if (++ops > 20000) throw codeError(line, "Your code ran for too long. Is there a loop that never stops?"); };
+        const query = (e) => {
+          if (e.name === "coneAhead") return sim.blockedAhead();
+          if (e.name === "atFlag") return sim.atFlag();
+          throw codeError(e.line, `"${e.name}()" isn't a question I can answer. Try coneAhead() or atFlag().`);
+        };
+        const val = (e) => {
+          if (e.k === "num") return e.v;
+          if (e.k === "q") return query(e) ? 1 : 0;
+          if (e.k === "var") {
+            if (!(e.name in vars)) throw codeError(e.line, `I don't know "${e.name}" yet. Create it first with: let ${e.name} = 1`);
+            return vars[e.name];
+          }
+          const a = val(e.l), b = val(e.r);
+          return e.op === "+" ? a + b : e.op === "-" ? a - b : a * b;
+        };
+        const test = (c) => {
+          switch (c.k) {
+            case "not": return !test(c.c);
+            case "and": return test(c.l) && test(c.r);
+            case "or": return test(c.l) || test(c.r);
+            case "bool": return c.v;
+            case "truthy": return c.e.k === "q" ? query(c.e) : !!val(c.e);
+            default: {
+              const a = val(c.l), b = val(c.r);
+              return c.op === "<" ? a < b : c.op === ">" ? a > b : c.op === "<=" ? a <= b : c.op === ">=" ? a >= b : c.op === "==" ? a === b : a !== b;
+            }
+          }
+        };
+        function* block(list) {
+          for (const s of list) {
+            tick(s.line);
+            if (s.k === "fn") continue;
+            if (s.k === "let") { vars[s.name] = val(s.e); yield { line: s.line, act: "think" }; continue; }
+            if (s.k === "set") {
+              if (!(s.name in vars)) throw codeError(s.line, `Create "${s.name}" first with: let ${s.name} = 1`);
+              vars[s.name] = val(s.e);
+              yield { line: s.line, act: "think" };
+              continue;
+            }
+            if (s.k === "repeat") {
+              const n = Math.floor(val(s.count));
+              if (!(n >= 0) || n > 200) throw codeError(s.line, "repeat() needs a number between 0 and 200.");
+              for (let i = 0; i < n; i++) yield* block(s.body);
+              continue;
+            }
+            if (s.k === "while") {
+              let guard = 0;
+              while (test(s.c)) {
+                if (++guard > 300) throw codeError(s.line, "This while loop never stopped. Make sure its condition can become false.");
+                yield* block(s.body);
+              }
+              continue;
+            }
+            if (s.k === "if") { if (test(s.c)) yield* block(s.yes); else if (s.no) yield* block(s.no); continue; }
+            // commands
+            if (s.name === "forward") {
+              const n = s.args.length ? Math.floor(val(s.args[0])) : 1;
+              if (!(n >= 0) || n > 20) throw codeError(s.line, "forward() needs a number of steps between 0 and 20.");
+              for (let i = 0; i < n; i++) yield { line: s.line, act: "fwd" };
+            } else if (s.name === "turnLeft") yield { line: s.line, act: "L" };
+            else if (s.name === "turnRight") yield { line: s.line, act: "R" };
+            else if (s.name === "ringBell") yield { line: s.line, act: "bell" };
+            else if (fns[s.name]) {
+              if (++depth > 25) throw codeError(s.line, "Your functions call each other too many times.");
+              yield* block(fns[s.name].body);
+              depth--;
+            } else throw codeError(s.line, `I don't know a command called "${s.name}".${didYouMean(s.name, Object.keys(fns))}`);
+          }
+        }
+        yield* block(prog);
+      }
+
+      // --- UI ---
+      const codeHud = $("#code-hud"), codeInput = $("#code-input"), codeGutter = $("#code-gutter"), codeStatus = $("#code-status");
+      const codeKey = (i) => `world-code-${CODE_LEVELS[i].id}`;
+      const countLines = (src) => src.split("\n").filter((l) => l.trim() && !l.trim().startsWith("//")).length;
+      function renderGutter(active = -1, error = -1) {
+        const n = codeInput.value.split("\n").length;
+        let html = "";
+        for (let i = 1; i <= n; i++) html += `<span class="${i === active ? "active" : i === error ? "error" : ""}">${i}</span>`;
+        codeGutter.innerHTML = html;
+        codeGutter.scrollTop = codeInput.scrollTop;
+      }
+      function setStatus(html, kind = "info") {
+        codeStatus.className = `code-status mono ${kind}`;
+        codeStatus.innerHTML = html;
+      }
+      function renderLevelDots() {
+        $("#code-levels").innerHTML = CODE_LEVELS.map((L, i) => {
+          const stars = codeProgress[L.id] || 0;
+          return `<button type="button" class="${i === levelIdx ? "current" : ""} ${stars ? "done" : ""}" data-level="${i}" aria-label="Level ${i + 1}: ${L.concept}${stars ? ", completed" : ""}">${i + 1}<small>${L.concept}</small><i>${"★".repeat(stars)}${"☆".repeat(2 - stars)}</i></button>`;
+        }).join("");
+      }
+      function loadLevel(i) {
+        stopRun();
+        levelIdx = i;
+        persist.set("world-code-level", String(i));
+        const L = CODE_LEVELS[i];
+        $("#code-kicker").textContent = `Code Lab · Level ${i + 1} of ${CODE_LEVELS.length} · ${L.concept}`;
+        $("#code-title").textContent = L.title;
+        $("#code-task").innerHTML = `${L.task} <span class="code-goal">Bonus ★: solve it in ${L.goal} lines or fewer.</span>`;
+        $("#code-palette").innerHTML = L.palette.map(([label], k) => `<button type="button" data-snip="${k}">${label.replace(/</g, "&lt;")}</button>`).join("");
+        codeInput.value = persist.get(codeKey(i)) ?? L.starter;
+        buildLevel();
+        renderGutter();
+        renderLevelDots();
+        setStatus("Edit the code, then press <b>Run ▶</b>. <span class='code-keys'>Ctrl + Enter also runs it.</span>");
+        $("#code-run").textContent = "▶ Run";
+      }
+      function stopRun() {
+        run = null;
+        $("#code-run").textContent = "▶ Run";
+      }
+      function startRun() {
+        if (run) { stopRun(); setStatus("Stopped. Press Run to try again."); renderGutter(); return; }
+        placeRobot();
+        let prog;
+        try {
+          prog = parse(codeInput.value);
+        } catch (err) {
+          if (!err.isCode) throw err;
+          sfx.thud();
+          renderGutter(-1, err.line);
+          setStatus(`<b>Line ${err.line}:</b> ${err.message}`, "err");
+          return;
+        }
+        run = { gen: interpret(prog), cur: null, actions: 0 };
+        $("#code-run").textContent = "■ Stop";
+        setStatus("Running…");
+        track(`world-code-run-${CODE_LEVELS[levelIdx].id}`, "Ran code in the Code Lab");
+      }
+      function finish(kind, html, line) {
+        stopRun();
+        renderGutter(kind === "err" ? -1 : line, kind === "err" ? line : -1);
+        setStatus(html, kind);
+      }
+      function win() {
+        const L = CODE_LEVELS[levelIdx], lines = countLines(codeInput.value), stars = lines <= L.goal ? 2 : 1;
+        const prev = codeProgress[L.id] || 0;
+        codeProgress[L.id] = Math.max(prev, stars);
+        progress.code = codeProgress;
+        saveProgress();
+        renderLevelDots();
+        sfx.lap();
+        burst(tileX(sim.c), 1.2, tileZ(sim.r), ["#3dffa6", "#f0b45a", "#f2f4f5"], 40, 3);
+        const nextBtn = levelIdx < CODE_LEVELS.length - 1 ? ` <button type="button" class="code-next" id="code-next">Next level ▶</button>` : "";
+        const msg = stars === 2
+          ? `<b>★★ You reached the flag!</b> Solved in ${lines} lines (goal: ${L.goal}).`
+          : `<b>★ You reached the flag!</b> Bonus: can you do it in ${L.goal} lines or fewer? You used ${lines}.`;
+        const allDone = CODE_LEVELS.every((l) => codeProgress[l.id]);
+        finish("ok", msg + (allDone && !prev && levelIdx === CODE_LEVELS.length - 1 ? " You finished every level. You're a coder now! 🎉" : "") + nextBtn);
+        track(`world-code-solved-${L.id}`, `Solved Code Lab level: ${L.title}`);
+        checkStickerUnlocks();
+      }
+      const ACT_TIME = { fwd: 0.42, L: 0.3, R: 0.3, bell: 0.35, think: 0.12, crash: 0.5 };
+      function stepRun() {
+        let n;
+        try {
+          n = run.gen.next();
+        } catch (err) {
+          if (!err.isCode) throw err;
+          sfx.thud();
+          return finish("err", `<b>Line ${err.line}:</b> ${err.message}`, err.line);
+        }
+        if (n.done) {
+          return finish("err", sim.atFlag() ? "" : "Your code finished, but the bike hasn't reached the flag yet. Add more steps!", -1);
+        }
+        const { act, line } = n.value;
+        if (++run.actions > 500) return finish("err", "Your bike took more than 500 steps. Is a loop running too many times?", line);
+        renderGutter(line);
+        const cur = { act, line, t: 0, fromX: robot.position.x, fromZ: robot.position.z, fromH: robot.rotation.y, toX: robot.position.x, toZ: robot.position.z, toH: robot.rotation.y };
+        if (act === "fwd") {
+          const nc = sim.c + DIRS[sim.dir].dc, nr = sim.r + DIRS[sim.dir].dr;
+          if (blockedAt(nc, nr)) {
+            cur.act = "crash";
+            cur.edge = nc < 0 || nr < 0 || nc >= LAB.n || nr >= LAB.n;
+            cur.toX = cur.fromX + DIRS[sim.dir].dc * LAB.tile * 0.3;
+            cur.toZ = cur.fromZ + DIRS[sim.dir].dr * LAB.tile * 0.3;
+          } else {
+            sim.c = nc; sim.r = nr;
+            cur.toX = tileX(nc); cur.toZ = tileZ(nr);
+          }
+        } else if (act === "L" || act === "R") {
+          sim.dir = (sim.dir + (act === "L" ? 3 : 1)) % 4;
+          const d = Math.atan2(Math.sin(DIRS[sim.dir].h - cur.fromH), Math.cos(DIRS[sim.dir].h - cur.fromH));
+          cur.toH = cur.fromH + d;
+        } else if (act === "bell") sfx.bell();
+        run.cur = cur;
+      }
+      function updateCode(dt) {
+        // camera: look at the grid, shifted so the code panel doesn't cover it
+        const narrow = innerWidth < 760;
+        const look = new THREE.Vector3(LAB.x + (narrow ? 0 : 4.2), 0, LAB.z + (narrow ? 6 : 0.5));
+        camera.position.set(LAB.x + (narrow ? 0 : 2), narrow ? 21 : 15.5, LAB.z + (narrow ? 15 : 13.5));
+        camera.lookAt(look);
+        if (!run) return;
+        if (!run.cur) stepRun();
+        const cur = run && run.cur;
+        if (!cur) return;
+        cur.t += (dt * codeSpeed) / ACT_TIME[cur.act];
+        const k = Math.min(cur.t, 1);
+        if (cur.act === "crash") {
+          const b = Math.sin(Math.PI * k);
+          robot.position.x = cur.fromX + (cur.toX - cur.fromX) * b;
+          robot.position.z = cur.fromZ + (cur.toZ - cur.fromZ) * b;
+        } else {
+          const e = k * k * (3 - 2 * k);
+          robot.position.x = cur.fromX + (cur.toX - cur.fromX) * e;
+          robot.position.z = cur.fromZ + (cur.toZ - cur.fromZ) * e;
+          robot.rotation.y = cur.fromH + (cur.toH - cur.fromH) * e;
+          if (cur.act === "fwd") { robotWheel += dt * codeSpeed * 9; robotWheels.forEach((w) => (w.rotation.x = robotWheel)); }
+        }
+        if (cur.t < 1) return;
+        run.cur = null;
+        if (cur.act === "crash") {
+          sfx.thud();
+          return finish("err", cur.edge
+            ? `<b>Line ${cur.line}:</b> Whoa, the bike nearly rode off the edge! Check your turns before this line.`
+            : `<b>Line ${cur.line}:</b> 💥 The bike hit a cone. Try turning before this step, or check how many steps you ride.`, cur.line);
+        }
+        if (cur.act === "fwd") {
+          const m = new THREE.Mesh(trailGeo, trailMat);
+          m.rotation.x = -Math.PI / 2;
+          m.position.set(robot.position.x - LAB.x, 0.09, robot.position.z - LAB.z);
+          lab.add(m);
+          trail.push(m);
+          if (sim.atFlag()) return win();
+        }
+      }
+
+      // editor behaviour
+      codeInput.addEventListener("input", () => {
+        persist.set(codeKey(levelIdx), codeInput.value);
+        renderGutter();
+      });
+      codeInput.addEventListener("scroll", () => (codeGutter.scrollTop = codeInput.scrollTop));
+      codeInput.addEventListener("keydown", (e) => {
+        if (e.key === "Tab") {
+          e.preventDefault();
+          codeInput.setRangeText("  ", codeInput.selectionStart, codeInput.selectionEnd, "end");
+          codeInput.dispatchEvent(new Event("input"));
+        } else if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          startRun();
+        } else if (e.key === "Enter") {
+          // keep the indentation of the current line
+          const before = codeInput.value.slice(0, codeInput.selectionStart);
+          const indent = (before.split("\n").pop().match(/^\s*/) || [""])[0] + (before.trimEnd().endsWith("{") ? "  " : "");
+          e.preventDefault();
+          codeInput.setRangeText("\n" + indent, codeInput.selectionStart, codeInput.selectionEnd, "end");
+          codeInput.dispatchEvent(new Event("input"));
+        }
+      });
+      $("#code-palette").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-snip]");
+        if (!b) return;
+        const snip = CODE_LEVELS[levelIdx].palette[+b.dataset.snip][1];
+        const before = codeInput.value.slice(0, codeInput.selectionStart);
+        const lineStart = before.split("\n").pop();
+        const indent = (lineStart.match(/^\s*/) || [""])[0];
+        const text = (lineStart.trim() ? "\n" + indent : "") + snip.replace(/\n/g, "\n" + indent);
+        codeInput.focus();
+        codeInput.setRangeText(text, codeInput.selectionStart, codeInput.selectionEnd, "end");
+        codeInput.dispatchEvent(new Event("input"));
+        sfx.click();
+      });
+      $("#code-levels").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-level]");
+        if (b) { loadLevel(+b.dataset.level); sfx.click(); }
+      });
+      codeStatus.addEventListener("click", (e) => {
+        if (e.target.closest("#code-next")) { loadLevel(Math.min(levelIdx + 1, CODE_LEVELS.length - 1)); sfx.click(); }
+      });
+      $("#code-run").addEventListener("click", startRun);
+      $("#code-reset").addEventListener("click", () => {
+        codeInput.value = CODE_LEVELS[levelIdx].starter;
+        persist.set(codeKey(levelIdx), codeInput.value);
+        stopRun();
+        placeRobot();
+        renderGutter();
+        setStatus("Code reset to the starting version.");
+      });
+      $("#code-hint").addEventListener("click", () => {
+        setStatus(`💡 ${CODE_LEVELS[levelIdx].hint}`, "info");
+        track("world-code-hint", "Used a Code Lab hint");
+      });
+      $("#code-speed").addEventListener("click", (e) => {
+        codeSpeed = codeSpeed === 1 ? 2 : codeSpeed === 2 ? 4 : 1;
+        e.currentTarget.textContent = `${codeSpeed}× speed`;
+      });
+
+      function enterCode() {
+        closeWheel();
+        mode = "code";
+        clearInput();
+        speed = 0; crankVel = 0; steer = 0;
+        pos.set(LAB.x, 0, LAB.z + LAB_HALF + 2.6);
+        heading = Math.PI;
+        camera.fov = 50;
+        camera.updateProjectionMatrix();
+        document.body.classList.add("in-code");
+        promptEl.classList.remove("show");
+        nearest = null;
+        codeHud.hidden = false;
+        loadLevel(levelIdx);
+        track("world-code-open", "Opened the Code Lab");
+      }
+      function exitCode() {
+        stopRun();
+        placeRobot();
+        mode = "ride";
+        document.body.classList.remove("in-code");
+        codeHud.hidden = true;
+        codeInput.blur();
+        nearest = null;
+        canvas.focus({ preventScroll: true });
+      }
+      $("#code-exit").addEventListener("click", exitCode);
+      ACTIVITIES.push({ title: "Code Lab", color: "#3dffa6", pos: new THREE.Vector3(LAB.x, 0, LAB.z + LAB_HALF + 1.2), radius: 0.8, play: () => enterCode() });
+
       const activate = (s) => (s.play ? s.play() : openPanel(s));
 
       /* ================= MULTIPLAYER (Supabase Realtime) =================
@@ -3278,6 +3952,9 @@
         mctx.beginPath(); mctx.arc(c + DARTS.x * s, c + DARTS.z * s, 3.5 * u, 0, Math.PI * 2); mctx.stroke();
         mctx.fillStyle = "#f0b45a";
         mctx.beginPath(); mctx.arc(c + DARTS.x * s, c + DARTS.z * s, 1.2 * u, 0, Math.PI * 2); mctx.fill();
+        mctx.strokeStyle = "#3dffa6";
+        mctx.lineWidth = 1.5 * u;
+        mctx.strokeRect(c + (LAB.x - 6) * s, c + (LAB.z - 6) * s, 12 * s, 12 * s);
         for (const st of STATIONS) {
           mctx.beginPath();
           mctx.arc(c + st.pos.x * s, c + st.pos.z * s, (st === nearest ? 5 : 3.5) * u, 0, Math.PI * 2);
@@ -3316,6 +3993,7 @@
         if (!started) return;
         if (settingsOpen) { if (e.code === "Escape") { e.preventDefault(); closeSettings(false); } return; }
         if (mode === "darts") { dartsKey(e, true); return; }
+        if (mode === "code") { if (e.code === "Escape") { e.preventDefault(); exitCode(); } return; }
         if (!$("#complete").hidden) { if (e.code === "Escape") $("#complete-close").click(); return; }
         if (panelOpen) { if (e.code === "Escape") closePanel(); return; }
         if (wheelOpen && e.code === "Escape") { e.preventDefault(); closeWheel(); return; }
@@ -3334,6 +4012,7 @@
       });
       addEventListener("keyup", (e) => {
         if (mode === "darts") { dartsKey(e, false); return; }
+        if (mode === "code") return;
         const k = KEYMAP[e.code];
         if (k) input[k] = false;
       });
@@ -3526,7 +4205,10 @@
       delBtn.addEventListener("click", () => {
         if (!delArmed) { delArmed = true; delBtn.classList.add("confirm"); delBtn.textContent = "Click again to confirm"; return; }
         ["world-progress", "world-best-lap", "world-darts-best", "world-darts-records", "world-settings", "world-guest-name", "world-guest-org", "world-guest-share"].forEach(persist.remove);
-        progress = { visited: [], orbs: [], completeShown: false, goals: 0, bull: false, miss: false, stickers: [] };
+        progress = { visited: [], orbs: [], completeShown: false, goals: 0, bull: false, miss: false, stickers: [], code: {} };
+        codeProgress = progress.code;
+        CODE_LEVELS.forEach((l) => persist.remove(`world-code-${l.id}`));
+        persist.remove("world-code-level");
         dartsBest = 0;
         records = {};
         drawScoreboard(0);
@@ -3546,7 +4228,7 @@
       });
 
       function openSettings() {
-        if (!started || settingsOpen || mode === "darts" || !$("#complete").hidden) return;
+        if (!started || settingsOpen || mode !== "ride" || !$("#complete").hidden) return;
         if (panelOpen) closePanel();
         if (!$("#complete").hidden) return;
         closeWheel();
@@ -3604,7 +4286,7 @@
           updateFootball(dt);
           recordGhost(dt);
           for (const o of orbs) if (o.g.visible && Math.abs(o.x - pos.x) < 1.8 && Math.abs(o.z - pos.z) < 1.8 && Math.hypot(o.x - pos.x, o.z - pos.z) < 1.8) collectOrb(o);
-        } else if (paused || mode === "darts") {
+        } else if (paused || mode !== "ride") {
           speed = 0;
           crankVel = 0;
         }
@@ -3628,6 +4310,7 @@
         ffGeo.attributes.position.needsUpdate = true;
 
         if (mode === "darts") updateDarts(dt, t);
+        else if (mode === "code") updateCode(dt);
         else updateCamera(dt, t);
         moon.position.set(pos.x - 25, 40, pos.z - 21);
         moon.target.position.copy(pos);

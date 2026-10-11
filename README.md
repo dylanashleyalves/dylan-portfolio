@@ -68,6 +68,7 @@ const dylan = {
 - 🛂 Passport stamps, 🔮 20 hidden orbs, ⏱️ lap timer
 - ⚽ Football pitch · 🎯 darts (301/501/701, Cricket)
 - 😎 Unlockable **sticker emotes**
+- 🧑‍💻 **Code Lab:** learn to code by steering a robot bike (sequence, loops, conditions, functions, variables)
 - 👥 **Live multiplayer** riders + 👻 **ghost riders** from past visits
 - 🌗 **Day/night cycle** with rain and fog
 - 🎵 Original generative music · ⚙️ retro settings
