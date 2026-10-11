@@ -318,7 +318,7 @@
      Create a form at formspree.io and paste its ID below.
      Until then, the form opens the visitor's email app instead,
      so no message is ever lost. */
-  const CONTACT_FORM_URL = "https://formspree.io/f/YOUR_CONTACT_FORM_ID";
+  const CONTACT_FORM_URL = "https://formspree.io/f/xnpjdlqj";
   const form = document.getElementById("contact-form");
   const status = document.getElementById("form-status");
   const setStatus = (text, isError = false) => {
